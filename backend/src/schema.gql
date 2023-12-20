@@ -1,0 +1,141 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+input AddReadonlyUserListDto {
+  email: String!
+  listId: ID!
+}
+
+type Category {
+  categories: [String!]!
+  mainCategory: String!
+}
+
+input CreateListDto {
+  allowDelete: [String!] = []
+  allowEdit: [String!] = []
+  allowView: [String!] = []
+  description: String
+  items: [String!] = []
+  name: String!
+  owner: String!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+input GetListByIdDto {
+  id: ID!
+}
+
+type GroceryItem {
+  code: Float
+  id: String!
+  imageUrl: String
+  listId: String!
+  quantity: Int!
+  value: String!
+}
+
+type Item {
+  brand: String!
+  category: Category!
+  code: String!
+  codeUrl: String
+  description: String!
+  image: String
+  name: String!
+  specs: [Spec!]!
+}
+
+input ItemByUpcDto {
+  code: String!
+}
+
+type List {
+  allowDelete: [String!]!
+  allowEdit: [String!]!
+  allowView: [String!]!
+  created: DateTime!
+  description: String
+  id: ID!
+  items: [GroceryItem!]!
+  name: String
+  owner: ID!
+  updated: DateTime!
+}
+
+input LoginDto {
+  email: String!
+  password: String!
+}
+
+type Logout {
+  success: Boolean!
+}
+
+type Mutation {
+  addReadOnlyUserToList(input: AddReadonlyUserListDto!): List!
+  createList(input: CreateListDto!): List!
+  login(input: LoginDto!): User!
+  logout: Logout!
+  refreshToken: User!
+  register(input: SignUpDto!): User!
+  updatePassword(input: UpdatePasswordDto!): User!
+  updateUser(input: UpdateUserDto!): User!
+}
+
+enum Provider {
+  FACEBOOK
+  GOOGLE
+  LOCAL
+}
+
+type Query {
+  itemByUpc(input: ItemByUpcDto!): Item
+  list(input: GetListByIdDto!): List!
+  lists: [List!]!
+  me: User!
+}
+
+input SignUpDto {
+  created: DateTime
+  email: String!
+  name: String
+  password: String
+  passwordCheck: String!
+  provider: String
+  refreshToken: String
+  token: String
+  updated: DateTime
+}
+
+type Spec {
+  name: String!
+  value: String!
+}
+
+input UpdatePasswordDto {
+  currentPassword: String!
+  newPassword: String!
+}
+
+input UpdateUserDto {
+  email: String
+  name: String
+}
+
+type User {
+  accessToken: String!
+  created: DateTime
+  email: String!
+  id: ID!
+  name: String
+  password: String
+  provider: Provider!
+  refreshToken: String
+  updated: DateTime
+}

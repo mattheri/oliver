@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String      @id @default(uuid())
+  name         String?
+  email        String      @unique
+  provider     String      @default("EMAIL")
+  password     String?
+  refreshToken String?
+  created      DateTime    @default(now())
+  updated      DateTime    @updatedAt()
+  groceryLists List[]
+  containers   Container[]
+}
+
+model Item {
+  id       String   @id @default(uuid())
+  name     String
+  value    String
+  code     Int
+  imageUrl String?
+  quantity Int
+  list     List     @relation(fields: [listId], references: [id])
+  listId   String
+  created  DateTime @default(now())
+  updated  DateTime @updatedAt
+}
+
+model List {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+  owner       User     @relation(fields: [ownerId], references: [id])
+  ownerId     String   @unique
+  items       Item[]
+  created     DateTime @default(now())
+  updated     DateTime @updatedAt
+  allowView   String
+  allowEdit   String
+  allowDelete String
+}
+
+model Container {
+  id          String          @id @default(uuid())
+  name        String
+  description String?
+  owner       User            @relation(fields: [ownerId], references: [id])
+  ownerId     String          @unique
+  items       ContainerItem[]
+  created     DateTime        @default(now())
+  updated     DateTime        @updatedAt
+  allowView   String
+  allowEdit   String
+  allowDelete String
+}
+
+model ContainerItem {
+  id           String    @id @default(uuid())
+  container    Container @relation(fields: [containerId], references: [id])
+  containerId  String
+  linkedItemId String?
+  quantity     Int
+  name         String
+  value        String?
+  code         Int?
+  imageUrl     String?
+  created      DateTime  @default(now())
+  updated      DateTime  @updatedAt
+}
