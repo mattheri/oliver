@@ -10,9 +10,17 @@ export type HttpMutationOptions<
 > = {
   variables?: Variables;
   invalidateCache?: boolean;
-};
+  };
 
-export type HttpResponse<T> = { data: T | null };
+export type HttpError = {
+  message?: string;
+  extensions?: {
+    code?: string;
+    originalError?: Error;
+  }
+}
+
+export type HttpResponse<T> = { data: T | null, errors?: HttpError[] };
 
 export type CacheKey = {
   query: string;

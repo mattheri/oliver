@@ -7,11 +7,11 @@ export class Http {
     this.base = base;
   }
 
-  public query<T extends unknown>(query: string, options?: HttpOptions) {
+  public query<T>(query: string, options?: HttpOptions) {
     return new Query(this.base, query, options).execute<T>();
   }
 
-  public mutate<T extends unknown>(
+  public mutate<T>(
     query: string,
     options?: HttpMutationOptions
   ) {

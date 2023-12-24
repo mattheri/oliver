@@ -1,0 +1,1 @@
+{"version":3,"file":"upc.module.js","sourceRoot":"","sources":["../../../src/groceries/upc/upc.module.ts"],"names":[],"mappings":";;;;;;;;;AAAA,2CAAwC;AAExC,2DAAuD;AACvD,wDAAoD;AAM7C,IAAM,SAAS,GAAf,MAAM,SAAS;CAAG,CAAA;AAAZ,SAAS;IAJrB,IAAA,eAAM,EAAC;QACN,SAAS,EAAE,CAAC,0BAAW,EAAE,wBAAU,CAAC;QACpC,OAAO,EAAE,CAAC,wBAAU,CAAC;KACtB,CAAC;GACW,SAAS,CAAG;AAAZ,8BAAS"}

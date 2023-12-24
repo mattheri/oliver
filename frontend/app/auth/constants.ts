@@ -27,11 +27,16 @@ export const SESSION_STORAGE_OPTIONS: SessionStorageOptions = {
 };
 
 export const PROVIDER = {
-  LOCAL: "local",
-};
+  LOCAL: "LOCAL",
+  GOOGLE: "GOOGLE",
+  FACEBOOK: "FACEBOOK",
+} as const;
 
 export const ERROR = {
-  INVALID_CREDENTIALS: "Invalid credentials",
-};
+  INVALID_CREDENTIALS: "INVALID_CREDENTIALS",
+  USER_NOT_FOUND: "USER_NOT_FOUND",
+  PASSWORD_DOES_NOT_MATCH: "PASSWORD_DOES_NOT_MATCH",
+  USER_ALREADY_EXISTS: "USER_ALREADY_EXISTS",
+} as const;
 
 export const ERROR_KEY = "authError";

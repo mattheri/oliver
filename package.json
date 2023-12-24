@@ -1,0 +1,34 @@
+{
+  "name": "oliver",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "target:frontend": "cd frontend",
+    "target:backend": "cd backend",
+    "dev:frontend": "npm run dev",
+    "dev:backend": "npm run dev",
+    "start:frontend:dev": "run-s target:frontend dev:frontend",
+    "start:backend:dev": "run-s target:backend dev:backend",
+    "start:dev": "run-p start:frontend:dev start:backend:dev",
+    "install:frontend:dev": "npm install",
+    "install:backend:dev": "npm install",
+    "install:frontend": "run-s target:frontend install:frontend:dev",
+    "install:backend": "run-s target:backend install:backend:dev",
+    "install:dev": "run-p install:frontend:dev install:backend:dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mattheri/oliver.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mattheri/oliver/issues"
+  },
+  "homepage": "https://github.com/mattheri/oliver#readme",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}

@@ -1,6 +1,7 @@
-import Joi from "joi";
 import * as crypto from "crypto";
 import { promisify } from "util";
+
+import Joi from "joi";
 
 import { PASSWORD_REGEX } from "../constants";
 

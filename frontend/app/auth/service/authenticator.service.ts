@@ -1,10 +1,10 @@
-import type { User } from "../types";
-
-import { createCookieSessionStorage } from "@remix-run/node";
 import { Authenticator } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
 
+import { createCookieSessionStorage } from "@remix-run/node";
+
 import { ERROR_KEY, PROVIDER, SESSION_STORAGE_OPTIONS } from "../constants";
+import type { User } from "../types";
 import { FormVerifyService } from "./verify.service";
 
 class FormAuthenticatorService {

@@ -1,8 +1,8 @@
-import type { HttpMutationOptions, HttpResponse } from "../types";
+import { stripIgnoredCharacters } from "graphql";
 
 import { HTTP_ERROR, HTTP_HEADERS, HTTP_METHOD } from "../constants";
+import type { HttpMutationOptions, HttpResponse } from "../types";
 import { Cache } from "./Cache";
-import { stripIgnoredCharacters } from "graphql";
 
 export class Mutation {
   private readonly base: string;
@@ -36,8 +36,8 @@ export class Mutation {
     return queryName.split("_")[1];
   }
 
-  public async execute<T extends unknown>(): Promise<
-    NonNullable<HttpResponse<T>>
+  public async execute<T>(): Promise<
+    HttpResponse<T>
   > {
     if (typeof this.query !== "string") {
       throw new Error(HTTP_ERROR.INVALID_QUERY);

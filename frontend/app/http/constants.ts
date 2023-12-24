@@ -5,7 +5,6 @@ export const HTTP_ERROR = {
 
 export const HTTP_HEADERS = {
   "Content-Type": "application/json",
-  "x-hasura-admin-secret": process.env.HASURA_ADMIN_SECRET ?? "",
 } as const;
 
 export const HTTP_METHOD = "POST" as const;

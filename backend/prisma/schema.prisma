@@ -21,6 +21,7 @@ model User {
   updated      DateTime    @updatedAt()
   groceryLists List[]
   containers   Container[]
+  recipes      Recipe[]
 }
 
 model Item {
@@ -76,4 +77,30 @@ model ContainerItem {
   imageUrl     String?
   created      DateTime  @default(now())
   updated      DateTime  @updatedAt
+}
+
+model RecipeImage {
+  id       String @id @default(uuid())
+  width    Int?
+  height   Int?
+  url      String
+  recipe   Recipe @relation(fields: [recipeId], references: [id])
+  recipeId String
+}
+
+model Recipe {
+  id            String        @id @default(uuid())
+  title         String
+  description   String?
+  ingredients   String
+  instructions  String
+  owner         User          @relation(fields: [ownerId], references: [id])
+  ownerId       String        @unique
+  created       DateTime      @default(now())
+  updated       DateTime      @updatedAt
+  isExternalSrc Boolean       @default(false)
+  allowView     String
+  allowEdit     String
+  allowDelete   String
+  image         RecipeImage[]
 }

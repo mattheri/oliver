@@ -1,9 +1,8 @@
+import { useEffect, useState } from "react";
+import Slider from "~/common/components/Slider/Slider";
+import { HttpState, useClientLoader } from "~/http";
 import type { Recipe } from "~/recipes/types";
 
-import { useState, useEffect } from "react";
-import { HttpState, useClientLoader } from "~/http";
-
-import Slider from "~/common/components/Slider/Slider";
 import RecipeCard from "../RecipeCard/RecipeCard";
 
 type Props = {
@@ -25,11 +24,11 @@ export default function RandomRecipesSlider({
       if (!response) return;
       setRandomRecipes(response.randomRecipes);
     });
-  }, []);
+  }, [loader, numberOfRecipes]);
 
   return (
     <HttpState loading={loading}>
-      <Slider slidesToShow={2} className="py-2">
+      <Slider slidesToShow={2} className="py-2 isolate">
         {randomRecipes.map((recipe) => (
           <RecipeCard key={recipe.id} {...recipe} />
         ))}

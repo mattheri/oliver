@@ -5,10 +5,10 @@ import { Provider } from 'src/users/users.constants';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@prisma/client';
 
+import { ERRORS } from '../constants/error.constants';
 import { LoginDto } from '../dto/login.dto';
-import { SignUpDto } from '../dto/sign-up.dto';
+import { UserWithoutPassword } from '../interfaces/auth.interfaces';
 
 @Injectable()
 export class AuthService {
@@ -22,17 +22,35 @@ export class AuthService {
   async validateUser(
     email: string,
     password: string,
-  ): Promise<Omit<User, 'password'>> {
-    const user = await this.userService.getUserByEmail(email);
-    if (user && (await this.hashService.compare(password, user.password))) {
+  ): Promise<UserWithoutPassword> {
+    try {
+      const user = await this.userService.getUserByEmail(email);
+
+      if (!user) {
+        throw ERRORS.USER_NOT_FOUND;
+      }
+      if (!(await this.hashService.compare(password, user.password))) {
+        throw ERRORS.INVALID_CREDENTIALS;
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...result } = user;
+      const { password: userPassword, ...result } = user;
       return result;
+    } catch (e) {
+      const message = e as string;
+
+      switch (message) {
+        case ERRORS.USER_NOT_FOUND:
+          throw new UnauthorizedException(ERRORS.USER_NOT_FOUND);
+        case ERRORS.INVALID_CREDENTIALS:
+          throw new UnauthorizedException(ERRORS.INVALID_CREDENTIALS);
+        default:
+          throw new UnauthorizedException();
+      }
     }
-    throw new UnauthorizedException();
   }
 
-  async getUser(id: string): Promise<Omit<User, 'password'> | null> {
+  async getUser(id: string): Promise<UserWithoutPassword | null> {
     const user = await this.userService.getUser(id);
 
     if (!user) {
@@ -58,18 +76,15 @@ export class AuthService {
     };
   }
 
-  async register(user: SignUpDto) {
-    const userExists = await this.userService.getUserByEmail(user.email);
+  async register(payload: LoginDto) {
+    const userExists = !!(await this.userService.getUserByEmail(payload.email));
 
     if (userExists) {
-      throw new UnauthorizedException('User already exists');
+      throw new UnauthorizedException(ERRORS.USER_ALREADY_EXISTS);
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { passwordCheck, ...tUser } = user;
-
     const createdUser = await this.userService.createUser({
-      ...tUser,
+      ...payload,
       provider: Provider.Local,
     });
     const tokens = await this.getTokens(createdUser.id, createdUser.email);

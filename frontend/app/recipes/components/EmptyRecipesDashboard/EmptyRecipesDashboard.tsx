@@ -1,6 +1,6 @@
-import { PencilIcon, LinkIcon } from "@heroicons/react/24/outline";
-
 import { ActionCard } from "~/common";
+
+import { LinkIcon, PencilIcon } from "@heroicons/react/24/outline";
 
 import RandomRecipesSlider from "../RandomRecipesSlider/RandomRecipesSlider";
 
@@ -14,7 +14,6 @@ export default function EmptyRecipesDashboard() {
         You didn’t add any recipes yet. Start by adding your first recipe.
       </p>
       <ul
-        role="list"
         className="mt-6 grid grid-cols-1 gap-6 border-b border-t border-gray-200 py-6 sm:grid-cols-2"
       >
         <li className="flow-root">

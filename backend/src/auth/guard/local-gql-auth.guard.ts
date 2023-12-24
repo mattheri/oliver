@@ -13,10 +13,12 @@ export class LocalGqlAuthGuard extends AuthGuard('local') {
     const {
       input: { email, password },
     } = ctx.getArgs();
+    const isRegister = ctx.getInfo().fieldName === 'register';
 
     const req = ctx.getContext().req;
     req.body.email = email;
     req.body.password = password;
+    req.body.register = isRegister;
 
     return req;
   }

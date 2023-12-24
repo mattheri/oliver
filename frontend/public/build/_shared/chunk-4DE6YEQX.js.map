@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../app/recipes/constants.ts"],
+  "sourcesContent": ["// REMIX HMR BEGIN\nimport * as __hmr__ from \"remix:hmr\";\nif (import.meta) {\nimport.meta.hot = __hmr__.createHotContext(\n//@ts-expect-error\n\"app/recipes/constants.ts\"\n);\nimport.meta.hot.lastModified = \"1703119630110.0664\";\n}\n// REMIX HMR END\n\nexport const MEAL_DB_BASE_URL = \"https://www.themealdb.com/api/json/v1/1\";\n\nexport const MEAL_DB_ENDPOINTS = {\n  SEARCH: \"search.php\",\n  RANDOM: \"random.php\",\n  CATEGORIES: \"categories.php\",\n  LIST: \"list.php\",\n  FILTER: \"filter.php\",\n  LOOKUP: \"lookup.php\",\n  PREVIEW_IMAGE: \"preview\",\n} as const;\n\nexport const MEAL_DB_QUERY_PARAMS = {\n  SEARCH_BY_NAME: \"s\",\n  SEARCH_BY_FIRST_LETTER: \"f\",\n  SEARCH_BY_ID: \"i\",\n  SEARCH_BY_CATEGORY: \"c\",\n  SEARCH_BY_AREA: \"a\",\n  FILTER_BY_INGREDIENT: \"i\",\n  FILTER_BY_CATEGORY: \"c\",\n  FILTER_BY_AREA: \"a\",\n} as const;\n\nexport const RECIPE_EXTERNAL_QUERY_PARAMS = {\n  TITLE: \"title\",\n  INSTRUCTIONS: \"instructions\",\n  INGREDIENTS: \"ingredients\",\n  IMAGE: \"image\",\n  URL: \"url\",\n  USER_ID: \"user_id\",\n} as const;\n"],
+  "mappings": ";;;;;AAEA,IAAI,aAAa;AACjB,cAAY,MAAc;AAAA;AAAA,IAE1B;AAAA,EACA;AACA,cAAY,IAAI,eAAe;AAC/B;AA0BO,IAAM,+BAA+B;AAAA,EAC1C,OAAO;AAAA,EACP,cAAc;AAAA,EACd,aAAa;AAAA,EACb,OAAO;AAAA,EACP,KAAK;AAAA,EACL,SAAS;AACX;",
+  "names": []
+}

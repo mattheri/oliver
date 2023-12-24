@@ -30,10 +30,7 @@ export class AuthResolver {
   @Mutation(() => User)
   @UseGuards(LocalGqlAuthGuard, SessionLocalAuthGuard)
   async register(@Args('input') input: SignUpDto, @GqlReq() req: Request) {
-    const user = await this.authService.register(input);
-    req.user = user;
-
-    return user;
+    return req.user;
   }
 
   @Query(() => User || null)

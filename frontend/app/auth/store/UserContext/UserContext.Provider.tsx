@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
 import type { UserContextState } from "~/auth/types";
 
-import { useState, useCallback } from "react";
-
 import UserContext from "./UserContext";
 
 type Props = {

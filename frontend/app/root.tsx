@@ -1,3 +1,5 @@
+import tailwind from "~/styles/tailwind.css";
+
 import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LinksFunction, LoaderArgs } from "@remix-run/node";
 import {
@@ -9,10 +11,10 @@ import {
   ScrollRestoration,
   useLoaderData,
 } from "@remix-run/react";
-import tailwind from "~/styles/tailwind.css";
-import { AppContextProvider, Menu } from "./common";
-import UserContextProvider from "./auth/store/UserContext/UserContext.Provider";
+
 import { formAuthenticator } from "./auth";
+import UserContextProvider from "./auth/store/UserContext/UserContext.Provider";
+import { AppContextProvider, Menu } from "./common";
 import recipesService from "./recipes/service/recipes.service";
 
 export const links: LinksFunction = () => [
@@ -37,6 +39,7 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function App() {
   const { user, isAuthenticated, recipes } = useLoaderData<typeof loader>();
+  console.log({ user, isAuthenticated, recipes })
 
   return (
     <html lang="en">

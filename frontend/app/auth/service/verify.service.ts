@@ -1,9 +1,9 @@
 import type { FormStrategyVerifyParams } from "remix-auth-form";
 
+import { ERROR } from "../constants";
+import type { User } from "../types";
 import UserService from "./user.service";
 import ValidatorService from "./validator.service";
-import { User } from "../types";
-import { ERROR, PROVIDER } from "../constants";
 
 export class FormVerifyService {
   private readonly userService: UserService;
@@ -19,7 +19,6 @@ export class FormVerifyService {
 
   public async verify({
     form,
-    context,
   }: FormStrategyVerifyParams): Promise<User> {
     try {
       const email = this.validator.validateEmail(String(form.get("email")));
@@ -27,31 +26,24 @@ export class FormVerifyService {
         String(form.get("password")),
       );
 
-      let user: (User & { password?: string }) | null = null;
-      const userFromDb = await this.userService.getUser({ email });
+      if (form.has("passwordConfirm")) {
+        const passwordConfirm = String(form.get("passwordConfirm"));
 
-      console.log(userFromDb);
-
-      if (!userFromDb) {
-        user = await this.userService.createUser({
-          email,
-          password,
-          provider: PROVIDER.LOCAL,
-        });
-      } else {
-        user = (await this.validator.compare(password, userFromDb.password))
-          ? userFromDb
-          : null;
+        if (password !== passwordConfirm) {
+          throw new Error(ERROR.PASSWORD_DOES_NOT_MATCH);
+        }
+        
+        return this.userService.register(email, password, passwordConfirm);
       }
 
-      if (!user) {
-        throw new Error(ERROR.INVALID_CREDENTIALS);
-      }
-
-      delete user.password;
-      return user as User;
+      return this.userService.login(email, password);
     } catch (e) {
-      throw new Error(ERROR.INVALID_CREDENTIALS);
+      const error = e as Error;
+
+      switch (error.message) {
+        default:
+          throw new Error(ERROR.INVALID_CREDENTIALS);
+      }
     }
   }
 }

@@ -1,7 +1,7 @@
-import type { Recipe } from "../types";
-
 import { client } from "~/http";
-import { RECIPES_BY_USER_QUERY } from "../graphql/query/RecipesByUserQuery";
+
+// import { RECIPES_BY_USER_QUERY } from "../graphql/query/RecipesByUserQuery";
+// import type { Recipe } from "../types";
 
 class RecipesService {
   static __instance: RecipesService;
@@ -16,17 +16,18 @@ class RecipesService {
     this.client = httpClient;
   }
 
-  public async getRecipesByUserId(userId?: number) {
-    if (!userId) return [];
+  public async getRecipesByUserId(userId?: string) {
+    return []
+    // if (!userId) return [];
 
-    const { data } = await this.client.query<{ recipes: Recipe[] }>(
-      RECIPES_BY_USER_QUERY,
-      {
-        variables: { userId },
-      },
-    );
+    // const { data } = await this.client.query<{ recipes: Recipe[] }>(
+    //   RECIPES_BY_USER_QUERY,
+    //   {
+    //     variables: { userId },
+    //   },
+    // );
 
-    return data?.recipes ?? [];
+    // return data?.recipes ?? [];
   }
 }
 

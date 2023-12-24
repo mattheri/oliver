@@ -1,5 +1,7 @@
 import type { DeepPartial, PartialBy } from "~/types";
 
+import type { PROVIDER } from "./constants";
+
 export type Credentials = {
   email: string;
   password: string;
@@ -10,10 +12,12 @@ export type EmailCredential = {
 };
 
 export type User = {
-  id: number;
+  id: string;
   email: string;
   name: string;
-  provider: string;
+  provider: typeof PROVIDER[keyof typeof PROVIDER];
+  accessToken: string;
+  refreshToken: string;
 };
 
 export type UserWithPassword = User & {
@@ -27,3 +31,5 @@ export type UserDTO = Omit<PartialBy<User, "name">, "id"> & {
 export type UserContextState = DeepPartial<User> & {
   isAuthenticated: boolean;
 };
+
+export type LoginResponse = Pick<User, "accessToken" | "refreshToken">;

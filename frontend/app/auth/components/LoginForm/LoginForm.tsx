@@ -1,15 +1,13 @@
-import { useFetcher } from "@remix-run/react";
-import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
-
-import { Button, If, Input, Toast } from "~/common";
+import { Button, If, Input } from "~/common";
 import ErrorCard from "~/common/components/ErrorCard/ErrorCard";
+
+import { useFetcher } from "@remix-run/react";
 
 export default function LoginForm() {
   const fetcher = useFetcher<{ message?: string }>();
   const {
     register,
-    formState: { errors },
   } = useForm({
     mode: "onBlur",
     defaultValues: {

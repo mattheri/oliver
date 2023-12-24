@@ -1,0 +1,11 @@
+{
+	"schemaPath": "./backend/src/schema.gql",
+	"includes": [
+		"./frontend/app/**/*.{graphql,ts,tsx}"
+	],
+	"extensions": {
+		"endpoints": {
+			"dev": "http://localhost:4000/graphql"
+		}
+	}
+}
