@@ -1,10 +1,10 @@
 import { IsInt, IsOptional, Max, Min } from 'class-validator';
 
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class GetRandomRecipesDto {
-  @Field({ nullable: true, defaultValue: 10 })
+  @Field(() => Int, { nullable: true, defaultValue: 10 })
   @IsOptional()
   @IsInt()
   @Min(1)

@@ -209,7 +209,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RecipesResolver.prototype, "randomRecipes", null);
 RecipesResolver = __decorate([
-    (0, graphql_1.Resolver)(),
+    (0, graphql_1.Resolver)(() => recipe_model_1.Recipe),
     __metadata("design:paramtypes", [recipes_service_1.RecipeService])
 ], RecipesResolver);
 exports.RecipesResolver = RecipesResolver;

@@ -6,7 +6,7 @@ export type Recipe = {
   url?: Nullable<string>;
   ingredients: Nullable<string[]>;
   instructions: Nullable<string[]>;
-  user_id: number;
+  userId: string;
   image?: Nullable<{
     width?: number;
     height?: number;

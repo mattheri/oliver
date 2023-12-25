@@ -9,7 +9,7 @@ import {
 
 import { Field, InputType, OmitType } from '@nestjs/graphql';
 
-import { RecipeImage } from '../models/recipe-image.model';
+import { CreateRecipeImageDto } from './create-recipe-image.dto';
 
 @InputType()
 export class CreateRecipeWithUserIdDto {
@@ -41,10 +41,10 @@ export class CreateRecipeWithUserIdDto {
   @IsString()
   userId: string;
 
-  @Field(() => RecipeImage, { nullable: true })
+  @Field(() => CreateRecipeImageDto, { nullable: true })
   @IsOptional()
   @IsObject()
-  image?: RecipeImage;
+  image?: CreateRecipeImageDto;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -90,6 +90,7 @@ export class CreateRecipeWithUserIdDto {
   allowDelete: string;
 }
 
+@InputType()
 export class CreateRecipeDto extends OmitType(CreateRecipeWithUserIdDto, [
   'userId',
 ] as const) {}

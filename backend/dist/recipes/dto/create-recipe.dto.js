@@ -13,7 +13,7 @@ exports.CreateRecipeDto = exports.CreateRecipeWithUserIdDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const graphql_1 = require("@nestjs/graphql");
-const recipe_image_model_1 = require("../models/recipe-image.model");
+const create_recipe_image_dto_1 = require("./create-recipe-image.dto");
 let CreateRecipeWithUserIdDto = class CreateRecipeWithUserIdDto {
 };
 __decorate([
@@ -49,10 +49,10 @@ __decorate([
     __metadata("design:type", String)
 ], CreateRecipeWithUserIdDto.prototype, "userId", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => recipe_image_model_1.RecipeImage, { nullable: true }),
+    (0, graphql_1.Field)(() => create_recipe_image_dto_1.CreateRecipeImageDto, { nullable: true }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsObject)(),
-    __metadata("design:type", recipe_image_model_1.RecipeImage)
+    __metadata("design:type", create_recipe_image_dto_1.CreateRecipeImageDto)
 ], CreateRecipeWithUserIdDto.prototype, "image", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),
@@ -106,9 +106,12 @@ CreateRecipeWithUserIdDto = __decorate([
     (0, graphql_1.InputType)()
 ], CreateRecipeWithUserIdDto);
 exports.CreateRecipeWithUserIdDto = CreateRecipeWithUserIdDto;
-class CreateRecipeDto extends (0, graphql_1.OmitType)(CreateRecipeWithUserIdDto, [
+let CreateRecipeDto = class CreateRecipeDto extends (0, graphql_1.OmitType)(CreateRecipeWithUserIdDto, [
     'userId',
 ]) {
-}
+};
+CreateRecipeDto = __decorate([
+    (0, graphql_1.InputType)()
+], CreateRecipeDto);
 exports.CreateRecipeDto = CreateRecipeDto;
 //# sourceMappingURL=create-recipe.dto.js.map

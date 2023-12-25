@@ -4397,14 +4397,14 @@ if (import.meta) {
     //@ts-expect-error
     "app/recipes/hook/useRecipeUrl.ts"
   );
-  import.meta.hot.lastModified = "1703119630110.3787";
+  import.meta.hot.lastModified = "1703508457852.3936";
 }
 function useRecipeUrl({
   id,
   ingredients,
   instructions,
   title,
-  user_id,
+  userId,
   image,
   isExternalSrc,
   url
@@ -4415,7 +4415,7 @@ function useRecipeUrl({
     recipeUrl.searchParams.set(RECIPE_EXTERNAL_QUERY_PARAMS.TITLE, title);
     recipeUrl.searchParams.set(
       RECIPE_EXTERNAL_QUERY_PARAMS.USER_ID,
-      user_id.toString()
+      userId.toString()
     );
     if (image) {
       recipeUrl.searchParams.set(
@@ -4463,7 +4463,7 @@ if (import.meta) {
     //@ts-expect-error
     "app/recipes/components/RecipeCard/RecipeCard.tsx"
   );
-  import.meta.hot.lastModified = "1703119630109.9424";
+  import.meta.hot.lastModified = "1703508430335.0945";
 }
 function RecipeCard({
   id,
@@ -4473,7 +4473,7 @@ function RecipeCard({
   isExternalSrc,
   ingredients,
   instructions,
-  user_id
+  userId
 }) {
   _s2();
   const to = useRecipeUrl({
@@ -4484,7 +4484,7 @@ function RecipeCard({
     isExternalSrc,
     ingredients,
     instructions,
-    user_id
+    userId
   });
   return /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(Link, { to, className: "block max-h-24 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("div", { className: "flex", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(If_default, { condition: !!image, children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("img", { className: "h-24 w-24 rounded-md", src: image == null ? void 0 : image.src, alt: title }, void 0, false, {
@@ -4816,4 +4816,4 @@ classnames/index.js:
   	http://jedwatson.github.io/classnames
   *)
 */
-//# sourceMappingURL=/build/routes/_index-TMQAJPKZ.js.map
+//# sourceMappingURL=/build/routes/_index-VFGUXY46.js.map

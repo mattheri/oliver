@@ -1,10 +1,10 @@
-import { RecipeImage } from '../models/recipe-image.model';
+import { UpdateRecipeImageDto } from './update-recipe-image.dto';
 export declare class UpdateRecipeDto {
     id: string;
     title?: string;
     ingredients?: string;
     instructions?: string;
-    image?: RecipeImage;
+    image?: UpdateRecipeImageDto;
     isExternalSrc?: boolean;
     url?: string;
     allowView?: string;

@@ -1,7 +1,6 @@
-import type { Recipe } from "~/recipes/types";
-
 import { If, Link } from "~/common";
 import useRecipeUrl from "~/recipes/hook/useRecipeUrl";
+import type { Recipe } from "~/recipes/types";
 
 export default function RecipeCard({
   id,
@@ -11,7 +10,7 @@ export default function RecipeCard({
   isExternalSrc,
   ingredients,
   instructions,
-  user_id,
+  userId,
 }: Recipe) {
   const to = useRecipeUrl({
     id,
@@ -21,7 +20,7 @@ export default function RecipeCard({
     isExternalSrc,
     ingredients,
     instructions,
-    user_id,
+    userId,
   });
 
   return (

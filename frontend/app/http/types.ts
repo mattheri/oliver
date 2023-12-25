@@ -3,13 +3,15 @@ import type { Request } from "@remix-run/node";
 export type HttpOptions<Variables extends Record<string, unknown> = {}> = {
   variables?: Variables;
   cache?: HttpCache;
+  headers?: Headers | Record<string, string>;
 };
 
 export type HttpMutationOptions<
   Variables extends Record<string, unknown> = {}
 > = {
-  variables?: Variables;
-  invalidateCache?: boolean;
+    variables?: Variables;
+    invalidateCache?: boolean;
+    headers?: Headers | Record<string, string>;
   };
 
 export type HttpError = {

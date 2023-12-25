@@ -17,7 +17,7 @@ import { UpdateAllowEditDto } from '../dto/update-allow-edit.dto';
 import { UpdateAllowDeleteDto } from '../dto/update-allow-delete.dto';
 import { GetRandomRecipesDto } from '../dto/get-random-recipes.dto';
 
-@Resolver()
+@Resolver(() => Recipe)
 export class RecipesResolver {
   constructor(private readonly recipeService: RecipeService) {}
 

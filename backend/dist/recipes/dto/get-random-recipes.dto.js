@@ -15,7 +15,7 @@ const graphql_1 = require("@nestjs/graphql");
 let GetRandomRecipesDto = class GetRandomRecipesDto {
 };
 __decorate([
-    (0, graphql_1.Field)({ nullable: true, defaultValue: 10 }),
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true, defaultValue: 10 }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsInt)(),
     (0, class_validator_1.Min)(1),

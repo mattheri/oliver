@@ -13,6 +13,7 @@ const passport_1 = require("@nestjs/passport");
 let JwtGqlAuthGuard = class JwtGqlAuthGuard extends (0, passport_1.AuthGuard)('jwt') {
     getRequest(context) {
         const ctx = graphql_1.GqlExecutionContext.create(context);
+        console.log(ctx.getContext().req);
         return ctx.getContext().req;
     }
 };

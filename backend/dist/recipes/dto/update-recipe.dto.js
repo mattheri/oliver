@@ -13,7 +13,7 @@ exports.UpdateRecipeDto = void 0;
 const class_transformer_1 = require("class-transformer");
 const class_validator_1 = require("class-validator");
 const graphql_1 = require("@nestjs/graphql");
-const recipe_image_model_1 = require("../models/recipe-image.model");
+const update_recipe_image_dto_1 = require("./update-recipe-image.dto");
 let UpdateRecipeDto = class UpdateRecipeDto {
 };
 __decorate([
@@ -50,10 +50,10 @@ __decorate([
     __metadata("design:type", String)
 ], UpdateRecipeDto.prototype, "instructions", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => recipe_image_model_1.RecipeImage, { nullable: true }),
+    (0, graphql_1.Field)(() => update_recipe_image_dto_1.UpdateRecipeImageDto, { nullable: true }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsObject)(),
-    __metadata("design:type", recipe_image_model_1.RecipeImage)
+    __metadata("design:type", update_recipe_image_dto_1.UpdateRecipeImageDto)
 ], UpdateRecipeDto.prototype, "image", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),

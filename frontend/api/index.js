@@ -325,7 +325,8 @@ var Mutation = class {
 };
 
 // app/http/utils/Query.ts
-var import_graphql2 = require("graphql"), Query = class {
+var import_graphql2 = require("graphql");
+var Query = class {
   constructor(base, query, options) {
     this.options = {};
     this.base = base, this.query = query, this.options = options || {}, this.cache = this.options.cache || Cache.Default();
@@ -353,9 +354,12 @@ var import_graphql2 = require("graphql"), Query = class {
     let body = JSON.stringify({
       query: this.query,
       variables: this.options.variables
-    }), response = await fetch(this.base, {
+    }), headers = this.options.headers || {}, response = await fetch(this.base, {
       method: HTTP_METHOD,
-      headers: HTTP_HEADERS,
+      headers: {
+        ...headers,
+        ...HTTP_HEADERS
+      },
       body
     });
     if (!response.ok)
@@ -2961,24 +2965,7 @@ var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime"), Slider = (0, im
 });
 
 // app/recipes/constants.ts
-var MEAL_DB_BASE_URL = "https://www.themealdb.com/api/json/v1/1", MEAL_DB_ENDPOINTS = {
-  SEARCH: "search.php",
-  RANDOM: "random.php",
-  CATEGORIES: "categories.php",
-  LIST: "list.php",
-  FILTER: "filter.php",
-  LOOKUP: "lookup.php",
-  PREVIEW_IMAGE: "preview"
-}, MEAL_DB_QUERY_PARAMS = {
-  SEARCH_BY_NAME: "s",
-  SEARCH_BY_FIRST_LETTER: "f",
-  SEARCH_BY_ID: "i",
-  SEARCH_BY_CATEGORY: "c",
-  SEARCH_BY_AREA: "a",
-  FILTER_BY_INGREDIENT: "i",
-  FILTER_BY_CATEGORY: "c",
-  FILTER_BY_AREA: "a"
-}, RECIPE_EXTERNAL_QUERY_PARAMS = {
+var RECIPE_EXTERNAL_QUERY_PARAMS = {
   TITLE: "title",
   INSTRUCTIONS: "instructions",
   INGREDIENTS: "ingredients",
@@ -2993,7 +2980,7 @@ function useRecipeUrl({
   ingredients,
   instructions,
   title,
-  user_id,
+  userId,
   image,
   isExternalSrc,
   url
@@ -3001,7 +2988,7 @@ function useRecipeUrl({
   let recipeUrl = new URL(`${window.location.origin}/recipes/${id}`);
   return isExternalSrc && (recipeUrl.pathname = "/recipes/external", recipeUrl.searchParams.set(RECIPE_EXTERNAL_QUERY_PARAMS.TITLE, title), recipeUrl.searchParams.set(
     RECIPE_EXTERNAL_QUERY_PARAMS.USER_ID,
-    user_id.toString()
+    userId.toString()
   ), image && recipeUrl.searchParams.set(
     RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE,
     image == null ? void 0 : image.src
@@ -3024,7 +3011,7 @@ function RecipeCard({
   isExternalSrc,
   ingredients,
   instructions,
-  user_id
+  userId
 }) {
   let to = useRecipeUrl({
     id,
@@ -3034,7 +3021,7 @@ function RecipeCard({
     isExternalSrc,
     ingredients,
     instructions,
-    user_id
+    userId
   });
   return /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(Link, { to, className: "block max-h-24 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)("div", { className: "flex", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(If_default, { condition: !!image, children: /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(
@@ -3048,42 +3035,42 @@ function RecipeCard({
       !1,
       {
         fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-        lineNumber: 32,
+        lineNumber: 31,
         columnNumber: 13
       },
       this
     ) }, void 0, !1, {
       fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-      lineNumber: 31,
+      lineNumber: 30,
       columnNumber: 11
     }, this) }, void 0, !1, {
       fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-      lineNumber: 30,
+      lineNumber: 29,
       columnNumber: 9
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)("div", { className: "max-h-full flex-grow p-2", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)("div", { className: "pb-2 text-left text-sm", children: title }, void 0, !1, {
         fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-        lineNumber: 40,
+        lineNumber: 39,
         columnNumber: 11
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)("p", { className: "line-clamp-2 text-sm", children: ingredients == null ? void 0 : ingredients.join(", ") }, void 0, !1, {
         fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-        lineNumber: 41,
+        lineNumber: 40,
         columnNumber: 11
       }, this)
     ] }, void 0, !0, {
       fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-      lineNumber: 39,
+      lineNumber: 38,
       columnNumber: 9
     }, this)
   ] }, void 0, !0, {
     fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-    lineNumber: 29,
+    lineNumber: 28,
     columnNumber: 7
   }, this) }, void 0, !1, {
     fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-    lineNumber: 28,
+    lineNumber: 27,
     columnNumber: 5
   }, this);
 }
@@ -3272,127 +3259,53 @@ __export(locale_api_recipes_random_count_route_exports, {
   loader: () => loader2
 });
 
-// app/recipes/presenters/mealdb.presenter.ts
-var MealDBPresenter = class {
-  mealDbToRecipe(meal, userId) {
-    let image = meal.strMealThumb ? {
-      src: meal.strMealThumb
-    } : null, url = meal.strSource ? meal.strSource : null;
-    return {
-      id: Number(meal.idMeal),
-      title: meal.strMeal,
-      instructions: this.formatInstructions(meal.strInstructions),
-      user_id: userId,
-      ingredients: this.filterIngredients(meal),
-      image,
-      url,
-      isExternalSrc: !0
-    };
-  }
-  mealDbCategoryToRecipeCategory(mealDbCategory) {
-    return {
-      name: mealDbCategory.strCategory,
-      url: `/recipes/categories/${mealDbCategory.strCategory.toLowerCase()}`,
-      image: mealDbCategory.strCategoryThumb
-    };
-  }
-  filterIngredients(meal) {
-    let ingredients = Object.entries(meal).filter(([key, value]) => key.includes("Ingredient") && value), measures = Object.entries(meal).filter(([key, value]) => key.includes("Measure") && value);
-    return ingredients.map(([key, value], index) => {
-      let measure = measures[index][1];
-      return `${value} ${measure}`;
-    });
-  }
-  formatInstructions(instructions) {
-    return instructions ? instructions.split(`
-`).filter((instruction) => instruction).map((instruction) => instruction.trim()) : [];
-  }
+// app/auth/utils/createBearerAccessTokenHeader.ts
+var createBearerAccessTokenHeader = async (authenticator, request) => {
+  let user = await authenticator.isAuthenticated(request);
+  return user ? {
+    Authorization: `Bearer ${user.accessToken}`
+  } : {
+    Authorization: ""
+  };
 };
 
-// app/recipes/service/mealdb.service.ts
-var MealDbService = class {
-  constructor() {
-    this.baseUrl = MEAL_DB_BASE_URL;
-    this.endopoints = MEAL_DB_ENDPOINTS;
-    this.queryParam = MEAL_DB_QUERY_PARAMS;
-    this.presenter = new MealDBPresenter();
-  }
-  static get instance() {
-    return this._instance || (this._instance = new this());
-  }
-  async getCategories() {
-    try {
-      let response = await fetch(
-        `${this.baseUrl}/${this.endopoints.CATEGORIES}`
-      );
-      if (!response.ok)
-        throw new Error(`${response.status}: ${response.statusText}`);
-      return (await response.json()).categories.map(
-        this.presenter.mealDbCategoryToRecipeCategory.bind(this.presenter)
-      );
-    } catch (e) {
-      let error = e;
-      throw console.log(error.message), error;
-    }
-  }
-  async getRecipesByCategory(category) {
-    try {
-      let response = await fetch(
-        `${this.baseUrl}/${this.endopoints.FILTER}?${this.queryParam.FILTER_BY_CATEGORY}=${category}`
-      );
-      if (!response.ok)
-        throw new Error(`${response.status}: ${response.statusText}`);
-      return (await response.json()).meals.map(this.presenter.mealDbToRecipe.bind(this.presenter));
-    } catch (e) {
-      let error = e;
-      throw console.log(error.message), error;
-    }
-  }
-  async getRecipeById(id) {
-    try {
-      let response = await fetch(
-        `${this.baseUrl}/${this.endopoints.LOOKUP}?${this.queryParam.SEARCH_BY_ID}=${id}`
-      );
-      if (!response.ok)
-        throw new Error(`${response.status}: ${response.statusText}`);
-      return (await response.json()).meals.map(
-        this.presenter.mealDbToRecipe.bind(this.presenter)
-      )[0];
-    } catch (e) {
-      let error = e;
-      throw console.log(error.message), error;
-    }
-  }
-  async getRandomRecipe() {
-    try {
-      let response = await fetch(`${this.baseUrl}/${this.endopoints.RANDOM}`);
-      if (!response.ok)
-        throw new Error(`${response.status}: ${response.statusText}`);
-      return (await response.json()).meals.map(
-        this.presenter.mealDbToRecipe.bind(this.presenter)
-      )[0];
-    } catch (e) {
-      let error = e;
-      throw console.log(error.message), error;
-    }
-  }
-  async getMultipeRandomRecipes(amount = 10) {
-    try {
-      let promises = Array.from({ length: amount }).map(() => this.getRandomRecipe());
-      return Promise.all(promises);
-    } catch (e) {
-      let error = e;
-      throw console.log(error.message), error;
-    }
-  }
-}, mealdb_service_default = MealDbService.instance;
+// app/recipes/graphql/query/RandomRecipesQuery.ts
+var RANDOM_RECIPES_QUERY = `#graphql
+	query RandomRecipes($amount: Int = 10) {
+		randomRecipes(input: { amount: $amount }) {
+			id
+			title
+			ingredients
+			instructions
+			userId
+			image {
+				id
+				width
+				height
+				src
+			}
+			url
+			isExternalSrc
+		}
+	}
+`, RandomRecipesQuery_default = RANDOM_RECIPES_QUERY;
 
 // app/recipes/routes/($locale).api.recipes.random.$count.route.tsx
 var DEFAULT_RANDOM_RECIPES_COUNT = 10;
-async function loader2({ params }) {
-  let count = Number(params.count) ?? DEFAULT_RANDOM_RECIPES_COUNT;
+async function loader2({ params, request }) {
+  let count = Number(params.count) ?? DEFAULT_RANDOM_RECIPES_COUNT, { data } = await client.query(RandomRecipesQuery_default, {
+    variables: {
+      input: {
+        amount: count
+      }
+    },
+    headers: {
+      ...await createBearerAccessTokenHeader(formAuthenticator, request)
+    },
+    cache: Cache.Long()
+  });
   return {
-    randomRecipes: await mealdb_service_default.getMultipeRandomRecipes(count)
+    randomRecipes: (data == null ? void 0 : data.randomRecipes) ?? []
   };
 }
 
@@ -3844,7 +3757,7 @@ function Index4() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { entry: { module: "/build/entry.client-KY4SRHS4.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-O63IHIKR.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-OGTFSPUD.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-A3RJPOTN.js", imports: ["/build/_shared/chunk-SDF77W74.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-43CFXCBH.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-HXYZOBT7.js", imports: ["/build/_shared/chunk-SDF77W74.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.external": { id: "($locale).recipes.external", parentId: "root", path: ":locale?/recipes/external", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.external-PXHA6Q7H.js", imports: ["/build/_shared/chunk-4DE6YEQX.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-B22Z7BEN.js", imports: ["/build/_shared/chunk-77PNIKS7.js", "/build/_shared/chunk-VOXRDU2P.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-TMQAJPKZ.js", imports: ["/build/_shared/chunk-4DE6YEQX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "0718c110", hmr: { runtime: "/build/_shared/chunk-OGTFSPUD.js", timestamp: 1703440448915 }, url: "/build/manifest-0718C110.js" };
+var assets_manifest_default = { entry: { module: "/build/entry.client-KY4SRHS4.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-O63IHIKR.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-OGTFSPUD.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-A3RJPOTN.js", imports: ["/build/_shared/chunk-SDF77W74.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-43CFXCBH.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-HXYZOBT7.js", imports: ["/build/_shared/chunk-SDF77W74.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.external": { id: "($locale).recipes.external", parentId: "root", path: ":locale?/recipes/external", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.external-PXHA6Q7H.js", imports: ["/build/_shared/chunk-4DE6YEQX.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-B22Z7BEN.js", imports: ["/build/_shared/chunk-77PNIKS7.js", "/build/_shared/chunk-VOXRDU2P.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-VFGUXY46.js", imports: ["/build/_shared/chunk-4DE6YEQX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "ab0b75ee", hmr: { runtime: "/build/_shared/chunk-OGTFSPUD.js", timestamp: 1703508986731 }, url: "/build/manifest-AB0B75EE.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_dev: !0, unstable_postcss: !1, unstable_tailwind: !1, v2_errorBoundary: !0, v2_headers: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !0 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

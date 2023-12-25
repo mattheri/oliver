@@ -6,7 +6,7 @@ export default function useRecipeUrl({
   ingredients,
   instructions,
   title,
-  user_id,
+  userId,
   image,
   isExternalSrc,
   url,
@@ -18,7 +18,7 @@ export default function useRecipeUrl({
     recipeUrl.searchParams.set(RECIPE_EXTERNAL_QUERY_PARAMS.TITLE, title);
     recipeUrl.searchParams.set(
       RECIPE_EXTERNAL_QUERY_PARAMS.USER_ID,
-      user_id.toString(),
+      userId.toString(),
     );
     if (image) {
       recipeUrl.searchParams.set(

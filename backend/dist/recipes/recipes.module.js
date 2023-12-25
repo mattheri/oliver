@@ -9,23 +9,25 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.RecipesModule = void 0;
 const authorization_service_1 = require("../auth/services/authorization.service");
 const db_service_1 = require("../db/services/db.service");
-const user_service_1 = require("../users/services/user.service");
+const users_module_1 = require("../users/users.module");
 const common_1 = require("@nestjs/common");
 const external_recipe_presenter_1 = require("./presenters/external-recipe.presenter");
 const recipes_resolver_1 = require("./resolvers/recipes.resolver");
 const external_recipe_service_1 = require("./services/external-recipe.service");
+const recipes_service_1 = require("./services/recipes.service");
 let RecipesModule = class RecipesModule {
 };
 RecipesModule = __decorate([
     (0, common_1.Module)({
         providers: [
             db_service_1.DatabaseService,
-            user_service_1.UserService,
+            recipes_service_1.RecipeService,
             authorization_service_1.AuthorizationService,
             recipes_resolver_1.RecipesResolver,
             external_recipe_service_1.ExternalRecipeService,
             external_recipe_presenter_1.ExternalRecipePresenter,
         ],
+        imports: [users_module_1.UsersModule],
     })
 ], RecipesModule);
 exports.RecipesModule = RecipesModule;

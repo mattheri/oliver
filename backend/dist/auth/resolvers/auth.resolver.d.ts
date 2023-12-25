@@ -11,11 +11,11 @@ export declare class AuthResolver {
         accessToken: string;
         refreshToken: string;
         id: string;
+        created: Date;
+        updated: Date;
         name: string;
         email: string;
         provider: string;
-        created: Date;
-        updated: Date;
     }>;
     register(input: SignUpDto, req: Request): Promise<Express.User>;
     me(user: User): Promise<User>;

@@ -9,7 +9,7 @@ import {
 
 import { Field, InputType } from '@nestjs/graphql';
 
-import { RecipeImage } from '../models/recipe-image.model';
+import { UpdateRecipeImageDto } from './update-recipe-image.dto';
 
 @InputType()
 export class UpdateRecipeDto {
@@ -42,10 +42,10 @@ export class UpdateRecipeDto {
   })
   instructions?: string;
 
-  @Field(() => RecipeImage, { nullable: true })
+  @Field(() => UpdateRecipeImageDto, { nullable: true })
   @IsOptional()
   @IsObject()
-  image?: RecipeImage;
+  image?: UpdateRecipeImageDto;
 
   @Field({ nullable: true })
   @IsOptional()

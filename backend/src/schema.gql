@@ -22,10 +22,37 @@ input CreateListDto {
   owner: String!
 }
 
+input CreateRecipeDto {
+  allowDelete: [String!] = []
+  allowEdit: [String!] = []
+  allowView: [String!] = []
+  image: CreateRecipeImageDto
+  ingredients: [String!] = []
+  instructions: [String!] = []
+  isExternalSrc: Boolean
+  title: String!
+  url: String
+}
+
+input CreateRecipeImageDto {
+  height: Float
+  id: String!
+  src: String!
+  width: Float
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input DeleteManyRecipeDto {
+  ids: [String!]!
+}
+
+input DeleteRecipeDto {
+  id: String!
+}
 
 input FindUserByEmailDto {
   email: String!
@@ -33,6 +60,10 @@ input FindUserByEmailDto {
 
 input GetListByIdDto {
   id: ID!
+}
+
+input GetRandomRecipesDto {
+  amount: Int = 10
 }
 
 type GroceryItem {
@@ -82,13 +113,23 @@ type Logout {
 }
 
 type Mutation {
+  addAllowDelete(input: UpdateAllowDeleteDto!): Recipe!
+  addAllowEdit(input: UpdateAllowEditDto!): Recipe!
+  addAllowView(input: UpdateAllowViewDto!): Recipe!
   addReadOnlyUserToList(input: AddReadonlyUserListDto!): List!
   createList(input: CreateListDto!): List!
+  createRecipe(input: CreateRecipeDto!): Recipe!
+  deleteManyRecipes(input: DeleteManyRecipeDto!): [Recipe!]!
+  deleteRecipe(input: DeleteRecipeDto!): Recipe!
   login(input: LoginDto!): User!
   logout: Logout!
   refreshToken: User!
   register(input: SignUpDto!): User!
+  removeAllowDelete(input: UpdateAllowDeleteDto!): Recipe!
+  removeAllowEdit(input: UpdateAllowEditDto!): Recipe!
+  removeAllowView(input: UpdateAllowViewDto!): Recipe!
   updatePassword(input: UpdatePasswordDto!): User!
+  updateRecipe(input: UpdateRecipeDto!): Recipe!
   updateUser(input: UpdateUserDto!): User!
 }
 
@@ -103,7 +144,33 @@ type Query {
   list(input: GetListByIdDto!): List!
   lists: [List!]!
   me: User!
+  randomRecipes(input: GetRandomRecipesDto!): [Recipe!]!
+  recipe: Recipe!
+  recipes: [Recipe!]!
+  recipesByUser: [Recipe!]!
+  recipesByUserEmail: [Recipe!]!
   user(input: FindUserByEmailDto!): User
+}
+
+type Recipe {
+  allowDelete: [String!]
+  allowEdit: [String!]
+  allowView: [String!]
+  id: String!
+  image: RecipeImage
+  ingredients: [String!]!
+  instructions: [String!]!
+  isExternalSrc: Boolean
+  title: String!
+  url: String
+  userId: String!
+}
+
+type RecipeImage {
+  height: Int
+  id: String!
+  src: String!
+  width: Int
 }
 
 input SignUpDto {
@@ -123,9 +190,44 @@ type Spec {
   value: String!
 }
 
+input UpdateAllowDeleteDto {
+  email: String!
+  id: String!
+}
+
+input UpdateAllowEditDto {
+  email: String!
+  id: String!
+}
+
+input UpdateAllowViewDto {
+  email: String!
+  id: String!
+}
+
 input UpdatePasswordDto {
   currentPassword: String!
   newPassword: String!
+}
+
+input UpdateRecipeDto {
+  allowDelete: [String!]
+  allowEdit: [String!]
+  allowView: [String!]
+  id: String!
+  image: UpdateRecipeImageDto
+  ingredients: [String!]
+  instructions: [String!]
+  isExternalSrc: Boolean
+  title: String!
+  url: String
+}
+
+input UpdateRecipeImageDto {
+  height: Float
+  id: String
+  src: String
+  width: Float
 }
 
 input UpdateUserDto {
