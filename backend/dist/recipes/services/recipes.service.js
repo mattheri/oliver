@@ -330,11 +330,8 @@ let RecipeService = class RecipeService {
     async deleteManyRecipes({ ids }) {
         return Promise.all(ids.map((id) => this.db.recipe.delete({ where: { id } })));
     }
-    async getRandomRecipes({ amount = this.randomRecipesDefaultAmount, }) {
-        console.log('getRandomRecipes');
-        const random = await this.externalRecipeService.getMultipeRandomRecipes(amount);
-        console.log(random);
-        return random;
+    async getRandomRecipes({ amount = this.randomRecipesDefaultAmount }, user) {
+        return this.externalRecipeService.getMultipeRandomRecipes(user.id, amount);
     }
 };
 RecipeService = __decorate([

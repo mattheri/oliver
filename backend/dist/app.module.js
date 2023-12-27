@@ -18,6 +18,7 @@ const auth_config_1 = require("./auth/config/auth.config");
 const throttler_service_1 = require("./config/services/throttler.service");
 const container_module_1 = require("./containers/container.module");
 const groceries_module_1 = require("./groceries/groceries.module");
+const image_module_1 = require("./image/image.module");
 const recipes_module_1 = require("./recipes/recipes.module");
 const users_module_1 = require("./users/users.module");
 let AppModule = class AppModule {
@@ -50,6 +51,7 @@ AppModule = __decorate([
             config_1.ConfigModule,
             container_module_1.ContainerModule,
             recipes_module_1.RecipesModule,
+            image_module_1.ImageModule,
         ],
     })
 ], AppModule);

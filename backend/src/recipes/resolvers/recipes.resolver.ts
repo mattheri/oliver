@@ -132,7 +132,10 @@ export class RecipesResolver {
 
   @Query(() => [Recipe])
   @UseGuards(JwtGqlAuthGuard)
-  async randomRecipes(@Args('input') input: GetRandomRecipesDto) {
-    return this.recipeService.getRandomRecipes(input);
+  async randomRecipes(
+    @Args('input') input: GetRandomRecipesDto,
+    @CurrentUser() user?: User,
+  ) {
+    return this.recipeService.getRandomRecipes(input, user);
   }
 }

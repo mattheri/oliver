@@ -1,10 +1,9 @@
-import type { ActionArgs } from "@remix-run/node";
-
-import { json } from "@remix-run/node";
 import { AuthorizationError } from "remix-auth";
-
 import { PROVIDER, formAuthenticator } from "~/auth";
 import { ROUTES } from "~/common/constants/routes";
+
+import type { ActionArgs } from "@remix-run/node";
+import { json } from "@remix-run/node";
 
 export async function action({ request }: ActionArgs) {
   try {

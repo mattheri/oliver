@@ -8,7 +8,7 @@ export declare class ExternalRecipeService {
     private readonly queryParams;
     getCategories(): Promise<unknown[]>;
     getRecipesByCategory(category: string): Promise<unknown[]>;
-    getRecipeById(id: string): Promise<unknown>;
-    getRandomRecipe(): Promise<unknown>;
-    getMultipeRandomRecipes(amount?: number): Promise<unknown[]>;
+    getRecipeById(id: string, userId: string): Promise<any>;
+    getRandomRecipe(userId?: string): Promise<import("../models/recipe.model").Recipe>;
+    getMultipeRandomRecipes(userId?: string, amount?: number): Promise<import("../models/recipe.model").Recipe[]>;
 }

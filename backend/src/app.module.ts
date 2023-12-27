@@ -11,6 +11,7 @@ import authConfig from './auth/config/auth.config';
 import { ThrottlerService } from './config/services/throttler.service';
 import { ContainerModule } from './containers/container.module';
 import { GroceriesModule } from './groceries/groceries.module';
+import { ImageModule } from './image/image.module';
 import { RecipesModule } from './recipes/recipes.module';
 import { UsersModule } from './users/users.module';
 
@@ -41,6 +42,7 @@ import { UsersModule } from './users/users.module';
     ConfigModule,
     ContainerModule,
     RecipesModule,
+    ImageModule,
   ],
 })
 export class AppModule {}

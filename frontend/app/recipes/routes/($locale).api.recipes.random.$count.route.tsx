@@ -1,6 +1,7 @@
 import { formAuthenticator } from "~/auth";
 import { createBearerAccessTokenHeader } from "~/auth/utils/createBearerAccessTokenHeader";
 import { Cache, client } from "~/http";
+import { handleGqlErrors } from "~/utils/formatGqlErrors";
 
 import type { LoaderArgs } from "@remix-run/node";
 
@@ -12,7 +13,7 @@ const DEFAULT_RANDOM_RECIPES_COUNT = 10;
 export async function loader({ params, request }: LoaderArgs) {
   const count = Number(params.count) ?? DEFAULT_RANDOM_RECIPES_COUNT;
 
-  const { data } = await client.query<{ randomRecipes: Recipe[] }>(RANDOM_RECIPES_QUERY, {
+  const { data, errors } = await client.query<{ randomRecipes: Recipe[] }>(RANDOM_RECIPES_QUERY, {
     variables: {
       input: {
         amount: count,
@@ -23,6 +24,8 @@ export async function loader({ params, request }: LoaderArgs) {
     },
     cache: Cache.Long(),
   })
+
+  handleGqlErrors(errors);
 
   return {
     randomRecipes: data?.randomRecipes ?? [],

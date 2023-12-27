@@ -381,15 +381,10 @@ export class RecipeService {
     );
   }
 
-  public async getRandomRecipes({
-    amount = this.randomRecipesDefaultAmount,
-  }: GetRandomRecipesDto) {
-    console.log('getRandomRecipes');
-    const random = await this.externalRecipeService.getMultipeRandomRecipes(
-      amount,
-    );
-    console.log(random);
-
-    return random;
+  public async getRandomRecipes(
+    { amount = this.randomRecipesDefaultAmount }: GetRandomRecipesDto,
+    user?: User,
+  ) {
+    return this.externalRecipeService.getMultipeRandomRecipes(user.id, amount);
   }
 }

@@ -165,10 +165,10 @@ __export(root_exports, {
 });
 
 // app/styles/tailwind.css
-var tailwind_default = "/build/_assets/tailwind-2FUQ6QSA.css";
+var tailwind_default = "/build/_assets/tailwind-DCERZUIY.css";
 
 // app/root.tsx
-var import_css_bundle = __toESM(require_dist()), import_react20 = require("@remix-run/react");
+var import_css_bundle = __toESM(require_dist()), import_react21 = require("@remix-run/react");
 
 // app/auth/service/authenticator.service.ts
 var import_remix_auth = require("remix-auth"), import_remix_auth_form = require("remix-auth-form"), import_node2 = require("@remix-run/node");
@@ -191,7 +191,8 @@ var PASSWORD_REGEX = new RegExp(".*"), SESSION_STORAGE_NAME = "__session", SESSI
   INVALID_CREDENTIALS: "INVALID_CREDENTIALS",
   USER_NOT_FOUND: "USER_NOT_FOUND",
   PASSWORD_DOES_NOT_MATCH: "PASSWORD_DOES_NOT_MATCH",
-  USER_ALREADY_EXISTS: "USER_ALREADY_EXISTS"
+  USER_ALREADY_EXISTS: "USER_ALREADY_EXISTS",
+  USER_NOT_LOGGED_IN: "USER_NOT_LOGGED_IN"
 }, ERROR_KEY = "authError";
 
 // app/http/utils/BaseCache.ts
@@ -988,7 +989,8 @@ var import_react12 = require("react");
 
 // app/auth/store/UserContext/UserContext.ts
 var import_react11 = require("react"), UserContext = (0, import_react11.createContext)({
-  isAuthenticated: !1
+  isAuthenticated: !1,
+  user: null
 }), UserContext_default = UserContext;
 
 // app/auth/hooks/useIsAuthenticated.ts
@@ -2120,18 +2122,6 @@ function HttpState({ loading, error, children }) {
   }, this);
 }
 
-// app/auth/graphql/mutation/CreateUserMutation.ts
-var CREATE_USER_MUTATION = `#graphql
-	mutation CreateUser($email: String!, $password: String!, $provider: String!) {
-		insert_users_one(object: { email: $email, password: $password, provider: $provider }) {
-			email
-			id
-			name
-			provider
-		}
-	}
-`, CreateUserMutation_default = CREATE_USER_MUTATION;
-
 // app/auth/graphql/mutation/LoginMutation.ts
 var LOGIN_MUTATION = `#graphql
 	mutation Login($input: LoginDto!) {
@@ -2158,50 +2148,10 @@ var REGISTER_MUTATION = `#graphql
 	}
 `, RegisterMutation_default = REGISTER_MUTATION;
 
-// app/auth/graphql/query/GetUserByEmailQuery.ts
-var GET_USER_BY_EMAIL_QUERY = `#graphql
-	query GetUserByEmail($email: String!) {
-		user(input: { email: $email}) {
-			id
-			email
-			accessToken
-			name
-			refreshToken
-		}	
-	}
-`, GetUserByEmailQuery_default = GET_USER_BY_EMAIL_QUERY;
-
-// app/auth/service/validator.service.ts
-var crypto = __toESM(require("crypto")), import_util = require("util"), import_joi = __toESM(require("joi"));
-var ValidatorService = class {
-  constructor(validator = import_joi.default) {
-    this.hasher = (0, import_util.promisify)(crypto.scrypt);
-    this.validator = validator;
-  }
-  async hash(password) {
-    let salt = crypto.randomBytes(16).toString("hex");
-    return `${(await this.hasher(password, salt, 64)).toString("hex")}.${salt}`;
-  }
-  async compare(password, hash) {
-    let [hashedPassword, salt] = hash.split("."), hashedPasswordBuffer = Buffer.from(hashedPassword, "hex"), suppliedPasswordBuffer = await this.hasher(
-      password,
-      salt,
-      64
-    );
-    return crypto.timingSafeEqual(hashedPasswordBuffer, suppliedPasswordBuffer);
-  }
-  validateEmail(email) {
-    return this.validator.string().email().required().validate(email).value;
-  }
-  validatePassword(password) {
-    return this.validator.string().pattern(PASSWORD_REGEX).required().validate(password).value;
-  }
-};
-
 // app/auth/service/user.service.ts
 var UserService = class {
-  constructor(httpClient = client, validator = new ValidatorService()) {
-    this.client = httpClient, this.validator = validator;
+  constructor(httpClient = client) {
+    this.client = httpClient;
   }
   async login(email, password) {
     let { data, errors } = await this.client.mutate(
@@ -2254,37 +2204,19 @@ var UserService = class {
     }
     return data.register;
   }
-  async getUser({
-    email
-  }) {
-    let { data } = await this.client.query(
-      GetUserByEmailQuery_default,
-      {
-        variables: { email }
-      }
-    );
-    return (data == null ? void 0 : data.users[0]) ?? null;
+};
+
+// app/auth/service/validator.service.ts
+var import_joi = __toESM(require("joi"));
+var ValidatorService = class {
+  constructor(validator = import_joi.default) {
+    this.validator = validator;
   }
-  async validateCredentials({ password }, user) {
-    return this.validator.compare(password, user.password);
+  validateEmail(email) {
+    return this.validator.string().email().required().validate(email).value;
   }
-  async hashPassword(password) {
-    return this.validator.hash(password);
-  }
-  async createUser(user) {
-    let hashedPassword = await this.hashPassword(user.password), { data } = await this.client.mutate(
-      CreateUserMutation_default,
-      {
-        variables: {
-          email: user.email,
-          name: user.name,
-          password: hashedPassword,
-          provider: user.provider
-        },
-        invalidateCache: !0
-      }
-    );
-    return (data == null ? void 0 : data.insert_users_one) ?? null;
+  validatePassword(password) {
+    return this.validator.string().pattern(PASSWORD_REGEX).required().validate(password).value;
   }
 };
 
@@ -2638,26 +2570,25 @@ function SignupForm() {
 }
 
 // app/auth/store/UserContext/UserContext.Provider.tsx
+var import_react20 = require("@remix-run/react");
 var import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
 function UserContextProvider({
-  id,
-  email,
-  name,
-  provider,
+  user,
   isAuthenticated,
   children
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
+  let navigate = (0, import_react20.useNavigate)();
+  return isAuthenticated || navigate(USER_ROUTES.LOGIN), /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(
     UserContext_default.Provider,
     {
-      value: { isAuthenticated, email, id, name, provider },
+      value: { isAuthenticated, user },
       children
     },
     void 0,
     !1,
     {
       fileName: "app/auth/store/UserContext/UserContext.Provider.tsx",
-      lineNumber: 19,
+      lineNumber: 25,
       columnNumber: 5
     },
     this
@@ -2695,78 +2626,78 @@ async function loader({ request }) {
   };
 }
 function App() {
-  let { user, isAuthenticated, recipes } = (0, import_react20.useLoaderData)();
-  return console.log({ user, isAuthenticated, recipes }), /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("html", { lang: "en", children: [
+  let { user, isAuthenticated, recipes } = (0, import_react21.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("html", { lang: "en", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("head", { children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("meta", { charSet: "utf-8" }, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 47,
+        lineNumber: 46,
         columnNumber: 9
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("meta", { name: "viewport", content: "width=device-width,initial-scale=1" }, void 0, !1, {
         fileName: "app/root.tsx",
+        lineNumber: 47,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react21.Meta, {}, void 0, !1, {
+        fileName: "app/root.tsx",
         lineNumber: 48,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react20.Meta, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react21.Links, {}, void 0, !1, {
         fileName: "app/root.tsx",
         lineNumber: 49,
-        columnNumber: 9
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react20.Links, {}, void 0, !1, {
-        fileName: "app/root.tsx",
-        lineNumber: 50,
         columnNumber: 9
       }, this)
     ] }, void 0, !0, {
       fileName: "app/root.tsx",
-      lineNumber: 46,
+      lineNumber: 45,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)("body", { className: "text-body text-black-900 flex flex-col", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(AppContextProvider, { recipes, children: /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(UserContextProvider, { isAuthenticated, ...user, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(AppContextProvider, { recipes, children: /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(UserContextProvider, { isAuthenticated, user, children: [
         /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(Menu, {}, void 0, !1, {
           fileName: "app/root.tsx",
-          lineNumber: 55,
+          lineNumber: 54,
           columnNumber: 13
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react20.Outlet, {}, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react21.Outlet, {}, void 0, !1, {
           fileName: "app/root.tsx",
-          lineNumber: 56,
+          lineNumber: 55,
           columnNumber: 13
         }, this)
       ] }, void 0, !0, {
         fileName: "app/root.tsx",
-        lineNumber: 54,
+        lineNumber: 53,
         columnNumber: 11
       }, this) }, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 53,
+        lineNumber: 52,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react20.ScrollRestoration, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react21.ScrollRestoration, {}, void 0, !1, {
+        fileName: "app/root.tsx",
+        lineNumber: 58,
+        columnNumber: 9
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react21.Scripts, {}, void 0, !1, {
         fileName: "app/root.tsx",
         lineNumber: 59,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react20.Scripts, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react21.LiveReload, {}, void 0, !1, {
         fileName: "app/root.tsx",
         lineNumber: 60,
-        columnNumber: 9
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(import_react20.LiveReload, {}, void 0, !1, {
-        fileName: "app/root.tsx",
-        lineNumber: 61,
         columnNumber: 9
       }, this)
     ] }, void 0, !0, {
       fileName: "app/root.tsx",
-      lineNumber: 52,
+      lineNumber: 51,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/root.tsx",
-    lineNumber: 45,
+    lineNumber: 44,
     columnNumber: 5
   }, this);
 }
@@ -2783,10 +2714,10 @@ __export(index_exports, {
 var import_outline4 = require("@heroicons/react/24/outline");
 
 // app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx
-var import_react22 = require("react");
+var import_react23 = require("react");
 
 // app/common/components/Slider/Slider.tsx
-var import_react21 = require("react"), import_react_slick = __toESM(require("react-slick"));
+var import_react22 = require("react"), import_react_slick = __toESM(require("react-slick"));
 
 // app/common/components/Slider/SliderArrowNext.tsx
 var import_tailwind_merge19 = require("tailwind-merge"), import_outline2 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime38 = require("react/jsx-dev-runtime");
@@ -2892,7 +2823,7 @@ function SliderDot({ className, ...rest }) {
 }
 
 // app/common/components/Slider/Slider.tsx
-var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime"), Slider = (0, import_react21.forwardRef)(
+var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime"), Slider = (0, import_react22.forwardRef)(
   ({
     children,
     dots = !0,
@@ -2924,8 +2855,8 @@ var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime"), Slider = (0, im
     deps = [],
     ...settings
   }, ref) => {
-    let sliderRef = (0, import_react21.useRef)(null);
-    return (0, import_react21.useEffect)(() => {
+    let sliderRef = (0, import_react22.useRef)(null);
+    return (0, import_react22.useEffect)(() => {
       ((ref == null ? void 0 : ref.current) || sliderRef.current).slickGoTo(0);
     }, [sliderRef, ref, ...deps]), /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(
       import_react_slick.default,
@@ -2941,7 +2872,7 @@ var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime"), Slider = (0, im
         customPaging,
         appendDots,
         ...settings,
-        children: import_react21.Children.map(children, (child) => /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(SlideAs, { children: child }, void 0, !1, {
+        children: import_react22.Children.map(children, (child) => /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(SlideAs, { children: child }, void 0, !1, {
           fileName: "app/common/components/Slider/Slider.tsx",
           lineNumber: 70,
           columnNumber: 11
@@ -3080,8 +3011,8 @@ var import_jsx_dev_runtime44 = require("react/jsx-dev-runtime"), DEFAULT_NUMBER_
 function RandomRecipesSlider({
   numberOfRecipes = DEFAULT_NUMBER_OF_RECIPES
 }) {
-  let { loader: loader5, loading } = useClientLoader(), [randomRecipes, setRandomRecipes] = (0, import_react22.useState)([]);
-  return (0, import_react22.useEffect)(() => {
+  let { loader: loader5, loading } = useClientLoader(), [randomRecipes, setRandomRecipes] = (0, import_react23.useState)([]);
+  return (0, import_react23.useEffect)(() => {
     loader5({
       route: `/api/recipes/random/${numberOfRecipes}`
     }).then((response) => {
@@ -3192,13 +3123,13 @@ function EmptyRecipesDashboard() {
 }
 
 // app/recipes/hook/useRecipes.ts
-var import_react23 = require("react");
+var import_react24 = require("react");
 function useRecipes() {
   let {
     data: {
       state: { recipes }
     }
-  } = (0, import_react23.useContext)(AppContext_default);
+  } = (0, import_react24.useContext)(AppContext_default);
   return recipes;
 }
 
@@ -3244,11 +3175,11 @@ var import_jsx_dev_runtime47 = require("react/jsx-dev-runtime"), meta = () => [
 function Index() {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("main", { className: "section-container pt-16", children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(RecipesDashboard, {}, void 0, !1, {
     fileName: "app/routes/_index.tsx",
-    lineNumber: 14,
+    lineNumber: 15,
     columnNumber: 7
   }, this) }, void 0, !1, {
     fileName: "app/routes/_index.tsx",
-    lineNumber: 13,
+    lineNumber: 14,
     columnNumber: 5
   }, this);
 }
@@ -3267,6 +3198,18 @@ var createBearerAccessTokenHeader = async (authenticator, request) => {
   } : {
     Authorization: ""
   };
+};
+
+// app/utils/formatGqlErrors.ts
+var handleGqlErrors = (errors) => {
+  var _a, _b;
+  if (errors) {
+    let formattedErrors = errors.map((error) => (console.error(error), error.message)).join(`
+`);
+    throw new Response(formattedErrors, {
+      status: ((_b = (_a = errors[0].extensions) == null ? void 0 : _a.originalError) == null ? void 0 : _b.statusCode) || 500
+    });
+  }
 };
 
 // app/recipes/graphql/query/RandomRecipesQuery.ts
@@ -3293,7 +3236,7 @@ var RANDOM_RECIPES_QUERY = `#graphql
 // app/recipes/routes/($locale).api.recipes.random.$count.route.tsx
 var DEFAULT_RANDOM_RECIPES_COUNT = 10;
 async function loader2({ params, request }) {
-  let count = Number(params.count) ?? DEFAULT_RANDOM_RECIPES_COUNT, { data } = await client.query(RandomRecipesQuery_default, {
+  let count = Number(params.count) ?? DEFAULT_RANDOM_RECIPES_COUNT, { data, errors } = await client.query(RandomRecipesQuery_default, {
     variables: {
       input: {
         amount: count
@@ -3304,7 +3247,7 @@ async function loader2({ params, request }) {
     },
     cache: Cache.Long()
   });
-  return {
+  return handleGqlErrors(errors), {
     randomRecipes: (data == null ? void 0 : data.randomRecipes) ?? []
   };
 }
@@ -3315,10 +3258,10 @@ __export(locale_recipes_external_route_exports, {
   default: () => Index2,
   loader: () => loader3
 });
-var import_react26 = require("@remix-run/react");
+var import_react27 = require("@remix-run/react");
 
 // app/recipes/components/Recipe/RecipeHeader.tsx
-var import_react24 = require("react"), import_solid = require("@heroicons/react/20/solid"), import_react25 = require("@headlessui/react"), import_cva14 = require("cva");
+var import_react25 = require("react"), import_solid = require("@heroicons/react/20/solid"), import_react26 = require("@headlessui/react"), import_cva14 = require("cva");
 var import_jsx_dev_runtime48 = require("react/jsx-dev-runtime");
 function RecipeHeader({
   title,
@@ -3385,8 +3328,8 @@ function RecipeHeader({
         lineNumber: 49,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react25.Menu, { as: "div", className: "relative sm:hidden", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react25.Menu.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react26.Menu, { as: "div", className: "relative sm:hidden", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react26.Menu.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
           "More",
           /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
             import_solid.ChevronDownIcon,
@@ -3409,17 +3352,17 @@ function RecipeHeader({
           columnNumber: 11
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
-          import_react25.Transition,
+          import_react26.Transition,
           {
-            as: import_react24.Fragment,
+            as: import_react25.Fragment,
             enter: "transition ease-out duration-200",
             enterFrom: "transform opacity-0 scale-95",
             enterTo: "transform opacity-100 scale-100",
             leave: "transition ease-in duration-75",
             leaveFrom: "transform opacity-100 scale-100",
             leaveTo: "transform opacity-0 scale-95",
-            children: /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react25.Menu.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
-              /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react25.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+            children: /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react26.Menu.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
+              /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react26.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
                 "a",
                 {
                   href: "#",
@@ -3442,7 +3385,7 @@ function RecipeHeader({
                 lineNumber: 78,
                 columnNumber: 15
               }, this),
-              /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react25.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+              /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(import_react26.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
                 "a",
                 {
                   href: "#",
@@ -3497,8 +3440,48 @@ function RecipeHeader({
   }, this);
 }
 
-// app/recipes/components/Recipe/Recipe.tsx
+// app/recipes/components/Recipe/RecipeHeaderSection.tsx
+var import_cva15 = require("cva");
 var import_jsx_dev_runtime49 = require("react/jsx-dev-runtime");
+function RecipeHeaderSection({ image, title }) {
+  return console.log(image), /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("section", { className: "grid grid-cols-1 grid-rows-1 max-h-96", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default, { condition: !!(image != null && image.src), children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("img", { src: image == null ? void 0 : image.src, alt: title, className: "w-full bg-cover bg-top block max-w-full h-auto" }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
+      lineNumber: 17,
+      columnNumber: 7
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
+      lineNumber: 16,
+      columnNumber: 6
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
+      lineNumber: 15,
+      columnNumber: 5
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
+      lineNumber: 14,
+      columnNumber: 4
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 grid place-items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("h1", { className: (0, import_cva15.cx)("text-3xl font-bold text-center", {
+      "bg-black text-white p-2": !!(image != null && image.src)
+    }), children: title }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
+      lineNumber: 22,
+      columnNumber: 5
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
+      lineNumber: 21,
+      columnNumber: 4
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
+    lineNumber: 13,
+    columnNumber: 3
+  }, this);
+}
+
+// app/recipes/components/Recipe/Recipe.tsx
+var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime");
 function Recipe({
   title,
   ingredients,
@@ -3506,109 +3489,95 @@ function Recipe({
   image,
   url
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("section", { className: "flex w-full flex-col", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(RecipeHeader, { title, url: url ?? " ", canEdit: !0 }, void 0, !1, {
-      fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 17,
-      columnNumber: 7
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "flex flex-col lg:flex-row", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default, { condition: !!image, children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("img", { src: image == null ? void 0 : image.src, alt: title, className: "w-full lg:w-1/2" }, void 0, !1, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 21,
-        columnNumber: 13
-      }, this) }, void 0, !1, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 20,
-        columnNumber: 11
-      }, this) }, void 0, !1, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 19,
-        columnNumber: 9
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default, { condition: !!ingredients, children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", { className: "w-full lg:w-1/2", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("h2", { className: "text-xl font-bold", children: "Ingredients" }, void 0, !1, {
-          fileName: "app/recipes/components/Recipe/Recipe.tsx",
-          lineNumber: 27,
-          columnNumber: 15
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("ul", { className: "list-inside list-disc", children: ingredients == null ? void 0 : ingredients.map((ingredient) => /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("li", { children: ingredient }, ingredient, !1, {
-          fileName: "app/recipes/components/Recipe/Recipe.tsx",
-          lineNumber: 30,
-          columnNumber: 19
-        }, this)) }, void 0, !1, {
-          fileName: "app/recipes/components/Recipe/Recipe.tsx",
-          lineNumber: 28,
-          columnNumber: 15
-        }, this)
-      ] }, void 0, !0, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 26,
-        columnNumber: 13
-      }, this) }, void 0, !1, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 25,
-        columnNumber: 11
-      }, this) }, void 0, !1, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 24,
-        columnNumber: 9
-      }, this)
-    ] }, void 0, !0, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("section", { className: "flex w-full flex-col", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(RecipeHeader, { title, url: url ?? " ", canEdit: !0 }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
       lineNumber: 18,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default.Then, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(RecipeHeaderSection, { image, title }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/Recipe.tsx",
+      lineNumber: 19,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(If_default, { condition: !!ingredients, children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "w-full lg:w-1/2", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h2", { className: "text-xl font-bold", children: "Ingredients" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 39,
+        lineNumber: 23,
+        columnNumber: 15
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("ul", { className: "list-inside list-disc", children: ingredients == null ? void 0 : ingredients.map((ingredient) => /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("li", { children: ingredient }, ingredient, !1, {
+        fileName: "app/recipes/components/Recipe/Recipe.tsx",
+        lineNumber: 26,
+        columnNumber: 19
+      }, this)) }, void 0, !1, {
+        fileName: "app/recipes/components/Recipe/Recipe.tsx",
+        lineNumber: 24,
+        columnNumber: 15
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/recipes/components/Recipe/Recipe.tsx",
+      lineNumber: 22,
+      columnNumber: 13
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/Recipe.tsx",
+      lineNumber: 21,
+      columnNumber: 11
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/Recipe.tsx",
+      lineNumber: 20,
+      columnNumber: 9
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(If_default.Then, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, !1, {
+        fileName: "app/recipes/components/Recipe/Recipe.tsx",
+        lineNumber: 34,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("li", { children: instruction }, instruction, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("li", { children: instruction }, instruction, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 42,
+        lineNumber: 37,
         columnNumber: 15
       }, this)) }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 40,
+        lineNumber: 35,
         columnNumber: 11
       }, this)
     ] }, void 0, !0, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 38,
+      lineNumber: 33,
       columnNumber: 9
     }, this) }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 37,
+      lineNumber: 32,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default, { condition: !!url, children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default.Then, { children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(If_default, { condition: !!url, children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(If_default.Then, { children: [
       "Original source:",
       " ",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("a", { href: url, target: "_blank", children: url }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("a", { href: url, target: "_blank", rel: "noreferrer", children: url }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 50,
+        lineNumber: 45,
         columnNumber: 11
       }, this)
     ] }, void 0, !0, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 48,
+      lineNumber: 43,
       columnNumber: 9
     }, this) }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 47,
+      lineNumber: 42,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/recipes/components/Recipe/Recipe.tsx",
-    lineNumber: 16,
+    lineNumber: 17,
     columnNumber: 5
   }, this);
 }
 
 // app/recipes/routes/($locale).recipes.external.route.tsx
-var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime51 = require("react/jsx-dev-runtime");
 async function loader3({ request }) {
   let url = new URL(request.url), title = url.searchParams.get(RECIPE_EXTERNAL_QUERY_PARAMS.TITLE), recipeUrl = url.searchParams.get(RECIPE_EXTERNAL_QUERY_PARAMS.URL), image = url.searchParams.get(RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE), ingredients = url.searchParams.get(
     RECIPE_EXTERNAL_QUERY_PARAMS.INGREDIENTS
@@ -3624,8 +3593,8 @@ async function loader3({ request }) {
   };
 }
 function Index2() {
-  let { title, url, imageSrc, ingredients, instructions } = (0, import_react26.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("main", { className: "flex flex-col py-12 section-container", children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(
+  let { title, url, imageSrc, ingredients, instructions } = (0, import_react27.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("main", { className: "flex flex-col py-12 section-container", children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
     Recipe,
     {
       title: title ?? "",
@@ -3654,7 +3623,8 @@ var locale_auth_actions_route_exports = {};
 __export(locale_auth_actions_route_exports, {
   action: () => action
 });
-var import_node3 = require("@remix-run/node"), import_remix_auth2 = require("remix-auth");
+var import_remix_auth2 = require("remix-auth");
+var import_node3 = require("@remix-run/node");
 async function action({ request }) {
   try {
     await formAuthenticator.authenticate(PROVIDER.LOCAL, request, {
@@ -3676,14 +3646,14 @@ __export(locale_auth_logout_route_exports, {
   default: () => Logout,
   loader: () => loader4
 });
-var import_jsx_dev_runtime51 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime52 = require("react/jsx-dev-runtime");
 async function loader4({ request }) {
   await formAuthenticator.logout(request, {
     redirectTo: USER_ROUTES.LOGIN
   });
 }
 function Logout() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("div", {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("div", {}, void 0, !1, {
     fileName: "app/auth/routes/($locale).auth.logout.route.tsx",
     lineNumber: 12,
     columnNumber: 10
@@ -3695,10 +3665,10 @@ var locale_auth_signup_route_exports = {};
 __export(locale_auth_signup_route_exports, {
   default: () => Index3
 });
-var import_jsx_dev_runtime52 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime53 = require("react/jsx-dev-runtime");
 function Index3() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(AccountSignIn, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(AccountSignIn, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
       lineNumber: 8,
       columnNumber: 11
@@ -3707,7 +3677,7 @@ function Index3() {
       lineNumber: 7,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(SignupForm, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(SignupForm, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
       lineNumber: 10,
       columnNumber: 9
@@ -3728,10 +3698,10 @@ var locale_auth_login_route_exports = {};
 __export(locale_auth_login_route_exports, {
   default: () => Index4
 });
-var import_jsx_dev_runtime53 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime54 = require("react/jsx-dev-runtime");
 function Index4() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(NoAccountSignup, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(NoAccountSignup, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.login.route.tsx",
       lineNumber: 8,
       columnNumber: 11
@@ -3740,7 +3710,7 @@ function Index4() {
       lineNumber: 7,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(LoginForm, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(LoginForm, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.login.route.tsx",
       lineNumber: 10,
       columnNumber: 9
@@ -3757,7 +3727,7 @@ function Index4() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { entry: { module: "/build/entry.client-KY4SRHS4.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-O63IHIKR.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-OGTFSPUD.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-A3RJPOTN.js", imports: ["/build/_shared/chunk-SDF77W74.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-43CFXCBH.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-HXYZOBT7.js", imports: ["/build/_shared/chunk-SDF77W74.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.external": { id: "($locale).recipes.external", parentId: "root", path: ":locale?/recipes/external", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.external-PXHA6Q7H.js", imports: ["/build/_shared/chunk-4DE6YEQX.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-B22Z7BEN.js", imports: ["/build/_shared/chunk-77PNIKS7.js", "/build/_shared/chunk-VOXRDU2P.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-VFGUXY46.js", imports: ["/build/_shared/chunk-4DE6YEQX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "ab0b75ee", hmr: { runtime: "/build/_shared/chunk-OGTFSPUD.js", timestamp: 1703508986731 }, url: "/build/manifest-AB0B75EE.js" };
+var assets_manifest_default = { entry: { module: "/build/entry.client-KY4SRHS4.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-O63IHIKR.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-OGTFSPUD.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-QLT6NTRP.js", imports: ["/build/_shared/chunk-TKPS3VXI.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-43CFXCBH.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-URSJQ3C6.js", imports: ["/build/_shared/chunk-TKPS3VXI.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.external": { id: "($locale).recipes.external", parentId: "root", path: ":locale?/recipes/external", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.external-SL6EJKBX.js", imports: ["/build/_shared/chunk-4DE6YEQX.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-7ATROSQZ.js", imports: ["/build/_shared/chunk-S6L5YXJY.js", "/build/_shared/chunk-VOXRDU2P.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-W45V4W47.js", imports: ["/build/_shared/chunk-4DE6YEQX.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "c906ad5e", hmr: { runtime: "/build/_shared/chunk-OGTFSPUD.js", timestamp: 1703601196858 }, url: "/build/manifest-C906AD5E.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_dev: !0, unstable_postcss: !1, unstable_tailwind: !1, v2_errorBoundary: !0, v2_headers: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !0 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

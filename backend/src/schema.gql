@@ -75,6 +75,20 @@ type GroceryItem {
   value: String!
 }
 
+type Image {
+  alt: String
+  height: Float
+  src: String!
+  width: Float
+}
+
+input ImageDto {
+  alt: String
+  height: Float
+  src: String!
+  width: Float
+}
+
 type Item {
   brand: String!
   category: Category!
@@ -140,6 +154,7 @@ enum Provider {
 }
 
 type Query {
+  imageMetadata(input: ImageDto!): Image!
   itemByUpc(input: ItemByUpcDto!): Item
   list(input: GetListByIdDto!): List!
   lists: [List!]!

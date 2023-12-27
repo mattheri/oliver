@@ -26,25 +26,27 @@ const session_guard_1 = require("../guard/session.guard");
 const jwt_gql_auth_guard_1 = require("../guard/jwt-gql-auth.guard");
 const refresh_jwt_gql_auth_guard_1 = require("../guard/refresh-jwt-gql-auth.guard");
 const Logout_model_1 = require("../models/Logout.model");
+const error_constants_1 = require("../constants/error.constants");
 let AuthResolver = class AuthResolver {
     constructor(authService) {
         this.authService = authService;
     }
     async login(input, req) {
-        const loggedInUser = await this.authService.login(input);
-        req.user = loggedInUser;
-        return loggedInUser;
+        if (!req.user)
+            throw new common_1.UnauthorizedException(error_constants_1.ERRORS.USER_NOT_LOGGED_IN);
+        return req.user;
     }
     async register(input, req) {
+        if (!req.user)
+            throw new common_1.UnauthorizedException(error_constants_1.ERRORS.USER_NOT_LOGGED_IN);
         return req.user;
     }
     async me(user) {
         return user;
     }
     async refreshToken(user) {
-        console.log(user);
         if (!user) {
-            throw new common_1.BadRequestException('User not found');
+            throw new common_1.BadRequestException(error_constants_1.ERRORS.USER_NOT_FOUND);
         }
         return user;
     }

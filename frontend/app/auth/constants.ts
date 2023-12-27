@@ -37,6 +37,13 @@ export const ERROR = {
   USER_NOT_FOUND: "USER_NOT_FOUND",
   PASSWORD_DOES_NOT_MATCH: "PASSWORD_DOES_NOT_MATCH",
   USER_ALREADY_EXISTS: "USER_ALREADY_EXISTS",
+  USER_NOT_LOGGED_IN: 'USER_NOT_LOGGED_IN',
 } as const;
 
 export const ERROR_KEY = "authError";
+
+export const USER_ACTION = {
+  VIEW: "VIEW",
+  EDIT: "EDIT",
+  DELETE: "DELETE",
+} as const;

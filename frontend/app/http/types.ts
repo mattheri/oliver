@@ -18,7 +18,7 @@ export type HttpError = {
   message?: string;
   extensions?: {
     code?: string;
-    originalError?: Error;
+    originalError?: { statusCode?: number, message?: string };
   }
 }
 

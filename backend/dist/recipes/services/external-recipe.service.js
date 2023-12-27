@@ -38,7 +38,7 @@ let ExternalRecipeService = class ExternalRecipeService {
     async getRecipesByCategory(category) {
         try {
             const { data } = await this.http.get(`/${this.endpoints.FILTER}?${this.queryParams.FILTER_BY_CATEGORY}=${category}`);
-            return data.meals.map(this.externalRecipePresenter.externalRecipeToRecipe.bind(this.externalRecipePresenter));
+            return Promise.all(data.meals.map(this.externalRecipePresenter.externalRecipeToRecipe.bind(this.externalRecipePresenter)));
         }
         catch (e) {
             const error = e;
@@ -46,10 +46,11 @@ let ExternalRecipeService = class ExternalRecipeService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async getRecipeById(id) {
+    async getRecipeById(id, userId) {
         try {
             const { data } = await this.http.get(`/${this.endpoints.LOOKUP}?${this.queryParams.SEARCH_BY_ID}=${id}`);
-            return data.meals.map(this.externalRecipePresenter.externalRecipeToRecipe.bind(this.externalRecipePresenter))[0];
+            const recipe = Promise.all(data.meals.map(async (externalRecipe) => this.externalRecipePresenter.externalRecipeToRecipe(externalRecipe, userId)));
+            return recipe[0];
         }
         catch (e) {
             const error = e;
@@ -57,10 +58,11 @@ let ExternalRecipeService = class ExternalRecipeService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async getRandomRecipe() {
+    async getRandomRecipe(userId) {
         try {
             const { data } = await this.http.get(`/${this.endpoints.RANDOM}`);
-            return data.meals.map(this.externalRecipePresenter.externalRecipeToRecipe.bind(this.externalRecipePresenter))[0];
+            const recipes = await Promise.all(data.meals.map(async (externalRecipe) => this.externalRecipePresenter.externalRecipeToRecipe(externalRecipe, userId)));
+            return recipes[0];
         }
         catch (e) {
             const error = e;
@@ -68,10 +70,10 @@ let ExternalRecipeService = class ExternalRecipeService {
             throw new common_1.BadRequestException(error.message);
         }
     }
-    async getMultipeRandomRecipes(amount = 10) {
+    async getMultipeRandomRecipes(userId, amount = 10) {
         try {
             const promises = Array.from({ length: amount }).map(() => {
-                return this.getRandomRecipe();
+                return this.getRandomRecipe(userId);
             });
             return Promise.all(promises);
         }

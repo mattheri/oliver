@@ -5,17 +5,25 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ExternalRecipePresenter = void 0;
+const image_service_1 = require("../../image/services/image.service");
 const common_1 = require("@nestjs/common");
 let ExternalRecipePresenter = class ExternalRecipePresenter {
-    externalRecipeToRecipe(externalRecipe, userId) {
+    constructor(imageService) {
+        this.imageService = imageService;
+    }
+    getImageMetadata(input) {
+        return this.imageService.getImageMetadata(input);
+    }
+    async externalRecipeToRecipe(externalRecipe, userId) {
         const image = externalRecipe.strMealThumb
-            ? {
-                id: externalRecipe.idMeal,
+            ? Object.assign({ id: externalRecipe.idMeal }, (await this.getImageMetadata({
                 src: externalRecipe.strMealThumb,
-            }
-            : null;
+            }))) : null;
         const url = externalRecipe.strSource ? externalRecipe.strSource : null;
         return {
             id: externalRecipe.idMeal,
@@ -43,8 +51,9 @@ let ExternalRecipePresenter = class ExternalRecipePresenter {
             return key.includes('Measure') && value;
         });
         return ingredients.map(([_, value], index) => {
-            const measure = measures[index][1];
-            return `${value} ${measure}`;
+            var _a;
+            const measure = (_a = measures[index]) === null || _a === void 0 ? void 0 : _a[1];
+            return measure ? `${value} ${measure}` : value;
         });
     }
     formatInstructions(instructions) {
@@ -58,7 +67,8 @@ let ExternalRecipePresenter = class ExternalRecipePresenter {
     }
 };
 ExternalRecipePresenter = __decorate([
-    (0, common_1.Injectable)()
+    (0, common_1.Injectable)(),
+    __metadata("design:paramtypes", [image_service_1.ImageService])
 ], ExternalRecipePresenter);
 exports.ExternalRecipePresenter = ExternalRecipePresenter;
 //# sourceMappingURL=external-recipe.presenter.js.map

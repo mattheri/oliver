@@ -1,5 +1,6 @@
-import type { V2_MetaFunction } from "@remix-run/node";
 import RecipesDashboard from "~/recipes/components/RecipesDashboard/RecipesDashboard";
+
+import type { V2_MetaFunction } from "@remix-run/node";
 
 export const meta: V2_MetaFunction = () => {
   return [

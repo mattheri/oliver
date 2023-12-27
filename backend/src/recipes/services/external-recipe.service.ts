@@ -50,9 +50,11 @@ export class ExternalRecipeService {
         `/${this.endpoints.FILTER}?${this.queryParams.FILTER_BY_CATEGORY}=${category}`,
       );
 
-      return data.meals.map(
-        this.externalRecipePresenter.externalRecipeToRecipe.bind(
-          this.externalRecipePresenter,
+      return Promise.all(
+        data.meals.map(
+          this.externalRecipePresenter.externalRecipeToRecipe.bind(
+            this.externalRecipePresenter,
+          ),
         ),
       );
     } catch (e) {
@@ -63,17 +65,22 @@ export class ExternalRecipeService {
     }
   }
 
-  public async getRecipeById(id: string) {
+  public async getRecipeById(id: string, userId: string) {
     try {
       const { data } = await this.http.get<ExternalRecipeResponse>(
         `/${this.endpoints.LOOKUP}?${this.queryParams.SEARCH_BY_ID}=${id}`,
       );
 
-      return data.meals.map(
-        this.externalRecipePresenter.externalRecipeToRecipe.bind(
-          this.externalRecipePresenter,
+      const recipe = Promise.all(
+        data.meals.map(async (externalRecipe) =>
+          this.externalRecipePresenter.externalRecipeToRecipe(
+            externalRecipe,
+            userId,
+          ),
         ),
-      )[0];
+      );
+
+      return recipe[0];
     } catch (e) {
       const error = e as Error;
       console.error(error.message);
@@ -82,17 +89,22 @@ export class ExternalRecipeService {
     }
   }
 
-  public async getRandomRecipe() {
+  public async getRandomRecipe(userId?: string) {
     try {
       const { data } = await this.http.get<ExternalRecipeResponse>(
         `/${this.endpoints.RANDOM}`,
       );
 
-      return data.meals.map(
-        this.externalRecipePresenter.externalRecipeToRecipe.bind(
-          this.externalRecipePresenter,
+      const recipes = await Promise.all(
+        data.meals.map(async (externalRecipe) =>
+          this.externalRecipePresenter.externalRecipeToRecipe(
+            externalRecipe,
+            userId,
+          ),
         ),
-      )[0];
+      );
+
+      return recipes[0];
     } catch (e) {
       const error = e as Error;
       console.error(error.message);
@@ -101,10 +113,10 @@ export class ExternalRecipeService {
     }
   }
 
-  public async getMultipeRandomRecipes(amount = 10) {
+  public async getMultipeRandomRecipes(userId?: string, amount = 10) {
     try {
       const promises = Array.from({ length: amount }).map(() => {
-        return this.getRandomRecipe();
+        return this.getRandomRecipe(userId);
       });
 
       return Promise.all(promises);

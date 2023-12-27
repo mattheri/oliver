@@ -1,4 +1,5 @@
 import { GetRecipeByIdDto } from '../dto/get-recipe-by-id.dto';
+import { Recipe } from '../models/recipe.model';
 import { RecipeService } from '../services/recipes.service';
 import { User } from '@prisma/client';
 import { CreateRecipeDto } from '../dto/create-recipe.dto';
@@ -273,5 +274,5 @@ export declare class RecipesResolver {
         allowEdit: string;
         allowDelete: string;
     })[]>;
-    randomRecipes(input: GetRandomRecipesDto): Promise<unknown[]>;
+    randomRecipes(input: GetRandomRecipesDto, user?: User): Promise<Recipe[]>;
 }

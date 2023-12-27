@@ -3,7 +3,11 @@ import { User } from 'src/users/models/user.model';
 import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
 import { LoginDto } from '../dto/login.dto';
 import { AuthService } from '../services/auth.service';
-import { BadRequestException, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import { SignUpDto } from '../dto/sign-up.dto';
 import { GqlReq } from '../decorators/gql-request.decorator';
@@ -13,6 +17,7 @@ import { SessionLocalAuthGuard } from '../guard/session.guard';
 import { JwtGqlAuthGuard } from '../guard/jwt-gql-auth.guard';
 import { RefreshJwtGqlAuthGuard } from '../guard/refresh-jwt-gql-auth.guard';
 import { Logout } from '../models/Logout.model';
+import { ERRORS } from '../constants/error.constants';
 
 @Resolver(() => User)
 export class AuthResolver {
@@ -21,15 +26,16 @@ export class AuthResolver {
   @Mutation(() => User)
   @UseGuards(LocalGqlAuthGuard, SessionLocalAuthGuard)
   async login(@Args('input') input: LoginDto, @GqlReq() req: Request) {
-    const loggedInUser = await this.authService.login(input);
-    req.user = loggedInUser;
+    if (!req.user) throw new UnauthorizedException(ERRORS.USER_NOT_LOGGED_IN);
 
-    return loggedInUser;
+    return req.user;
   }
 
   @Mutation(() => User)
   @UseGuards(LocalGqlAuthGuard, SessionLocalAuthGuard)
   async register(@Args('input') input: SignUpDto, @GqlReq() req: Request) {
+    if (!req.user) throw new UnauthorizedException(ERRORS.USER_NOT_LOGGED_IN);
+
     return req.user;
   }
 
@@ -42,9 +48,8 @@ export class AuthResolver {
   @Mutation(() => User)
   @UseGuards(RefreshJwtGqlAuthGuard)
   async refreshToken(@CurrentUser() user?: User) {
-    console.log(user);
     if (!user) {
-      throw new BadRequestException('User not found');
+      throw new BadRequestException(ERRORS.USER_NOT_FOUND);
     }
 
     return user;

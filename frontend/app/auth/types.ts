@@ -1,6 +1,6 @@
-import type { DeepPartial, PartialBy } from "~/types";
+import type { PartialBy } from "~/types";
 
-import type { PROVIDER } from "./constants";
+import type { PROVIDER, USER_ACTION } from "./constants";
 
 export type Credentials = {
   email: string;
@@ -28,8 +28,16 @@ export type UserDTO = Omit<PartialBy<User, "name">, "id"> & {
   password: string;
 };
 
-export type UserContextState = DeepPartial<User> & {
+export type UserContextState = {
   isAuthenticated: boolean;
+  user: User | null;
 };
 
 export type LoginResponse = Pick<User, "accessToken" | "refreshToken">;
+
+export type UserActions = typeof USER_ACTION[keyof typeof USER_ACTION];
+
+export type CanIContextState = {
+  user?: User;
+  canI: UserActions | null;
+}

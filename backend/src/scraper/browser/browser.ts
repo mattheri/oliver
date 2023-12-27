@@ -13,4 +13,14 @@ export class Browser {
       devtools: process.env.NODE_ENV !== 'production',
     });
   }
+
+  public end() {
+    this.browser.close();
+  }
+
+  public async newPage() {
+    const context = await this.browser.newContext();
+    const page = await context.newPage();
+    return page;
+  }
 }

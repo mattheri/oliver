@@ -252,5 +252,5 @@ export declare class RecipeService {
         allowEdit: string;
         allowDelete: string;
     }[]>;
-    getRandomRecipes({ amount, }: GetRandomRecipesDto): Promise<unknown[]>;
+    getRandomRecipes({ amount }: GetRandomRecipesDto, user?: User): Promise<import("../models/recipe.model").Recipe[]>;
 }

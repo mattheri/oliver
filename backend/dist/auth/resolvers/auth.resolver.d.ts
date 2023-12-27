@@ -7,16 +7,7 @@ import { Request } from 'express';
 export declare class AuthResolver {
     private readonly authService;
     constructor(authService: AuthService);
-    login(input: LoginDto, req: Request): Promise<{
-        accessToken: string;
-        refreshToken: string;
-        id: string;
-        created: Date;
-        updated: Date;
-        name: string;
-        email: string;
-        provider: string;
-    }>;
+    login(input: LoginDto, req: Request): Promise<Express.User>;
     register(input: SignUpDto, req: Request): Promise<Express.User>;
     me(user: User): Promise<User>;
     refreshToken(user?: User): Promise<User>;

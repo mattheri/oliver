@@ -11,7 +11,9 @@ const common_1 = require("@nestjs/common");
 let ScraperModule = class ScraperModule {
 };
 ScraperModule = __decorate([
-    (0, common_1.Module)({})
+    (0, common_1.Module)({
+        providers: [],
+    })
 ], ScraperModule);
 exports.ScraperModule = ScraperModule;
 //# sourceMappingURL=scraper.module.js.map

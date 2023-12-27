@@ -78,8 +78,8 @@ let RecipesResolver = class RecipesResolver {
     async recipesByUserEmail(user) {
         return this.recipeService.getRecipesByUserEmail(user.email, true);
     }
-    async randomRecipes(input) {
-        return this.recipeService.getRandomRecipes(input);
+    async randomRecipes(input, user) {
+        return this.recipeService.getRandomRecipes(input, user);
     }
 };
 __decorate([
@@ -204,8 +204,9 @@ __decorate([
     (0, graphql_1.Query)(() => [recipe_model_1.Recipe]),
     (0, common_1.UseGuards)(jwt_gql_auth_guard_1.JwtGqlAuthGuard),
     __param(0, (0, graphql_1.Args)('input')),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [get_random_recipes_dto_1.GetRandomRecipesDto]),
+    __metadata("design:paramtypes", [get_random_recipes_dto_1.GetRandomRecipesDto, Object]),
     __metadata("design:returntype", Promise)
 ], RecipesResolver.prototype, "randomRecipes", null);
 RecipesResolver = __decorate([

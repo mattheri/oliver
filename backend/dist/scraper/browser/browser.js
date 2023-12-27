@@ -12,6 +12,14 @@ class Browser {
             devtools: process.env.NODE_ENV !== 'production',
         });
     }
+    end() {
+        this.browser.close();
+    }
+    async newPage() {
+        const context = await this.browser.newContext();
+        const page = await context.newPage();
+        return page;
+    }
 }
 exports.Browser = Browser;
 //# sourceMappingURL=browser.js.map

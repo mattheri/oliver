@@ -1,3 +1,6 @@
+import { ImageDto } from 'src/image/dto/image.dto';
+import { ImageService } from 'src/image/services/image.service';
+
 import { Injectable } from '@nestjs/common';
 
 import {
@@ -10,14 +13,22 @@ import { Recipe } from '../models/recipe.model';
 
 @Injectable()
 export class ExternalRecipePresenter {
-  externalRecipeToRecipe(
+  constructor(private readonly imageService: ImageService) {}
+
+  getImageMetadata(input: ImageDto) {
+    return this.imageService.getImageMetadata(input);
+  }
+
+  async externalRecipeToRecipe(
     externalRecipe: ExternalRecipe,
     userId: string,
-  ): Recipe {
+  ): Promise<Recipe> {
     const image: Recipe['image'] = externalRecipe.strMealThumb
       ? {
           id: externalRecipe.idMeal,
-          src: externalRecipe.strMealThumb,
+          ...(await this.getImageMetadata({
+            src: externalRecipe.strMealThumb,
+          })),
         }
       : null;
 
@@ -58,8 +69,8 @@ export class ExternalRecipePresenter {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     return ingredients.map(([_, value], index) => {
-      const measure = measures[index][1];
-      return `${value} ${measure}`;
+      const measure = measures[index]?.[1];
+      return measure ? `${value} ${measure}` : value;
     });
   }
 

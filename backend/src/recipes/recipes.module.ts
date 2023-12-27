@@ -1,5 +1,6 @@
 import { AuthorizationService } from 'src/auth/services/authorization.service';
 import { DatabaseService } from 'src/db/services/db.service';
+import { ImageModule } from 'src/image/image.module';
 import { UsersModule } from 'src/users/users.module';
 
 import { Module } from '@nestjs/common';
@@ -18,6 +19,6 @@ import { RecipeService } from './services/recipes.service';
     ExternalRecipeService,
     ExternalRecipePresenter,
   ],
-  imports: [UsersModule],
+  imports: [UsersModule, ImageModule],
 })
 export class RecipesModule {}

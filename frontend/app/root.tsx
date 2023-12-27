@@ -39,7 +39,6 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function App() {
   const { user, isAuthenticated, recipes } = useLoaderData<typeof loader>();
-  console.log({ user, isAuthenticated, recipes })
 
   return (
     <html lang="en">
@@ -51,7 +50,7 @@ export default function App() {
       </head>
       <body className="text-body text-black-900 flex flex-col">
         <AppContextProvider recipes={recipes}>
-          <UserContextProvider isAuthenticated={isAuthenticated} {...user}>
+          <UserContextProvider isAuthenticated={isAuthenticated} user={user}>
             <Menu />
             <Outlet />
           </UserContextProvider>
