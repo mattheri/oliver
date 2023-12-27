@@ -2,7 +2,7 @@ import {
   AppContextProvider,
   Menu,
   UserContext_default
-} from "/build/_shared/chunk-S6L5YXJY.js";
+} from "/build/_shared/chunk-WV34VO76.js";
 import {
   Links,
   LiveReload,
@@ -29,7 +29,7 @@ import {
 } from "/build/_shared/chunk-PNG5AS42.js";
 
 // app/styles/tailwind.css
-var tailwind_default = "/build/_assets/tailwind-DCERZUIY.css";
+var tailwind_default = "/build/_assets/tailwind-KFOQSCCU.css";
 
 // css-bundle-update-plugin-ns:/Users/mathieutheriault/aec/oliver/frontend/node_modules/@remix-run/css-bundle/dist/esm/index.js
 var cssBundleHref = false ? void 0 : void 0;
@@ -224,4 +224,4 @@ export {
    * @license MIT
    *)
 */
-//# sourceMappingURL=/build/root-7ATROSQZ.js.map
+//# sourceMappingURL=/build/root-2PMFYBKN.js.map

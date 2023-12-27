@@ -26,10 +26,13 @@ input CreateRecipeDto {
   allowDelete: [String!] = []
   allowEdit: [String!] = []
   allowView: [String!] = []
+  cookTime: Int
   image: CreateRecipeImageDto
   ingredients: [String!] = []
   instructions: [String!] = []
   isExternalSrc: Boolean
+  prepTime: Int
+  servings: Int
   title: String!
   url: String
 }
@@ -78,12 +81,26 @@ type GroceryItem {
 type Image {
   alt: String
   height: Float
+  sizes: [ImageSize!]
   src: String!
   width: Float
 }
 
 input ImageDto {
   alt: String
+  height: Float
+  sizes: [ImageSizeDto!]
+  src: String!
+  width: Float
+}
+
+type ImageSize {
+  height: Float
+  src: String!
+  width: Float
+}
+
+input ImageSizeDto {
   height: Float
   src: String!
   width: Float
@@ -171,21 +188,17 @@ type Recipe {
   allowDelete: [String!]
   allowEdit: [String!]
   allowView: [String!]
+  cookTime: Int
   id: String!
-  image: RecipeImage
+  image: Image
   ingredients: [String!]!
   instructions: [String!]!
   isExternalSrc: Boolean
+  prepTime: Int
+  servings: Int
   title: String!
   url: String
   userId: String!
-}
-
-type RecipeImage {
-  height: Int
-  id: String!
-  src: String!
-  width: Int
 }
 
 input SignUpDto {
@@ -229,11 +242,14 @@ input UpdateRecipeDto {
   allowDelete: [String!]
   allowEdit: [String!]
   allowView: [String!]
+  cookTime: Int
   id: String!
   image: UpdateRecipeImageDto
   ingredients: [String!]
   instructions: [String!]
   isExternalSrc: Boolean
+  prepTime: Int
+  servings: Int
   title: String!
   url: String
 }

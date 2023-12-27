@@ -11,6 +11,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Image = void 0;
 const graphql_1 = require("@nestjs/graphql");
+const image_size_model_1 = require("./image-size.model");
 let Image = class Image {
 };
 __decorate([
@@ -29,6 +30,10 @@ __decorate([
     (0, graphql_1.Field)({ nullable: true }),
     __metadata("design:type", String)
 ], Image.prototype, "alt", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [image_size_model_1.ImageSize], { nullable: true }),
+    __metadata("design:type", Array)
+], Image.prototype, "sizes", void 0);
 Image = __decorate([
     (0, graphql_1.ObjectType)()
 ], Image);

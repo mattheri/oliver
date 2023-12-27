@@ -1,5 +1,5 @@
 import { cx } from "cva";
-import { If } from "~/common";
+import { If, Image } from "~/common";
 import type { Recipe } from "~/recipes/types";
 
 type Props = {
@@ -8,13 +8,12 @@ type Props = {
 };
 
 export default function RecipeHeaderSection({ image, title }: Props) {
-	console.log(image);
 	return (
 		<section className="grid grid-cols-1 grid-rows-1 max-h-96">
 			<If condition={!!image?.src}>
 				<If.Then>
 					<div className="col-start-1 col-end-2 row-start-1 row-end-2 overflow-hidden">
-						<img src={image?.src} alt={title} className="w-full bg-cover bg-top block max-w-full h-auto" />
+						<Image {...image!} alt={title} className="w-full bg-cover bg-top block max-w-full h-auto" />
 					</div>
 				</If.Then>
 			</If>

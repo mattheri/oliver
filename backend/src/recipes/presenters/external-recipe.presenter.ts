@@ -25,7 +25,6 @@ export class ExternalRecipePresenter {
   ): Promise<Recipe> {
     const image: Recipe['image'] = externalRecipe.strMealThumb
       ? {
-          id: externalRecipe.idMeal,
           ...(await this.getImageMetadata({
             src: externalRecipe.strMealThumb,
           })),

@@ -21,7 +21,7 @@ let ExternalRecipePresenter = class ExternalRecipePresenter {
     }
     async externalRecipeToRecipe(externalRecipe, userId) {
         const image = externalRecipe.strMealThumb
-            ? Object.assign({ id: externalRecipe.idMeal }, (await this.getImageMetadata({
+            ? Object.assign({}, (await this.getImageMetadata({
                 src: externalRecipe.strMealThumb,
             }))) : null;
         const url = externalRecipe.strSource ? externalRecipe.strSource : null;

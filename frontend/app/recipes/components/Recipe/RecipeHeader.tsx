@@ -1,39 +1,27 @@
+import { cx } from "cva";
+import { Fragment } from "react";
+import { Button, If } from "~/common";
 import type { Recipe } from "~/recipes/types";
 
-import { Fragment } from "react";
+import { Menu, Transition } from "@headlessui/react";
 import {
-  BriefcaseIcon,
-  CalendarIcon,
-  CheckIcon,
   ChevronDownIcon,
-  ChevronRightIcon,
-  CurrencyDollarIcon,
   LinkIcon,
-  MapPinIcon,
   PencilIcon,
 } from "@heroicons/react/20/solid";
-import { Menu, Transition } from "@headlessui/react";
-import { cx } from "cva";
-import { Button, If } from "~/common";
 
-type Props = Partial<Pick<Recipe, "title" | "url">> & {
+type Props = Partial<Pick<Recipe, "url">> & {
   canEdit?: boolean;
   isFavorite?: boolean;
 };
 
 export default function RecipeHeader({
-  title,
   url,
   canEdit,
   isFavorite,
 }: Props) {
   return (
     <section className="flex items-center justify-between py-4">
-      <section className="w-full flex-grow">
-        <h1 className="mt-2 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
-          {title}
-        </h1>
-      </section>
       <section className="flex gap-4">
         <If condition={!!canEdit}>
           <If.Then>

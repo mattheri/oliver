@@ -1,6 +1,6 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Image } from 'src/image/models/image.model';
 
-import { RecipeImage } from './recipe-image.model';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class Recipe {
@@ -16,11 +16,20 @@ export class Recipe {
   @Field(() => [String])
   instructions: string[];
 
+  @Field(() => Int, { nullable: true })
+  servings?: number;
+
+  @Field(() => Int, { nullable: true })
+  prepTime?: number;
+
+  @Field(() => Int, { nullable: true })
+  cookTime?: number;
+
   @Field()
   userId: string;
 
-  @Field(() => RecipeImage, { nullable: true })
-  image?: RecipeImage;
+  @Field(() => Image, { nullable: true })
+  image?: Image;
 
   @Field({ nullable: true })
   isExternalSrc?: boolean;

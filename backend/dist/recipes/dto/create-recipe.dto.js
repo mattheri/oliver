@@ -44,6 +44,26 @@ __decorate([
     __metadata("design:type", String)
 ], CreateRecipeWithUserIdDto.prototype, "instructions", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.ValidateIf)((o) => o.servings !== null),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.Min)(1),
+    __metadata("design:type", Number)
+], CreateRecipeWithUserIdDto.prototype, "servings", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], CreateRecipeWithUserIdDto.prototype, "prepTime", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    (0, class_validator_1.IsInt)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Number)
+], CreateRecipeWithUserIdDto.prototype, "cookTime", void 0);
+__decorate([
     (0, graphql_1.Field)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)

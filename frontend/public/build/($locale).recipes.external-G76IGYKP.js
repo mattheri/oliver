@@ -1,9 +1,11 @@
-import "/build/_shared/chunk-4DE6YEQX.js";
+import "/build/_shared/chunk-FWY7U4PK.js";
 import {
   Button,
   C,
   D,
   If_default,
+  Image,
+  LinkIcon_default,
   S,
   X,
   c,
@@ -19,7 +21,7 @@ import {
   tt,
   u,
   y
-} from "/build/_shared/chunk-S6L5YXJY.js";
+} from "/build/_shared/chunk-WV34VO76.js";
 import {
   useLoaderData
 } from "/build/_shared/chunk-O63IHIKR.js";
@@ -618,7 +620,7 @@ function LinkIcon({
   }));
 }
 var ForwardRef2 = React2.forwardRef(LinkIcon);
-var LinkIcon_default = ForwardRef2;
+var LinkIcon_default2 = ForwardRef2;
 
 // node_modules/@heroicons/react/20/solid/esm/PencilIcon.js
 var React3 = __toESM(require_react(), 1);
@@ -662,131 +664,119 @@ if (import.meta) {
     //@ts-expect-error
     "app/recipes/components/Recipe/RecipeHeader.tsx"
   );
-  import.meta.hot.lastModified = "1703119630109.8706";
+  import.meta.hot.lastModified = "1703674771209.4448";
 }
 function RecipeHeader({
-  title,
   url,
   canEdit,
   isFavorite
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("section", { className: "flex items-center justify-between py-4", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("section", { className: "w-full flex-grow", children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("h1", { className: "mt-2 text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight", children: title }, void 0, false, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("section", { className: "flex items-center justify-between py-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("section", { className: "flex gap-4", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(If_default, { condition: !!canEdit, children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Button, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(PencilIcon_default, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, false, {
+        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+        lineNumber: 37,
+        columnNumber: 17
+      }, this),
+      "Edit"
+    ] }, void 0, true, {
+      fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+      lineNumber: 36,
+      columnNumber: 15
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+      lineNumber: 35,
+      columnNumber: 13
+    }, this) }, void 0, false, {
       fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
       lineNumber: 34,
-      columnNumber: 9
+      columnNumber: 11
     }, this) }, void 0, false, {
       fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
       lineNumber: 33,
-      columnNumber: 7
+      columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("section", { className: "flex gap-4", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(If_default, { condition: !!canEdit, children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Button, { children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(PencilIcon_default, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, false, {
-          fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-          lineNumber: 43,
-          columnNumber: 17
-        }, this),
-        "Edit"
-      ] }, void 0, true, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(If_default, { condition: !!url, children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Button, { intent: "secondary", to: url, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(LinkIcon_default2, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, false, {
         fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-        lineNumber: 42,
-        columnNumber: 15
-      }, this) }, void 0, false, {
-        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-        lineNumber: 41,
-        columnNumber: 13
-      }, this) }, void 0, false, {
-        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-        lineNumber: 40,
-        columnNumber: 11
-      }, this) }, void 0, false, {
-        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-        lineNumber: 39,
-        columnNumber: 9
+        lineNumber: 48,
+        columnNumber: 17
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(If_default, { condition: !!url, children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(Button, { intent: "secondary", to: url, children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(LinkIcon_default, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, false, {
+      "Source"
+    ] }, void 0, true, {
+      fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+      lineNumber: 47,
+      columnNumber: 15
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+      lineNumber: 46,
+      columnNumber: 13
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+      lineNumber: 45,
+      columnNumber: 11
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+      lineNumber: 44,
+      columnNumber: 9
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it, { as: "div", className: "relative sm:hidden", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
+        "More",
+        /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(ChevronDownIcon_default, { className: "-mr-1 ml-1.5 h-5 w-5 text-gray-400", "aria-hidden": "true" }, void 0, false, {
           fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-          lineNumber: 54,
-          columnNumber: 17
-        }, this),
-        "Source"
-      ] }, void 0, true, {
-        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-        lineNumber: 53,
-        columnNumber: 15
-      }, this) }, void 0, false, {
-        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-        lineNumber: 52,
-        columnNumber: 13
-      }, this) }, void 0, false, {
-        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-        lineNumber: 51,
-        columnNumber: 11
-      }, this) }, void 0, false, {
-        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-        lineNumber: 50,
-        columnNumber: 9
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it, { as: "div", className: "relative sm:hidden", children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
-          "More",
-          /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(ChevronDownIcon_default, { className: "-mr-1 ml-1.5 h-5 w-5 text-gray-400", "aria-hidden": "true" }, void 0, false, {
-            fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-            lineNumber: 63,
-            columnNumber: 13
-          }, this)
-        ] }, void 0, true, {
-          fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-          lineNumber: 61,
-          columnNumber: 11
-        }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(tt, { as: import_react11.Fragment, enter: "transition ease-out duration-200", enterFrom: "transform opacity-0 scale-95", enterTo: "transform opacity-100 scale-100", leave: "transition ease-in duration-75", leaveFrom: "transform opacity-100 scale-100", leaveTo: "transform opacity-0 scale-95", children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it.Item, { children: ({
-            active
-          }) => /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("a", { href: "#", className: cx(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700"), children: "Edit" }, void 0, false, {
-            fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-            lineNumber: 71,
-            columnNumber: 21
-          }, this) }, void 0, false, {
-            fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-            lineNumber: 68,
-            columnNumber: 15
-          }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it.Item, { children: ({
-            active
-          }) => /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("a", { href: "#", className: cx(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700"), children: "View" }, void 0, false, {
-            fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-            lineNumber: 78,
-            columnNumber: 21
-          }, this) }, void 0, false, {
-            fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-            lineNumber: 75,
-            columnNumber: 15
-          }, this)
-        ] }, void 0, true, {
-          fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-          lineNumber: 67,
+          lineNumber: 57,
           columnNumber: 13
-        }, this) }, void 0, false, {
-          fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-          lineNumber: 66,
-          columnNumber: 11
         }, this)
       ] }, void 0, true, {
         fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+        lineNumber: 55,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(tt, { as: import_react11.Fragment, enter: "transition ease-out duration-200", enterFrom: "transform opacity-0 scale-95", enterTo: "transform opacity-100 scale-100", leave: "transition ease-in duration-75", leaveFrom: "transform opacity-100 scale-100", leaveTo: "transform opacity-0 scale-95", children: /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it.Item, { children: ({
+          active
+        }) => /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("a", { href: "#", className: cx(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700"), children: "Edit" }, void 0, false, {
+          fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+          lineNumber: 65,
+          columnNumber: 21
+        }, this) }, void 0, false, {
+          fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+          lineNumber: 62,
+          columnNumber: 15
+        }, this),
+        /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)(it.Item, { children: ({
+          active
+        }) => /* @__PURE__ */ (0, import_jsx_dev_runtime.jsxDEV)("a", { href: "#", className: cx(active ? "bg-gray-100" : "", "block px-4 py-2 text-sm text-gray-700"), children: "View" }, void 0, false, {
+          fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+          lineNumber: 72,
+          columnNumber: 21
+        }, this) }, void 0, false, {
+          fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+          lineNumber: 69,
+          columnNumber: 15
+        }, this)
+      ] }, void 0, true, {
+        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+        lineNumber: 61,
+        columnNumber: 13
+      }, this) }, void 0, false, {
+        fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
         lineNumber: 60,
-        columnNumber: 9
+        columnNumber: 11
       }, this)
     ] }, void 0, true, {
       fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
-      lineNumber: 38,
-      columnNumber: 7
+      lineNumber: 54,
+      columnNumber: 9
     }, this)
   ] }, void 0, true, {
     fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
     lineNumber: 32,
+    columnNumber: 7
+  }, this) }, void 0, false, {
+    fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
+    lineNumber: 31,
     columnNumber: 10
   }, this);
 }
@@ -815,45 +805,44 @@ if (import.meta) {
     //@ts-expect-error
     "app/recipes/components/Recipe/RecipeHeaderSection.tsx"
   );
-  import.meta.hot.lastModified = "1703600964748.5276";
+  import.meta.hot.lastModified = "1703684198564.5818";
 }
 function RecipeHeaderSection({
   image,
   title
 }) {
-  console.log(image);
   return /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("section", { className: "grid grid-cols-1 grid-rows-1 max-h-96", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(If_default, { condition: !!(image == null ? void 0 : image.src), children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("img", { src: image == null ? void 0 : image.src, alt: title, className: "w-full bg-cover bg-top block max-w-full h-auto" }, void 0, false, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(If_default, { condition: !!(image == null ? void 0 : image.src), children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)(Image, { ...image, alt: title, className: "w-full bg-cover bg-top block max-w-full h-auto" }, void 0, false, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
-      lineNumber: 32,
+      lineNumber: 31,
       columnNumber: 7
     }, this) }, void 0, false, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
-      lineNumber: 31,
+      lineNumber: 30,
       columnNumber: 6
     }, this) }, void 0, false, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
-      lineNumber: 30,
+      lineNumber: 29,
       columnNumber: 5
     }, this) }, void 0, false, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
-      lineNumber: 29,
+      lineNumber: 28,
       columnNumber: 4
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 grid place-items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime2.jsxDEV)("h1", { className: cx("text-3xl font-bold text-center", {
       "bg-black text-white p-2": !!(image == null ? void 0 : image.src)
     }), children: title }, void 0, false, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
-      lineNumber: 37,
+      lineNumber: 36,
       columnNumber: 5
     }, this) }, void 0, false, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
-      lineNumber: 36,
+      lineNumber: 35,
       columnNumber: 4
     }, this)
   ] }, void 0, true, {
     fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
-    lineNumber: 28,
+    lineNumber: 27,
     columnNumber: 10
   }, this);
 }
@@ -863,8 +852,133 @@ $RefreshReg$(_c2, "RecipeHeaderSection");
 window.$RefreshReg$ = prevRefreshReg;
 window.$RefreshSig$ = prevRefreshSig;
 
-// app/recipes/components/Recipe/Recipe.tsx
+// app/recipes/components/Recipe/RecipeMetadata.tsx
 var import_jsx_dev_runtime3 = __toESM(require_jsx_dev_runtime());
+if (!window.$RefreshReg$ || !window.$RefreshSig$ || !window.$RefreshRuntime$) {
+  console.warn("remix:hmr: React Fast Refresh only works when the Remix compiler is running in development mode.");
+} else {
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = (type, id) => {
+    window.$RefreshRuntime$.register(type, '"app/recipes/components/Recipe/RecipeMetadata.tsx"' + id);
+  };
+  window.$RefreshSig$ = window.$RefreshRuntime$.createSignatureFunctionForTransform;
+}
+var prevRefreshReg;
+var prevRefreshSig;
+if (import.meta) {
+  import.meta.hot = createHotContext(
+    //@ts-expect-error
+    "app/recipes/components/Recipe/RecipeMetadata.tsx"
+  );
+  import.meta.hot.lastModified = "1703694593820.1565";
+}
+function RecipeMetadata({
+  prepTime,
+  cookTime,
+  servings,
+  externalUrl,
+  mainIngredient
+}) {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("section", { className: "flex flex-wrap items-center gap-y-2 gap-x-4 py-2 text-gray-900", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default, { condition: !!prepTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("span", { className: "text-sm", children: [
+      "Preparation: ",
+      prepTime
+    ] }, void 0, true, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 33,
+      columnNumber: 6
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 32,
+      columnNumber: 5
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 31,
+      columnNumber: 4
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default, { condition: !!cookTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("span", { className: "text-sm", children: [
+      "Cooking: ",
+      cookTime
+    ] }, void 0, true, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 40,
+      columnNumber: 6
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 39,
+      columnNumber: 5
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 38,
+      columnNumber: 4
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default, { condition: !!servings, children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("span", { className: "text-sm", children: [
+      "Serves: ",
+      servings
+    ] }, void 0, true, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 47,
+      columnNumber: 6
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 46,
+      columnNumber: 5
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 45,
+      columnNumber: 4
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default, { condition: !!mainIngredient, children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("span", { className: "text-sm", children: [
+      "Main Ingredient: ",
+      mainIngredient
+    ] }, void 0, true, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 54,
+      columnNumber: 6
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 53,
+      columnNumber: 5
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 52,
+      columnNumber: 4
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default, { condition: !!externalUrl, children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(Button, { intent: "secondary", to: externalUrl, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(LinkIcon_default, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, false, {
+        fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+        lineNumber: 62,
+        columnNumber: 5
+      }, this),
+      "Source"
+    ] }, void 0, true, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 61,
+      columnNumber: 4
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 60,
+      columnNumber: 5
+    }, this) }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+      lineNumber: 59,
+      columnNumber: 4
+    }, this)
+  ] }, void 0, true, {
+    fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
+    lineNumber: 30,
+    columnNumber: 10
+  }, this);
+}
+_c3 = RecipeMetadata;
+var _c3;
+$RefreshReg$(_c3, "RecipeMetadata");
+window.$RefreshReg$ = prevRefreshReg;
+window.$RefreshSig$ = prevRefreshSig;
+
+// app/recipes/components/Recipe/Recipe.tsx
+var import_jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime());
 if (!window.$RefreshReg$ || !window.$RefreshSig$ || !window.$RefreshRuntime$) {
   console.warn("remix:hmr: React Fast Refresh only works when the Remix compiler is running in development mode.");
 } else {
@@ -882,109 +996,101 @@ if (import.meta) {
     //@ts-expect-error
     "app/recipes/components/Recipe/Recipe.tsx"
   );
-  import.meta.hot.lastModified = "1703600478488.3467";
+  import.meta.hot.lastModified = "1703695436473.9775";
 }
 function Recipe({
   title,
   ingredients,
   instructions,
   image,
-  url
+  url,
+  cookTime,
+  mainIngredient,
+  prepTime,
+  servings
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("section", { className: "flex w-full flex-col", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(RecipeHeader, { title, url: url != null ? url : " ", canEdit: true }, void 0, false, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("section", { className: "flex w-full flex-col", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(RecipeHeader, { url: url != null ? url : " ", canEdit: true }, void 0, false, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 32,
+      lineNumber: 37,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(RecipeHeaderSection, { image, title }, void 0, false, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(RecipeHeaderSection, { image, title }, void 0, false, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 33,
+      lineNumber: 38,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default, { condition: !!ingredients, children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("div", { className: "w-full lg:w-1/2", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("h2", { className: "text-xl font-bold", children: "Ingredients" }, void 0, false, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(RecipeMetadata, { cookTime, prepTime, servings, mainIngredient, externalUrl: url }, void 0, false, {
+      fileName: "app/recipes/components/Recipe/Recipe.tsx",
+      lineNumber: 39,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(If_default, { condition: !!ingredients, children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("div", { className: "w-full lg:w-1/2", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("h2", { className: "text-xl font-bold", children: "Ingredients" }, void 0, false, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 37,
+        lineNumber: 43,
         columnNumber: 15
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("ul", { className: "list-inside list-disc", children: ingredients == null ? void 0 : ingredients.map((ingredient) => /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("li", { children: ingredient }, ingredient, false, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("ul", { className: "list-inside list-disc", children: ingredients == null ? void 0 : ingredients.map((ingredient) => /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("li", { children: ingredient }, ingredient, false, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 39,
+        lineNumber: 45,
         columnNumber: 49
       }, this)) }, void 0, false, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 38,
+        lineNumber: 44,
         columnNumber: 15
       }, this)
     ] }, void 0, true, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 36,
+      lineNumber: 42,
       columnNumber: 13
     }, this) }, void 0, false, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 35,
+      lineNumber: 41,
       columnNumber: 11
     }, this) }, void 0, false, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 34,
+      lineNumber: 40,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default.Then, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, false, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(If_default.Then, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, false, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 46,
+        lineNumber: 52,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("li", { children: instruction }, instruction, false, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("li", { children: instruction }, instruction, false, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 48,
+        lineNumber: 54,
         columnNumber: 47
       }, this)) }, void 0, false, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 47,
+        lineNumber: 53,
         columnNumber: 11
       }, this)
     ] }, void 0, true, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 45,
+      lineNumber: 51,
       columnNumber: 9
     }, this) }, void 0, false, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 44,
-      columnNumber: 7
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default, { condition: !!url, children: /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)(If_default.Then, { children: [
-      "Original source:",
-      " ",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime3.jsxDEV)("a", { href: url, target: "_blank", rel: "noreferrer", children: url }, void 0, false, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 55,
-        columnNumber: 11
-      }, this)
-    ] }, void 0, true, {
-      fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 53,
-      columnNumber: 9
-    }, this) }, void 0, false, {
-      fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 52,
+      lineNumber: 50,
       columnNumber: 7
     }, this)
   ] }, void 0, true, {
     fileName: "app/recipes/components/Recipe/Recipe.tsx",
-    lineNumber: 31,
+    lineNumber: 36,
     columnNumber: 10
   }, this);
 }
-_c3 = Recipe;
-var _c3;
-$RefreshReg$(_c3, "Recipe");
+_c4 = Recipe;
+var _c4;
+$RefreshReg$(_c4, "Recipe");
 window.$RefreshReg$ = prevRefreshReg;
 window.$RefreshSig$ = prevRefreshSig;
 
 // app/recipes/routes/($locale).recipes.external.route.tsx
-var import_jsx_dev_runtime4 = __toESM(require_jsx_dev_runtime());
+var import_jsx_dev_runtime5 = __toESM(require_jsx_dev_runtime());
 if (!window.$RefreshReg$ || !window.$RefreshSig$ || !window.$RefreshRuntime$) {
   console.warn("remix:hmr: React Fast Refresh only works when the Remix compiler is running in development mode.");
 } else {
@@ -1003,7 +1109,7 @@ if (import.meta) {
     //@ts-expect-error
     "app/recipes/routes/($locale).recipes.external.route.tsx"
   );
-  import.meta.hot.lastModified = "1703119630110.7935";
+  import.meta.hot.lastModified = "1703674212963.767";
 }
 function Index() {
   _s();
@@ -1014,25 +1120,25 @@ function Index() {
     ingredients,
     instructions
   } = useLoaderData();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)("main", { className: "flex flex-col py-12 section-container", children: /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(Recipe, { title: title != null ? title : "", url, image: imageSrc, ingredients, instructions }, void 0, false, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)("main", { className: "flex flex-col py-12 section-container", children: /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(Recipe, { title: title != null ? title : "", url, image: imageSrc, ingredients, instructions }, void 0, false, {
     fileName: "app/recipes/routes/($locale).recipes.external.route.tsx",
-    lineNumber: 55,
+    lineNumber: 59,
     columnNumber: 7
   }, this) }, void 0, false, {
     fileName: "app/recipes/routes/($locale).recipes.external.route.tsx",
-    lineNumber: 54,
+    lineNumber: 58,
     columnNumber: 10
   }, this);
 }
 _s(Index, "jta+NhvSh9Z8NpJqWlES2UBLEsU=", false, function() {
   return [useLoaderData];
 });
-_c4 = Index;
-var _c4;
-$RefreshReg$(_c4, "Index");
+_c5 = Index;
+var _c5;
+$RefreshReg$(_c5, "Index");
 window.$RefreshReg$ = prevRefreshReg;
 window.$RefreshSig$ = prevRefreshSig;
 export {
   Index as default
 };
-//# sourceMappingURL=/build/($locale).recipes.external-SL6EJKBX.js.map
+//# sourceMappingURL=/build/($locale).recipes.external-G76IGYKP.js.map

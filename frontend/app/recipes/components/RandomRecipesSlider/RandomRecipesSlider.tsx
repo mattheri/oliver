@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { THEME } from "~/common";
 import Slider from "~/common/components/Slider/Slider";
 import { HttpState, useClientLoader } from "~/http";
 import type { Recipe } from "~/recipes/types";
@@ -28,7 +29,7 @@ export default function RandomRecipesSlider({
 
   return (
     <HttpState loading={loading}>
-      <Slider slidesToShow={2} className="py-2 isolate">
+      <Slider slidesToShow={2} responsive={[{ breakpoint: THEME.BREAKPOINTS.LG, settings: { slidesToShow: 1} }]} className="py-2 isolate">
         {randomRecipes.map((recipe) => (
           <RecipeCard key={recipe.id} {...recipe} />
         ))}

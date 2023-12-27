@@ -1,11 +1,14 @@
-import { RecipeImage } from './recipe-image.model';
+import { Image } from 'src/image/models/image.model';
 export declare class Recipe {
     id: string;
     title: string;
     ingredients: string[];
     instructions: string[];
+    servings?: number;
+    prepTime?: number;
+    cookTime?: number;
     userId: string;
-    image?: RecipeImage;
+    image?: Image;
     isExternalSrc?: boolean;
     url?: string;
     allowView?: string[];

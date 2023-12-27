@@ -10,8 +10,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Recipe = void 0;
+const image_model_1 = require("../../image/models/image.model");
 const graphql_1 = require("@nestjs/graphql");
-const recipe_image_model_1 = require("./recipe-image.model");
 let Recipe = class Recipe {
 };
 __decorate([
@@ -31,12 +31,24 @@ __decorate([
     __metadata("design:type", Array)
 ], Recipe.prototype, "instructions", void 0);
 __decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], Recipe.prototype, "servings", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], Recipe.prototype, "prepTime", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], Recipe.prototype, "cookTime", void 0);
+__decorate([
     (0, graphql_1.Field)(),
     __metadata("design:type", String)
 ], Recipe.prototype, "userId", void 0);
 __decorate([
-    (0, graphql_1.Field)(() => recipe_image_model_1.RecipeImage, { nullable: true }),
-    __metadata("design:type", recipe_image_model_1.RecipeImage)
+    (0, graphql_1.Field)(() => image_model_1.Image, { nullable: true }),
+    __metadata("design:type", image_model_1.Image)
 ], Recipe.prototype, "image", void 0);
 __decorate([
     (0, graphql_1.Field)({ nullable: true }),

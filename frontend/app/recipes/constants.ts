@@ -26,6 +26,9 @@ export const RECIPE_EXTERNAL_QUERY_PARAMS = {
   INSTRUCTIONS: "instructions",
   INGREDIENTS: "ingredients",
   IMAGE: "image",
+  IMAGE_WIDTH: "image_width",
+  IMAGE_HEIGHT: "image_height",
+  IMAGE_SIZES: "image_sizes",
   URL: "url",
   USER_ID: "user_id",
 } as const;

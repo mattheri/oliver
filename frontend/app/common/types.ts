@@ -2,6 +2,7 @@ import type { Dispatch, ReactNode } from "react";
 import type { Modals } from "~/common";
 import type { ActionPayload as ModalActionPayload } from "~/common/store/AppContext/modalsReducer";
 import type { Recipe } from "~/recipes/types";
+
 import type { ActionPayload as DataActionPayload } from "./store/AppContext/dataReducer";
 
 export type QueueObject = {
@@ -28,3 +29,14 @@ export type ModalsState = {
 export type DataState = {
   recipes: Recipe[];
 };
+
+export type Image = {
+  width?: number;
+  height?: number;
+  src: string;
+  sizes?: {
+    width?: number;
+    height?: number;
+    src: string;
+  }[];
+}

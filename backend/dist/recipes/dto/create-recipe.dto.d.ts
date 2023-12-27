@@ -3,6 +3,9 @@ export declare class CreateRecipeWithUserIdDto {
     title: string;
     ingredients: string;
     instructions: string;
+    servings?: number;
+    prepTime?: number;
+    cookTime?: number;
     userId: string;
     image?: CreateRecipeImageDto;
     isExternalSrc?: boolean;

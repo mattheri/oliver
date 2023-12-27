@@ -7,10 +7,14 @@ const RANDOM_RECIPES_QUERY = `#graphql
 			instructions
 			userId
 			image {
-				id
 				width
 				height
 				src
+				sizes {
+					height
+					width
+					src
+				}
 			}
 			url
 			isExternalSrc

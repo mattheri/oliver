@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ImageDto = void 0;
 const class_validator_1 = require("class-validator");
 const graphql_1 = require("@nestjs/graphql");
+const image_size_dto_1 = require("./image-size.dto");
 let ImageDto = class ImageDto {
 };
 __decorate([
@@ -38,6 +39,12 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], ImageDto.prototype, "alt", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [image_size_dto_1.ImageSizeDto], { nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsString)(),
+    __metadata("design:type", Array)
+], ImageDto.prototype, "sizes", void 0);
 ImageDto = __decorate([
     (0, graphql_1.InputType)()
 ], ImageDto);

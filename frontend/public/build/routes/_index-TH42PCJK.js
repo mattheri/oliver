@@ -1,6 +1,6 @@
 import {
   RECIPE_EXTERNAL_QUERY_PARAMS
-} from "/build/_shared/chunk-4DE6YEQX.js";
+} from "/build/_shared/chunk-FWY7U4PK.js";
 import {
   ActionCard,
   AppContext_default,
@@ -11,8 +11,9 @@ import {
   LinkIcon_default,
   Loader,
   PencilIcon_default,
+  THEME,
   twMerge
-} from "/build/_shared/chunk-S6L5YXJY.js";
+} from "/build/_shared/chunk-WV34VO76.js";
 import "/build/_shared/chunk-O63IHIKR.js";
 import "/build/_shared/chunk-VOXRDU2P.js";
 import {
@@ -4397,7 +4398,7 @@ if (import.meta) {
     //@ts-expect-error
     "app/recipes/hook/useRecipeUrl.ts"
   );
-  import.meta.hot.lastModified = "1703508457852.3936";
+  import.meta.hot.lastModified = "1703677495883.0454";
 }
 function useRecipeUrl({
   id,
@@ -4422,6 +4423,23 @@ function useRecipeUrl({
         RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE,
         image == null ? void 0 : image.src
       );
+      if (image == null ? void 0 : image.width) {
+        recipeUrl.searchParams.set(
+          RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_WIDTH,
+          image == null ? void 0 : image.width.toString()
+        );
+      }
+      if (image == null ? void 0 : image.height) {
+        recipeUrl.searchParams.set(
+          RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_HEIGHT,
+          image == null ? void 0 : image.height.toString()
+        );
+      } else if (image == null ? void 0 : image.width) {
+        recipeUrl.searchParams.set(
+          RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_HEIGHT,
+          image == null ? void 0 : image.width.toString()
+        );
+      }
     }
     if (url) {
       recipeUrl.searchParams.set(RECIPE_EXTERNAL_QUERY_PARAMS.URL, url);
@@ -4555,7 +4573,7 @@ if (import.meta) {
     //@ts-expect-error
     "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx"
   );
-  import.meta.hot.lastModified = "1703264434139.3372";
+  import.meta.hot.lastModified = "1703695243026.9028";
 }
 var DEFAULT_NUMBER_OF_RECIPES = 10;
 function RandomRecipesSlider({
@@ -4576,17 +4594,22 @@ function RandomRecipesSlider({
       setRandomRecipes(response.randomRecipes);
     });
   }, [loader, numberOfRecipes]);
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime8.jsxDEV)(HttpState, { loading, children: /* @__PURE__ */ (0, import_jsx_dev_runtime8.jsxDEV)(Slider_default, { slidesToShow: 2, className: "py-2 isolate", children: randomRecipes.map((recipe) => /* @__PURE__ */ (0, import_jsx_dev_runtime8.jsxDEV)(RecipeCard, { ...recipe }, recipe.id, false, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime8.jsxDEV)(HttpState, { loading, children: /* @__PURE__ */ (0, import_jsx_dev_runtime8.jsxDEV)(Slider_default, { slidesToShow: 2, responsive: [{
+    breakpoint: THEME.BREAKPOINTS.LG,
+    settings: {
+      slidesToShow: 1
+    }
+  }], className: "py-2 isolate", children: randomRecipes.map((recipe) => /* @__PURE__ */ (0, import_jsx_dev_runtime8.jsxDEV)(RecipeCard, { ...recipe }, recipe.id, false, {
     fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
-    lineNumber: 46,
+    lineNumber: 52,
     columnNumber: 38
   }, this)) }, void 0, false, {
     fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
-    lineNumber: 45,
+    lineNumber: 46,
     columnNumber: 7
   }, this) }, void 0, false, {
     fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
-    lineNumber: 44,
+    lineNumber: 45,
     columnNumber: 10
   }, this);
 }
@@ -4816,4 +4839,4 @@ classnames/index.js:
   	http://jedwatson.github.io/classnames
   *)
 */
-//# sourceMappingURL=/build/routes/_index-W45V4W47.js.map
+//# sourceMappingURL=/build/routes/_index-TH42PCJK.js.map

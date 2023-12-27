@@ -8,13 +8,16 @@ if (import.meta) {
     //@ts-expect-error
     "app/recipes/constants.ts"
   );
-  import.meta.hot.lastModified = "1703119630110.0664";
+  import.meta.hot.lastModified = "1703676968158.519";
 }
 var RECIPE_EXTERNAL_QUERY_PARAMS = {
   TITLE: "title",
   INSTRUCTIONS: "instructions",
   INGREDIENTS: "ingredients",
   IMAGE: "image",
+  IMAGE_WIDTH: "image_width",
+  IMAGE_HEIGHT: "image_height",
+  IMAGE_SIZES: "image_sizes",
   URL: "url",
   USER_ID: "user_id"
 };
@@ -22,4 +25,4 @@ var RECIPE_EXTERNAL_QUERY_PARAMS = {
 export {
   RECIPE_EXTERNAL_QUERY_PARAMS
 };
-//# sourceMappingURL=/build/_shared/chunk-4DE6YEQX.js.map
+//# sourceMappingURL=/build/_shared/chunk-FWY7U4PK.js.map

@@ -25,6 +25,25 @@ export default function useRecipeUrl({
         RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE,
         image?.src,
       );
+
+      if (image?.width) {
+        recipeUrl.searchParams.set(
+          RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_WIDTH,
+          image?.width.toString(),
+        );
+      }
+
+      if (image?.height) {
+        recipeUrl.searchParams.set(
+          RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_HEIGHT,
+          image?.height.toString(),
+        );
+      } else if (image?.width) {
+        recipeUrl.searchParams.set(
+          RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_HEIGHT,
+          image?.width.toString(),
+        );
+      }
     }
     if (url) {
       recipeUrl.searchParams.set(RECIPE_EXTERNAL_QUERY_PARAMS.URL, url);

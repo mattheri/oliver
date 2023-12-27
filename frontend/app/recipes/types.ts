@@ -11,8 +11,17 @@ export type Recipe = {
     width?: number;
     height?: number;
     src: string;
+    sizes?: {
+      width?: number;
+      height?: number;
+      src: string;
+    }[];
   }>;
   isExternalSrc?: boolean;
+  servings?: Nullable<string>;
+  prepTime?: Nullable<string>;
+  cookTime?: Nullable<string>;
+  mainIngredient?: Nullable<string>;
 };
 
 export type RecipeCategory = {

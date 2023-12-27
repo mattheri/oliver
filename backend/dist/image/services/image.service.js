@@ -14,6 +14,31 @@ let ImageService = class ImageService {
     constructor() {
         this.http = axios_1.default.create({});
     }
+    async createImageSizes(input, sizes = [300, 600, 900]) {
+        const { data } = await this.http.get(input.src, {
+            responseType: 'arraybuffer',
+        });
+        const img = sharp(data);
+        const metadata = await img.metadata();
+        const promises = sizes.map(async (size) => {
+            const width = size;
+            const height = Math.floor((size / metadata.width) * metadata.height);
+            return img
+                .resize(width, height)
+                .toBuffer()
+                .then((buffer) => ({
+                width,
+                height,
+                buffer,
+            }));
+        });
+        const buffers = await Promise.all(promises);
+        return buffers.map((buffer) => ({
+            width: buffer.width,
+            height: buffer.height,
+            src: buffer.buffer.toString('base64'),
+        }));
+    }
     async getImageMetadata(input) {
         const { data } = await this.http.get(input.src, {
             responseType: 'arraybuffer',

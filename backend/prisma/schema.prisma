@@ -103,4 +103,7 @@ model Recipe {
   allowEdit     String
   allowDelete   String
   image         RecipeImage[]
+  servings      Int?
+  prepTime      Int?
+  cookTime      Int?
 }

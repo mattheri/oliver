@@ -1,8 +1,8 @@
 import {
   AccountSignIn,
   SignupForm
-} from "/build/_shared/chunk-TKPS3VXI.js";
-import "/build/_shared/chunk-S6L5YXJY.js";
+} from "/build/_shared/chunk-ELSFOB3R.js";
+import "/build/_shared/chunk-WV34VO76.js";
 import "/build/_shared/chunk-O63IHIKR.js";
 import "/build/_shared/chunk-VOXRDU2P.js";
 import {
@@ -72,4 +72,4 @@ window.$RefreshSig$ = prevRefreshSig;
 export {
   Index as default
 };
-//# sourceMappingURL=/build/($locale).auth.signup-URSJQ3C6.js.map
+//# sourceMappingURL=/build/($locale).auth.signup-WZI4RSCB.js.map

@@ -4,6 +4,9 @@ export declare class UpdateRecipeDto {
     title?: string;
     ingredients?: string;
     instructions?: string;
+    servings?: number;
+    prepTime?: number;
+    cookTime?: number;
     image?: UpdateRecipeImageDto;
     isExternalSrc?: boolean;
     url?: string;

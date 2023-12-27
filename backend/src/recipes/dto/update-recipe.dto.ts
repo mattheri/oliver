@@ -2,12 +2,15 @@ import { Transform } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
+  IsInt,
   IsObject,
   IsOptional,
   IsString,
+  Min,
+  ValidateIf,
 } from 'class-validator';
 
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 import { UpdateRecipeImageDto } from './update-recipe-image.dto';
 
@@ -41,6 +44,23 @@ export class UpdateRecipeDto {
     return value;
   })
   instructions?: string;
+
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @IsOptional()
+  @ValidateIf((o) => o.servings !== null)
+  @Min(1)
+  servings?: number;
+
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @IsOptional()
+  prepTime?: number;
+
+  @Field(() => Int, { nullable: true })
+  @IsInt()
+  @IsOptional()
+  cookTime?: number;
 
   @Field(() => UpdateRecipeImageDto, { nullable: true })
   @IsOptional()

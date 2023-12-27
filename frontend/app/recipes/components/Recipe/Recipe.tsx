@@ -3,6 +3,7 @@ import type { Recipe } from "~/recipes/types";
 import { If } from "~/common";
 import RecipeHeader from "./RecipeHeader";
 import RecipeHeaderSection from "./RecipeHeaderSection";
+import RecipeMetadata from "./RecipeMetadata";
 
 type Props = Partial<Recipe>;
 
@@ -12,11 +13,22 @@ export default function Recipe({
   instructions,
   image,
   url,
+  cookTime,
+  mainIngredient,
+  prepTime,
+  servings,
 }: Props) {
   return (
     <section className="flex w-full flex-col">
-      <RecipeHeader title={title} url={url ?? " "} canEdit />
+      <RecipeHeader url={url ?? " "} canEdit />
       <RecipeHeaderSection image={image} title={title} />
+      <RecipeMetadata
+        cookTime={cookTime}
+        prepTime={prepTime}
+        servings={servings}
+        mainIngredient={mainIngredient}
+        externalUrl={url}
+      />
         <If condition={!!ingredients}>
           <If.Then>
             <div className="w-full lg:w-1/2">
@@ -37,14 +49,6 @@ export default function Recipe({
               <li key={instruction}>{instruction}</li>
             ))}
           </ol>
-        </If.Then>
-      </If>
-      <If condition={!!url}>
-        <If.Then>
-          Original source:{" "}
-          <a href={url!} target="_blank" rel="noreferrer">
-            {url}
-          </a>
         </If.Then>
       </If>
     </section>

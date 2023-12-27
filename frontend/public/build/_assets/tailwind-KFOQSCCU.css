@@ -852,6 +852,9 @@ select {
 .flex-col {
   flex-direction: column;
 }
+.flex-wrap {
+  flex-wrap: wrap;
+}
 .place-items-center {
   place-items: center;
 }
@@ -878,6 +881,12 @@ select {
 }
 .gap-x-3 {
   column-gap: .75rem;
+}
+.gap-x-4 {
+  column-gap: 1rem;
+}
+.gap-y-2 {
+  row-gap: .5rem;
 }
 .space-x-4 > :not([hidden]) ~ :not([hidden]) {
   --tw-space-x-reverse: 0;
@@ -1643,4 +1652,4 @@ select {
   --tw-bg-opacity: 1;
   background-color: rgb(0 0 0 / var(--tw-bg-opacity));
 }
-/*# sourceMappingURL=/build/_assets/tailwind-AGCDQKWA.css.map */
+/*# sourceMappingURL=/build/_assets/tailwind-IAMDLX5V.css.map */
