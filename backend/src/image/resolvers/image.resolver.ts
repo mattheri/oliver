@@ -3,14 +3,19 @@ import { Image } from '../models/image.model';
 import { ImageDto } from '../dto/image.dto';
 import { ImageService } from '../services/image.service';
 import { ImageSize } from '../models/image-size.model';
+import { ImageSizeDto } from '../dto/image-size.dto';
 
 @Resolver(() => Image)
 export class ImageResolver {
   constructor(private readonly imageService: ImageService) {}
 
   @Query(() => Image)
-  imageMetadata(@Args('input') input: ImageDto) {
+  async imageMetadata(@Args('input') input: ImageDto) {
     return this.imageService.getImageMetadata(input);
+  }
+
+  async imageSizes(@Args('input') { sizes, ...image }: ImageSizeDto) {
+    return this.imageService.createImageSizes(image, sizes);
   }
 
   @ResolveField(() => ImageSize)

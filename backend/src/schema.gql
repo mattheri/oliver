@@ -102,6 +102,7 @@ type ImageSize {
 
 input ImageSizeDto {
   height: Float
+  sizes: [Int!] = [300, 600, 900]
   src: String!
   width: Float
 }

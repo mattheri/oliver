@@ -33,6 +33,13 @@ __decorate([
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], ImageSizeDto.prototype, "src", void 0);
+__decorate([
+    (0, graphql_1.Field)(() => [graphql_1.Int], { nullable: true, defaultValue: [300, 600, 900] }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.ValidateIf)((o) => o.sizes !== undefined),
+    (0, class_validator_1.IsInt)({ each: true }),
+    __metadata("design:type", Array)
+], ImageSizeDto.prototype, "sizes", void 0);
 ImageSizeDto = __decorate([
     (0, graphql_1.InputType)()
 ], ImageSizeDto);

@@ -1,6 +1,6 @@
-import { IsOptional, IsString, Min, ValidateIf } from 'class-validator';
+import { IsInt, IsOptional, IsString, Min, ValidateIf } from 'class-validator';
 
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 @InputType()
 export class ImageSizeDto {
@@ -19,4 +19,10 @@ export class ImageSizeDto {
   @Field()
   @IsString()
   src: string;
+
+  @Field(() => [Int], { nullable: true, defaultValue: [300, 600, 900] })
+  @IsOptional()
+  @ValidateIf((o) => o.sizes !== undefined)
+  @IsInt({ each: true })
+  sizes?: number[];
 }
