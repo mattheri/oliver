@@ -46,6 +46,28 @@ export class RecipeService {
     return [...new Set(recipes)];
   }
 
+  public async getWishlistRecipesByUserEmail(
+    email?: string,
+    includeOwner = false,
+  ) {
+    return this.db.recipe.findMany({
+      where: {
+        AND: [
+          { isWishList: true },
+          {
+            OR: [
+              { owner: { email } },
+              { allowView: { contains: email } },
+              { allowEdit: { contains: email } },
+              { allowDelete: { contains: email } },
+            ],
+          },
+        ],
+      },
+      include: { owner: includeOwner },
+    });
+  }
+
   public async getRecipeById(id: string, includeOwner = false) {
     return this.db.recipe.findUnique({
       where: { id },
@@ -82,6 +104,7 @@ export class RecipeService {
         allowDelete: true,
         allowEdit: true,
         allowView: true,
+        isWishList: true,
       },
     });
   }
@@ -386,5 +409,9 @@ export class RecipeService {
     user?: User,
   ) {
     return this.externalRecipeService.getMultipeRandomRecipes(user.id, amount);
+  }
+
+  public async getExternalRecipeById(id: string, user?: User) {
+    return this.externalRecipeService.getRecipeById(id, user.id);
   }
 }

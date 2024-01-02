@@ -14,4 +14,5 @@ export declare class Recipe {
     allowView?: string[];
     allowEdit?: string[];
     allowDelete?: string[];
+    isWishList?: boolean;
 }

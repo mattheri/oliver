@@ -10,10 +10,11 @@ import { UpdateAllowViewDto } from '../dto/update-allow-view.dto';
 import { UpdateAllowEditDto } from '../dto/update-allow-edit.dto';
 import { UpdateAllowDeleteDto } from '../dto/update-allow-delete.dto';
 import { GetRandomRecipesDto } from '../dto/get-random-recipes.dto';
+import { GetExternalRecipeByIdDto } from '../dto/get-external-recipe-by-id.dto';
 export declare class RecipesResolver {
     private readonly recipeService;
     constructor(recipeService: RecipeService);
-    recipe({ id }: GetRecipeByIdDto): Promise<{
+    recipe(input: GetRecipeByIdDto): Promise<{
         owner: {
             id: string;
             name: string;
@@ -40,6 +41,7 @@ export declare class RecipesResolver {
         servings: number;
         prepTime: number;
         cookTime: number;
+        isWishList: boolean;
     }>;
     recipesByUser(user?: User): Promise<({
         owner: {
@@ -68,6 +70,36 @@ export declare class RecipesResolver {
         servings: number;
         prepTime: number;
         cookTime: number;
+        isWishList: boolean;
+    })[]>;
+    wishlistRecipes(user?: User): Promise<({
+        owner: {
+            id: string;
+            name: string;
+            email: string;
+            provider: string;
+            password: string;
+            refreshToken: string;
+            created: Date;
+            updated: Date;
+        };
+    } & {
+        id: string;
+        title: string;
+        description: string;
+        ingredients: string;
+        instructions: string;
+        ownerId: string;
+        created: Date;
+        updated: Date;
+        isExternalSrc: boolean;
+        allowView: string;
+        allowEdit: string;
+        allowDelete: string;
+        servings: number;
+        prepTime: number;
+        cookTime: number;
+        isWishList: boolean;
     })[]>;
     recipes(user?: User): Promise<{
         id: string;
@@ -85,8 +117,19 @@ export declare class RecipesResolver {
         servings: number;
         prepTime: number;
         cookTime: number;
+        isWishList: boolean;
     }[]>;
     createRecipe(input: CreateRecipeDto, user?: User): Promise<{
+        id: string;
+        title: string;
+        ingredients: string;
+        instructions: string;
+        ownerId: string;
+        isExternalSrc: boolean;
+        allowView: string;
+        allowEdit: string;
+        allowDelete: string;
+        isWishList: boolean;
         image: {
             id: string;
             width: number;
@@ -94,17 +137,17 @@ export declare class RecipesResolver {
             url: string;
             recipeId: string;
         }[];
-        id: string;
-        title: string;
-        isExternalSrc: boolean;
-        ingredients: string;
-        instructions: string;
-        allowView: string;
-        allowEdit: string;
-        allowDelete: string;
-        ownerId: string;
     }>;
     updateRecipe(input: UpdateRecipeDto): Promise<{
+        id: string;
+        title: string;
+        ingredients: string;
+        instructions: string;
+        ownerId: string;
+        isExternalSrc: boolean;
+        allowView: string;
+        allowEdit: string;
+        allowDelete: string;
         image: {
             id: string;
             width: number;
@@ -112,15 +155,6 @@ export declare class RecipesResolver {
             url: string;
             recipeId: string;
         }[];
-        id: string;
-        title: string;
-        isExternalSrc: boolean;
-        ingredients: string;
-        instructions: string;
-        allowView: string;
-        allowEdit: string;
-        allowDelete: string;
-        ownerId: string;
     }>;
     deleteRecipe(input: DeleteRecipeDto): Promise<{
         id: string;
@@ -138,6 +172,7 @@ export declare class RecipesResolver {
         servings: number;
         prepTime: number;
         cookTime: number;
+        isWishList: boolean;
     }>;
     deleteManyRecipes(input: DeleteManyRecipeDto): Promise<{
         id: string;
@@ -155,8 +190,18 @@ export declare class RecipesResolver {
         servings: number;
         prepTime: number;
         cookTime: number;
+        isWishList: boolean;
     }[]>;
     addAllowView(input: UpdateAllowViewDto, user?: User): Promise<{
+        id: string;
+        title: string;
+        ingredients: string;
+        instructions: string;
+        ownerId: string;
+        isExternalSrc: boolean;
+        allowView: string;
+        allowEdit: string;
+        allowDelete: string;
         image: {
             id: string;
             width: number;
@@ -164,17 +209,17 @@ export declare class RecipesResolver {
             url: string;
             recipeId: string;
         }[];
-        id: string;
-        title: string;
-        isExternalSrc: boolean;
-        ingredients: string;
-        instructions: string;
-        allowView: string;
-        allowEdit: string;
-        allowDelete: string;
-        ownerId: string;
     }>;
     removeAllowView(input: UpdateAllowViewDto, user?: User): Promise<{
+        id: string;
+        title: string;
+        ingredients: string;
+        instructions: string;
+        ownerId: string;
+        isExternalSrc: boolean;
+        allowView: string;
+        allowEdit: string;
+        allowDelete: string;
         image: {
             id: string;
             width: number;
@@ -182,17 +227,17 @@ export declare class RecipesResolver {
             url: string;
             recipeId: string;
         }[];
-        id: string;
-        title: string;
-        isExternalSrc: boolean;
-        ingredients: string;
-        instructions: string;
-        allowView: string;
-        allowEdit: string;
-        allowDelete: string;
-        ownerId: string;
     }>;
     addAllowEdit(input: UpdateAllowEditDto, user?: User): Promise<{
+        id: string;
+        title: string;
+        ingredients: string;
+        instructions: string;
+        ownerId: string;
+        isExternalSrc: boolean;
+        allowView: string;
+        allowEdit: string;
+        allowDelete: string;
         image: {
             id: string;
             width: number;
@@ -200,17 +245,17 @@ export declare class RecipesResolver {
             url: string;
             recipeId: string;
         }[];
-        id: string;
-        title: string;
-        isExternalSrc: boolean;
-        ingredients: string;
-        instructions: string;
-        allowView: string;
-        allowEdit: string;
-        allowDelete: string;
-        ownerId: string;
     }>;
     removeAllowEdit(input: UpdateAllowEditDto, user?: User): Promise<{
+        id: string;
+        title: string;
+        ingredients: string;
+        instructions: string;
+        ownerId: string;
+        isExternalSrc: boolean;
+        allowView: string;
+        allowEdit: string;
+        allowDelete: string;
         image: {
             id: string;
             width: number;
@@ -218,17 +263,17 @@ export declare class RecipesResolver {
             url: string;
             recipeId: string;
         }[];
-        id: string;
-        title: string;
-        isExternalSrc: boolean;
-        ingredients: string;
-        instructions: string;
-        allowView: string;
-        allowEdit: string;
-        allowDelete: string;
-        ownerId: string;
     }>;
     addAllowDelete(input: UpdateAllowDeleteDto, user?: User): Promise<{
+        id: string;
+        title: string;
+        ingredients: string;
+        instructions: string;
+        ownerId: string;
+        isExternalSrc: boolean;
+        allowView: string;
+        allowEdit: string;
+        allowDelete: string;
         image: {
             id: string;
             width: number;
@@ -236,17 +281,17 @@ export declare class RecipesResolver {
             url: string;
             recipeId: string;
         }[];
-        id: string;
-        title: string;
-        isExternalSrc: boolean;
-        ingredients: string;
-        instructions: string;
-        allowView: string;
-        allowEdit: string;
-        allowDelete: string;
-        ownerId: string;
     }>;
     removeAllowDelete(input: UpdateAllowDeleteDto, user?: User): Promise<{
+        id: string;
+        title: string;
+        ingredients: string;
+        instructions: string;
+        ownerId: string;
+        isExternalSrc: boolean;
+        allowView: string;
+        allowEdit: string;
+        allowDelete: string;
         image: {
             id: string;
             width: number;
@@ -254,15 +299,6 @@ export declare class RecipesResolver {
             url: string;
             recipeId: string;
         }[];
-        id: string;
-        title: string;
-        isExternalSrc: boolean;
-        ingredients: string;
-        instructions: string;
-        allowView: string;
-        allowEdit: string;
-        allowDelete: string;
-        ownerId: string;
     }>;
     recipesByUserEmail(user?: User): Promise<({
         owner: {
@@ -291,6 +327,8 @@ export declare class RecipesResolver {
         servings: number;
         prepTime: number;
         cookTime: number;
+        isWishList: boolean;
     })[]>;
     randomRecipes(input: GetRandomRecipesDto, user?: User): Promise<Recipe[]>;
+    externalRecipe(input: GetExternalRecipeByIdDto, user?: User): Promise<Recipe>;
 }

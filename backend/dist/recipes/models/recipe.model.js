@@ -70,6 +70,10 @@ __decorate([
     (0, graphql_1.Field)(() => [String], { nullable: true }),
     __metadata("design:type", Array)
 ], Recipe.prototype, "allowDelete", void 0);
+__decorate([
+    (0, graphql_1.Field)({ defaultValue: false, nullable: true }),
+    __metadata("design:type", Boolean)
+], Recipe.prototype, "isWishList", void 0);
 Recipe = __decorate([
     (0, graphql_1.ObjectType)()
 ], Recipe);

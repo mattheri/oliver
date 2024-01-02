@@ -16,6 +16,7 @@ import { UpdateAllowViewDto } from '../dto/update-allow-view.dto';
 import { UpdateAllowEditDto } from '../dto/update-allow-edit.dto';
 import { UpdateAllowDeleteDto } from '../dto/update-allow-delete.dto';
 import { GetRandomRecipesDto } from '../dto/get-random-recipes.dto';
+import { GetExternalRecipeByIdDto } from '../dto/get-external-recipe-by-id.dto';
 
 @Resolver(() => Recipe)
 export class RecipesResolver {
@@ -23,8 +24,8 @@ export class RecipesResolver {
 
   @Query(() => Recipe)
   @UseGuards(JwtGqlAuthGuard)
-  async recipe({ id }: GetRecipeByIdDto) {
-    return this.recipeService.getRecipeById(id);
+  async recipe(@Args('input') input: GetRecipeByIdDto) {
+    return this.recipeService.getRecipeById(input.id);
   }
 
   @Query(() => [Recipe])
@@ -33,6 +34,14 @@ export class RecipesResolver {
     if (!user) throw new UnauthorizedException();
 
     return this.recipeService.getRecipesByUserEmail(user.email, true);
+  }
+
+  @Query(() => [Recipe])
+  @UseGuards(JwtGqlAuthGuard)
+  async wishlistRecipes(@CurrentUser() user?: User) {
+    if (!user) throw new UnauthorizedException();
+
+    return this.recipeService.getRecipesByUserEmail(user.email, false);
   }
 
   @Query(() => [Recipe])
@@ -137,5 +146,14 @@ export class RecipesResolver {
     @CurrentUser() user?: User,
   ) {
     return this.recipeService.getRandomRecipes(input, user);
+  }
+
+  @Query(() => Recipe)
+  @UseGuards(JwtGqlAuthGuard)
+  async externalRecipe(
+    @Args('input') input: GetExternalRecipeByIdDto,
+    @CurrentUser() user?: User,
+  ) {
+    return this.recipeService.getExternalRecipeById(input.id, user);
   }
 }

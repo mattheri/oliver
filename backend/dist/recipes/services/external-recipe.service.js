@@ -49,7 +49,7 @@ let ExternalRecipeService = class ExternalRecipeService {
     async getRecipeById(id, userId) {
         try {
             const { data } = await this.http.get(`/${this.endpoints.LOOKUP}?${this.queryParams.SEARCH_BY_ID}=${id}`);
-            const recipe = Promise.all(data.meals.map(async (externalRecipe) => this.externalRecipePresenter.externalRecipeToRecipe(externalRecipe, userId)));
+            const recipe = await Promise.all(data.meals.map(async (externalRecipe) => this.externalRecipePresenter.externalRecipeToRecipe(externalRecipe, userId)));
             return recipe[0];
         }
         catch (e) {

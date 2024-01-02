@@ -1,7 +1,7 @@
 import type { Nullable } from "~/types";
 
 export type Recipe = {
-  id: number;
+  id: string;
   title: string;
   url?: Nullable<string>;
   ingredients: Nullable<string[]>;
@@ -22,7 +22,11 @@ export type Recipe = {
   prepTime?: Nullable<string>;
   cookTime?: Nullable<string>;
   mainIngredient?: Nullable<string>;
+  isWishList?: boolean;
 };
+
+export type CreateRecipeDto = Omit<Recipe, "id" | "userId">;
+export type UpdateRecipeDto = Partial<CreateRecipeDto>;
 
 export type RecipeCategory = {
   name: string;

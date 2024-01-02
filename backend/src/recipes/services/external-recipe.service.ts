@@ -71,7 +71,7 @@ export class ExternalRecipeService {
         `/${this.endpoints.LOOKUP}?${this.queryParams.SEARCH_BY_ID}=${id}`,
       );
 
-      const recipe = Promise.all(
+      const recipe = await Promise.all(
         data.meals.map(async (externalRecipe) =>
           this.externalRecipePresenter.externalRecipeToRecipe(
             externalRecipe,

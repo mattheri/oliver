@@ -31,6 +31,7 @@ input CreateRecipeDto {
   ingredients: [String!] = []
   instructions: [String!] = []
   isExternalSrc: Boolean
+  isWishList: Boolean = false
   prepTime: Int
   servings: Int
   title: String!
@@ -61,12 +62,20 @@ input FindUserByEmailDto {
   email: String!
 }
 
+input GetExternalRecipeByIdDto {
+  id: String!
+}
+
 input GetListByIdDto {
   id: ID!
 }
 
 input GetRandomRecipesDto {
   amount: Int = 10
+}
+
+input GetRecipeByIdDto {
+  id: ID!
 }
 
 type GroceryItem {
@@ -172,17 +181,20 @@ enum Provider {
 }
 
 type Query {
+  externalRecipe(input: GetExternalRecipeByIdDto!): Recipe!
   imageMetadata(input: ImageDto!): Image!
+  imageSizes(input: ImageSizeDto!): [ImageSize!]!
   itemByUpc(input: ItemByUpcDto!): Item
   list(input: GetListByIdDto!): List!
   lists: [List!]!
   me: User!
   randomRecipes(input: GetRandomRecipesDto!): [Recipe!]!
-  recipe: Recipe!
+  recipe(input: GetRecipeByIdDto!): Recipe!
   recipes: [Recipe!]!
   recipesByUser: [Recipe!]!
   recipesByUserEmail: [Recipe!]!
   user(input: FindUserByEmailDto!): User
+  wishlistRecipes: [Recipe!]!
 }
 
 type Recipe {
@@ -195,6 +207,7 @@ type Recipe {
   ingredients: [String!]!
   instructions: [String!]!
   isExternalSrc: Boolean
+  isWishList: Boolean
   prepTime: Int
   servings: Int
   title: String!

@@ -22,12 +22,9 @@ export class ImageService {
 
       return img
         .resize(width, height)
+        .png({ quality: 0.92 })
         .toBuffer()
-        .then((buffer) => ({
-          width,
-          height,
-          buffer,
-        }));
+        .then((buffer) => ({ buffer, width, height }));
     });
 
     const buffers = await Promise.all(promises);

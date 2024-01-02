@@ -165,7 +165,7 @@ __export(root_exports, {
 });
 
 // app/styles/tailwind.css
-var tailwind_default = "/build/_assets/tailwind-KFOQSCCU.css";
+var tailwind_default = "/build/_assets/tailwind-CIXTXMLI.css";
 
 // app/root.tsx
 var import_css_bundle = __toESM(require_dist()), import_react21 = require("@remix-run/react");
@@ -307,7 +307,7 @@ var Mutation = class {
   async execute() {
     if (typeof this.query != "string")
       throw new Error(HTTP_ERROR.INVALID_QUERY);
-    if (typeof this.options.variables != "object")
+    if (this.options.variables && typeof this.options.variables != "object")
       throw new Error(
         `${HTTP_ERROR.INVALID_VARIABLES}: ${this.options.variables}`
       );
@@ -342,7 +342,7 @@ var Query = class {
   async execute() {
     if (typeof this.query != "string")
       throw new Error(HTTP_ERROR.INVALID_QUERY);
-    if (typeof this.options.variables != "object")
+    if (this.options.variables && typeof this.options.variables != "object")
       throw new Error(
         `${HTTP_ERROR.INVALID_VARIABLES}: ${this.options.variables}`
       );
@@ -2652,6 +2652,55 @@ function UserContextProvider({
   );
 }
 
+// app/utils/formatGqlErrors.ts
+var handleGqlErrors = (errors) => {
+  var _a, _b;
+  if (errors) {
+    let formattedErrors = errors.map((error) => (console.error(error), error.message)).join(`
+`);
+    throw new Response(formattedErrors, {
+      status: ((_b = (_a = errors[0].extensions) == null ? void 0 : _a.originalError) == null ? void 0 : _b.statusCode) || 500
+    });
+  }
+};
+
+// app/recipes/graphql/mutation/CreateRecipeMutation.ts
+var CREATE_RECIPE_MUTATION = `#graphql
+	mutation CreateRecipe($input: CreateRecipeDto!) {
+		createRecipe(input: $input) {
+			id
+		}
+	}
+`, CreateRecipeMutation_default = CREATE_RECIPE_MUTATION;
+
+// app/recipes/graphql/fragment/MinimalRecipeFragment.ts
+var MINIMAL_RECIPE_FRAGMENT = `#graphql
+	fragment recipeFields on Recipe {
+		id
+		title
+		ingredients
+		image {
+			alt
+			height
+			width
+			src
+		}
+		isExternalSrc
+		isWishList
+	}
+`;
+
+// app/recipes/graphql/query/RecipesQuery.ts
+var RECIPES_QUERY = `#graphql
+	query Recipes {
+		recipes {
+			...recipeFields
+		}
+	}
+
+	${MINIMAL_RECIPE_FRAGMENT}
+`, RecipesQuery_default = RECIPES_QUERY;
+
 // app/recipes/service/recipes.service.ts
 var RecipesService = class {
   static get instance() {
@@ -2660,8 +2709,17 @@ var RecipesService = class {
   constructor(httpClient = client) {
     this.client = httpClient;
   }
-  async getRecipesByUserId(userId) {
-    return [];
+  async getRecipesByUserId() {
+    let { data } = await this.client.query(RecipesQuery_default);
+    return (data == null ? void 0 : data.recipes) || [];
+  }
+  async createRecipeAndAddToWishList(input2) {
+    let { data, errors } = await this.client.mutate(CreateRecipeMutation_default, {
+      variables: {
+        input: input2
+      }
+    });
+    return handleGqlErrors(errors), data == null ? void 0 : data.createRecipe;
   }
 }, recipes_service_default = RecipesService.instance;
 
@@ -2675,7 +2733,7 @@ var import_jsx_dev_runtime38 = require("react/jsx-dev-runtime"), links = () => [
   }
 ];
 async function loader({ request }) {
-  let user = await formAuthenticator.isAuthenticated(request), recipes = await recipes_service_default.getRecipesByUserId(user == null ? void 0 : user.id);
+  let user = await formAuthenticator.isAuthenticated(request), recipes = await recipes_service_default.getRecipesByUserId();
   return {
     user,
     isAuthenticated: !!user,
@@ -2954,51 +3012,16 @@ var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, im
 
 // app/recipes/constants.ts
 var RECIPE_EXTERNAL_QUERY_PARAMS = {
-  TITLE: "title",
-  INSTRUCTIONS: "instructions",
-  INGREDIENTS: "ingredients",
-  IMAGE: "image",
-  IMAGE_WIDTH: "image_width",
-  IMAGE_HEIGHT: "image_height",
-  IMAGE_SIZES: "image_sizes",
-  URL: "url",
-  USER_ID: "user_id"
+  IS_EXTERNAL_SRC: "isExternalSrc"
 };
 
 // app/recipes/hook/useRecipeUrl.ts
 function useRecipeUrl({
   id,
-  ingredients,
-  instructions,
-  title,
-  userId,
-  image,
-  isExternalSrc,
-  url
+  isExternalSrc
 }) {
   let recipeUrl = new URL(`${window.location.origin}/recipes/${id}`);
-  return isExternalSrc && (recipeUrl.pathname = "/recipes/external", recipeUrl.searchParams.set(RECIPE_EXTERNAL_QUERY_PARAMS.TITLE, title), recipeUrl.searchParams.set(
-    RECIPE_EXTERNAL_QUERY_PARAMS.USER_ID,
-    userId.toString()
-  ), image && (recipeUrl.searchParams.set(
-    RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE,
-    image == null ? void 0 : image.src
-  ), image != null && image.width && recipeUrl.searchParams.set(
-    RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_WIDTH,
-    image == null ? void 0 : image.width.toString()
-  ), image != null && image.height ? recipeUrl.searchParams.set(
-    RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_HEIGHT,
-    image == null ? void 0 : image.height.toString()
-  ) : image != null && image.width && recipeUrl.searchParams.set(
-    RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_HEIGHT,
-    image == null ? void 0 : image.width.toString()
-  )), url && recipeUrl.searchParams.set(RECIPE_EXTERNAL_QUERY_PARAMS.URL, url), instructions && recipeUrl.searchParams.set(
-    RECIPE_EXTERNAL_QUERY_PARAMS.INSTRUCTIONS,
-    instructions == null ? void 0 : instructions.join(",")
-  ), ingredients && recipeUrl.searchParams.set(
-    RECIPE_EXTERNAL_QUERY_PARAMS.INGREDIENTS,
-    ingredients == null ? void 0 : ingredients.join(",")
-  )), recipeUrl.toString();
+  return isExternalSrc && recipeUrl.searchParams.set(RECIPE_EXTERNAL_QUERY_PARAMS.IS_EXTERNAL_SRC, "true"), recipeUrl.toString().replace(window.location.origin, "");
 }
 
 // app/recipes/components/RecipeCard/RecipeCard.tsx
@@ -3006,22 +3029,13 @@ var import_jsx_dev_runtime44 = require("react/jsx-dev-runtime");
 function RecipeCard({
   id,
   title,
-  url,
   image,
-  isExternalSrc,
-  ingredients,
-  instructions,
-  userId
+  isExternalSrc = !1,
+  ingredients
 }) {
   let to = useRecipeUrl({
     id,
-    title,
-    url,
-    image,
-    isExternalSrc,
-    ingredients,
-    instructions,
-    userId
+    isExternalSrc
   });
   return /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(Link, { to, className: "block max-h-24 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("div", { className: "flex", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(If_default, { condition: !!image, children: /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(
@@ -3035,42 +3049,42 @@ function RecipeCard({
       !1,
       {
         fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-        lineNumber: 31,
+        lineNumber: 30,
         columnNumber: 13
       },
       this
     ) }, void 0, !1, {
       fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-      lineNumber: 30,
+      lineNumber: 29,
       columnNumber: 11
     }, this) }, void 0, !1, {
       fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-      lineNumber: 29,
+      lineNumber: 28,
       columnNumber: 9
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("div", { className: "max-h-full flex-grow p-2", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("div", { className: "pb-2 text-left text-sm", children: title }, void 0, !1, {
         fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-        lineNumber: 39,
+        lineNumber: 38,
         columnNumber: 11
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("p", { className: "line-clamp-2 text-sm", children: ingredients == null ? void 0 : ingredients.join(", ") }, void 0, !1, {
         fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-        lineNumber: 40,
+        lineNumber: 39,
         columnNumber: 11
       }, this)
     ] }, void 0, !0, {
       fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-      lineNumber: 38,
+      lineNumber: 37,
       columnNumber: 9
     }, this)
   ] }, void 0, !0, {
     fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-    lineNumber: 28,
+    lineNumber: 27,
     columnNumber: 7
   }, this) }, void 0, !1, {
     fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
-    lineNumber: 27,
+    lineNumber: 26,
     columnNumber: 5
   }, this);
 }
@@ -3087,17 +3101,17 @@ function RandomRecipesSlider({
     }).then((response) => {
       response && setRandomRecipes(response.randomRecipes);
     });
-  }, [loader5, numberOfRecipes]), /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(HttpState, { loading, children: /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(Slider_default, { slidesToShow: 2, responsive: [{ breakpoint: THEME.BREAKPOINTS.LG, settings: { slidesToShow: 1 } }], className: "py-2 isolate", children: randomRecipes.map((recipe) => /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(RecipeCard, { ...recipe }, recipe.id, !1, {
+  }, [loader5, numberOfRecipes]), console.log("randomRecipes", randomRecipes), /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(HttpState, { loading, children: /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(Slider_default, { slidesToShow: 2, responsive: [{ breakpoint: THEME.BREAKPOINTS.LG, settings: { slidesToShow: 1 } }], className: "py-2 isolate", children: randomRecipes.map((recipe) => /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(RecipeCard, { id: recipe.id, ingredients: recipe.ingredients, isExternalSrc: recipe.isExternalSrc, title: recipe.title, image: recipe.image }, recipe.id, !1, {
     fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
-    lineNumber: 34,
+    lineNumber: 36,
     columnNumber: 11
   }, this)) }, void 0, !1, {
     fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
-    lineNumber: 32,
+    lineNumber: 34,
     columnNumber: 7
   }, this) }, void 0, !1, {
     fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
-    lineNumber: 31,
+    lineNumber: 33,
     columnNumber: 5
   }, this);
 }
@@ -3262,48 +3276,22 @@ __export(locale_api_recipes_random_count_route_exports, {
 // app/auth/utils/createBearerAccessTokenHeader.ts
 var createBearerAccessTokenHeader = async (authenticator, request) => {
   let user = await authenticator.isAuthenticated(request);
-  return console.log("user", user), user ? {
+  return user ? {
     Authorization: `Bearer ${user.accessToken}`
   } : {
     Authorization: ""
   };
 };
 
-// app/utils/formatGqlErrors.ts
-var handleGqlErrors = (errors) => {
-  var _a, _b;
-  if (errors) {
-    let formattedErrors = errors.map((error) => (console.error(error), error.message)).join(`
-`);
-    throw new Response(formattedErrors, {
-      status: ((_b = (_a = errors[0].extensions) == null ? void 0 : _a.originalError) == null ? void 0 : _b.statusCode) || 500
-    });
-  }
-};
-
 // app/recipes/graphql/query/RandomRecipesQuery.ts
 var RANDOM_RECIPES_QUERY = `#graphql
 	query RandomRecipes($amount: Int = 10) {
 		randomRecipes(input: { amount: $amount }) {
-			id
-			title
-			ingredients
-			instructions
-			userId
-			image {
-				width
-				height
-				src
-				sizes {
-					height
-					width
-					src
-				}
-			}
-			url
-			isExternalSrc
+			...recipeFields
 		}
 	}
+
+	${MINIMAL_RECIPE_FRAGMENT}
 `, RandomRecipesQuery_default = RANDOM_RECIPES_QUERY;
 
 // app/recipes/routes/($locale).api.recipes.random.$count.route.tsx
@@ -3325,25 +3313,100 @@ async function loader2({ params, request }) {
   };
 }
 
-// app/recipes/routes/($locale).recipes.external.route.tsx
-var locale_recipes_external_route_exports = {};
-__export(locale_recipes_external_route_exports, {
-  default: () => Index2,
+// app/auth/routes/($locale).auth.actions.route.tsx
+var locale_auth_actions_route_exports = {};
+__export(locale_auth_actions_route_exports, {
+  action: () => action
+});
+var import_remix_auth2 = require("remix-auth");
+var import_node3 = require("@remix-run/node");
+async function action({ request }) {
+  try {
+    await formAuthenticator.authenticate(PROVIDER.LOCAL, request, {
+      successRedirect: ROUTES.INDEX
+    });
+  } catch (e) {
+    if (e instanceof Response)
+      return e;
+    if (e instanceof import_remix_auth2.AuthorizationError) {
+      let error = e;
+      return console.error(error), (0, import_node3.json)({ message: error.message });
+    }
+  }
+}
+
+// app/auth/routes/($locale).auth.logout.route.tsx
+var locale_auth_logout_route_exports = {};
+__export(locale_auth_logout_route_exports, {
+  default: () => Logout,
   loader: () => loader3
 });
-var import_react27 = require("@remix-run/react");
+var import_jsx_dev_runtime49 = require("react/jsx-dev-runtime");
+async function loader3({ request }) {
+  await formAuthenticator.logout(request, {
+    redirectTo: USER_ROUTES.LOGIN
+  });
+}
+function Logout() {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", {}, void 0, !1, {
+    fileName: "app/auth/routes/($locale).auth.logout.route.tsx",
+    lineNumber: 12,
+    columnNumber: 10
+  }, this);
+}
+
+// app/auth/routes/($locale).auth.signup.route.tsx
+var locale_auth_signup_route_exports = {};
+__export(locale_auth_signup_route_exports, {
+  default: () => Index2
+});
+var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime");
+function Index2() {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(AccountSignIn, {}, void 0, !1, {
+      fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
+      lineNumber: 8,
+      columnNumber: 11
+    }, this) }, void 0, !1, {
+      fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
+      lineNumber: 7,
+      columnNumber: 9
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(SignupForm, {}, void 0, !1, {
+      fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
+      lineNumber: 10,
+      columnNumber: 9
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
+    lineNumber: 6,
+    columnNumber: 7
+  }, this) }, void 0, !1, {
+    fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
+    lineNumber: 5,
+    columnNumber: 5
+  }, this);
+}
+
+// app/recipes/routes/($locale).recipes.$id.route.tsx
+var locale_recipes_id_route_exports = {};
+__export(locale_recipes_id_route_exports, {
+  default: () => Index3,
+  loader: () => loader4
+});
+var import_react28 = require("@remix-run/react");
 
 // app/recipes/components/Recipe/RecipeHeader.tsx
 var import_cva14 = require("cva"), import_react25 = require("react");
-var import_react26 = require("@headlessui/react"), import_solid = require("@heroicons/react/20/solid"), import_jsx_dev_runtime49 = require("react/jsx-dev-runtime");
+var import_react26 = require("@headlessui/react"), import_solid = require("@heroicons/react/20/solid"), import_jsx_dev_runtime51 = require("react/jsx-dev-runtime");
 function RecipeHeader({
   url,
   canEdit,
   isFavorite
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("section", { className: "flex items-center justify-between py-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("section", { className: "flex gap-4", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default, { condition: !!canEdit, children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(Button, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_solid.PencilIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("section", { className: "flex items-center justify-between py-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("section", { className: "flex gap-4", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default, { condition: !!canEdit, children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(Button, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_solid.PencilIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
         lineNumber: 30,
         columnNumber: 17
@@ -3366,8 +3429,8 @@ function RecipeHeader({
       lineNumber: 26,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default, { condition: !!url, children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(Button, { intent: "secondary", to: url, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_solid.LinkIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default, { condition: !!url, children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(Button, { intent: "secondary", to: url, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_solid.LinkIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
         lineNumber: 41,
         columnNumber: 17
@@ -3390,10 +3453,10 @@ function RecipeHeader({
       lineNumber: 37,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react26.Menu, { as: "div", className: "relative sm:hidden", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react26.Menu.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu, { as: "div", className: "relative sm:hidden", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
         "More",
-        /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
           import_solid.ChevronDownIcon,
           {
             className: "-mr-1 ml-1.5 h-5 w-5 text-gray-400",
@@ -3413,7 +3476,7 @@ function RecipeHeader({
         lineNumber: 48,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
+      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
         import_react26.Transition,
         {
           as: import_react25.Fragment,
@@ -3423,8 +3486,8 @@ function RecipeHeader({
           leave: "transition ease-in duration-75",
           leaveFrom: "transform opacity-100 scale-100",
           leaveTo: "transform opacity-0 scale-95",
-          children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react26.Menu.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react26.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
+          children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
               "a",
               {
                 href: "#",
@@ -3447,7 +3510,7 @@ function RecipeHeader({
               lineNumber: 66,
               columnNumber: 15
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(import_react26.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
               "a",
               {
                 href: "#",
@@ -3503,10 +3566,10 @@ function RecipeHeader({
 
 // app/recipes/components/Recipe/RecipeHeaderSection.tsx
 var import_cva15 = require("cva");
-var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime52 = require("react/jsx-dev-runtime");
 function RecipeHeaderSection({ image, title }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("section", { className: "grid grid-cols-1 grid-rows-1 max-h-96", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(If_default, { condition: !!(image != null && image.src), children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(Image, { ...image, alt: title, className: "w-full bg-cover bg-top block max-w-full h-auto" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("section", { className: "grid grid-cols-1 grid-rows-1 max-h-96", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default, { condition: !!(image != null && image.src), children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(Image, { ...image, alt: title, className: "w-full bg-cover bg-top block max-w-full h-auto" }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
       lineNumber: 16,
       columnNumber: 7
@@ -3523,7 +3586,7 @@ function RecipeHeaderSection({ image, title }) {
       lineNumber: 13,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 grid place-items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("h1", { className: (0, import_cva15.cx)("text-3xl font-bold text-center", {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 grid place-items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("h1", { className: (0, import_cva15.cx)("text-3xl font-bold text-center", {
       "bg-black text-white p-2": !!(image != null && image.src)
     }), children: title }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
@@ -3542,10 +3605,10 @@ function RecipeHeaderSection({ image, title }) {
 }
 
 // app/recipes/components/Recipe/RecipeMetadata.tsx
-var import_outline5 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime51 = require("react/jsx-dev-runtime");
+var import_outline5 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime53 = require("react/jsx-dev-runtime");
 function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredient }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("section", { className: "flex flex-wrap items-center gap-y-2 gap-x-4 py-2 text-gray-900", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default, { condition: !!prepTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("span", { className: "text-sm", children: [
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("section", { className: "flex flex-wrap items-center gap-y-2 gap-x-4 py-2 text-gray-900", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!prepTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("span", { className: "text-sm", children: [
       "Preparation: ",
       prepTime
     ] }, void 0, !0, {
@@ -3561,7 +3624,7 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
       lineNumber: 17,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default, { condition: !!cookTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("span", { className: "text-sm", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!cookTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("span", { className: "text-sm", children: [
       "Cooking: ",
       cookTime
     ] }, void 0, !0, {
@@ -3577,7 +3640,7 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
       lineNumber: 24,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default, { condition: !!servings, children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("span", { className: "text-sm", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!servings, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("span", { className: "text-sm", children: [
       "Serves: ",
       servings
     ] }, void 0, !0, {
@@ -3593,7 +3656,7 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
       lineNumber: 31,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default, { condition: !!mainIngredient, children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("span", { className: "text-sm", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!mainIngredient, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("span", { className: "text-sm", children: [
       "Main Ingredient: ",
       mainIngredient
     ] }, void 0, !0, {
@@ -3609,8 +3672,8 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
       lineNumber: 38,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default, { condition: !!externalUrl, children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(Button, { intent: "secondary", to: externalUrl, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_outline5.LinkIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!externalUrl, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(Button, { intent: "secondary", to: externalUrl, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(import_outline5.LinkIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
         lineNumber: 48,
         columnNumber: 5
@@ -3636,8 +3699,64 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
   }, this);
 }
 
+// app/common/components/WishlistButton/WishlistButton.tsx
+var import_cva16 = require("cva"), import_outline6 = require("@heroicons/react/24/outline");
+var import_jsx_dev_runtime54 = require("react/jsx-dev-runtime");
+function WishlistButton({ isWishlist, children, compact = !0, onClick, ...props }) {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(Button, { ...props, type: "button", intent: "secondary", onClick, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(import_outline6.HeartIcon, { className: (0, import_cva16.cx)("h-5 w-5", { "text-red-600": isWishlist }) }, void 0, !1, {
+      fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
+      lineNumber: 17,
+      columnNumber: 3
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default, { condition: !compact, children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("span", { className: "ml-2", children: isWishlist ? "Remove from Wishlist" : "Add to Wishlist" }, void 0, !1, {
+      fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
+      lineNumber: 20,
+      columnNumber: 5
+    }, this) }, void 0, !1, {
+      fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
+      lineNumber: 19,
+      columnNumber: 4
+    }, this) }, void 0, !1, {
+      fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
+      lineNumber: 18,
+      columnNumber: 3
+    }, this)
+  ] }, void 0, !0, {
+    fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
+    lineNumber: 16,
+    columnNumber: 9
+  }, this);
+}
+
+// app/recipes/components/RecipeWishlistButton/RecipeWishlistButton.tsx
+var import_react27 = require("@remix-run/react"), import_jsx_dev_runtime55 = require("react/jsx-dev-runtime");
+function RecipeWishlistButton({ recipe, createRecipe = !1 }) {
+  let navigate = (0, import_react27.useNavigate)(), fetcher = (0, import_react27.useFetcher)(), onClick = async () => {
+    let route = createRecipe ? "/api/recipes/create" : "/api/recipes/update";
+    if (fetcher.submit(route, {
+      preventScrollReset: !0,
+      method: "POST"
+    }), createRecipe) {
+      let { id, ...input2 } = recipe;
+      console.log(input2);
+      let data = await recipes_service_default.createRecipeAndAddToWishList({
+        ...input2,
+        isWishList: !0
+      });
+      if (console.log(data), data)
+        return navigate(`/recipes/${data.id}`);
+    }
+  };
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(WishlistButton, { isWishlist: recipe.isWishList, onClick }, void 0, !1, {
+    fileName: "app/recipes/components/RecipeWishlistButton/RecipeWishlistButton.tsx",
+    lineNumber: 41,
+    columnNumber: 9
+  }, this);
+}
+
 // app/recipes/components/Recipe/Recipe.tsx
-var import_jsx_dev_runtime52 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime56 = require("react/jsx-dev-runtime");
 function Recipe({
   title,
   ingredients,
@@ -3647,20 +3766,43 @@ function Recipe({
   cookTime,
   mainIngredient,
   prepTime,
-  servings
+  servings,
+  id,
+  userId,
+  isExternalSrc,
+  isWishList
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("section", { className: "flex w-full flex-col", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(RecipeHeader, { url: url ?? " ", canEdit: !0 }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("section", { className: "flex w-full flex-col", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(RecipeWishlistButton, { recipe: {
+      title,
+      ingredients,
+      instructions,
+      image,
+      url,
+      cookTime,
+      mainIngredient,
+      prepTime,
+      servings,
+      id,
+      userId,
+      isExternalSrc,
+      isWishList
+    }, createRecipe: !0 }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 23,
+      lineNumber: 28,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(RecipeHeaderSection, { image, title }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(RecipeHeader, { url: url ?? " ", canEdit: !0 }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 24,
+      lineNumber: 41,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(RecipeHeaderSection, { image, title }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/Recipe.tsx",
+      lineNumber: 42,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(
       RecipeMetadata,
       {
         cookTime,
@@ -3673,188 +3815,168 @@ function Recipe({
       !1,
       {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 25,
+        lineNumber: 43,
         columnNumber: 7
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default, { condition: !!ingredients, children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("div", { className: "w-full lg:w-1/2", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("h2", { className: "text-xl font-bold", children: "Ingredients" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default, { condition: !!ingredients, children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("div", { className: "w-full lg:w-1/2", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("h2", { className: "text-xl font-bold", children: "Ingredients" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 35,
+        lineNumber: 53,
         columnNumber: 15
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("ul", { className: "list-inside list-disc", children: ingredients == null ? void 0 : ingredients.map((ingredient) => /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("li", { children: ingredient }, ingredient, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("ul", { className: "list-inside list-disc", children: ingredients == null ? void 0 : ingredients.map((ingredient) => /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("li", { children: ingredient }, ingredient, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 38,
+        lineNumber: 56,
         columnNumber: 19
       }, this)) }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 36,
+        lineNumber: 54,
         columnNumber: 15
       }, this)
     ] }, void 0, !0, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 34,
+      lineNumber: 52,
       columnNumber: 13
     }, this) }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 33,
+      lineNumber: 51,
       columnNumber: 11
     }, this) }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 32,
+      lineNumber: 50,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default.Then, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default.Then, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 46,
+        lineNumber: 64,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("li", { children: instruction }, instruction, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("li", { children: instruction }, instruction, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 49,
+        lineNumber: 67,
         columnNumber: 15
       }, this)) }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 47,
+        lineNumber: 65,
         columnNumber: 11
       }, this)
     ] }, void 0, !0, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 45,
+      lineNumber: 63,
       columnNumber: 9
     }, this) }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 44,
+      lineNumber: 62,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/recipes/components/Recipe/Recipe.tsx",
-    lineNumber: 22,
+    lineNumber: 27,
     columnNumber: 5
   }, this);
 }
 
-// app/recipes/routes/($locale).recipes.external.route.tsx
-var import_jsx_dev_runtime53 = require("react/jsx-dev-runtime");
-async function loader3({ request }) {
-  let url = new URL(request.url), title = url.searchParams.get(RECIPE_EXTERNAL_QUERY_PARAMS.TITLE), recipeUrl = url.searchParams.get(RECIPE_EXTERNAL_QUERY_PARAMS.URL), image = url.searchParams.get(RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE), imageWidth = Number(url.searchParams.get(
-    RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_WIDTH
-  )), imageHeight = Number(url.searchParams.get(
-    RECIPE_EXTERNAL_QUERY_PARAMS.IMAGE_HEIGHT
-  )), ingredients = url.searchParams.get(
-    RECIPE_EXTERNAL_QUERY_PARAMS.INGREDIENTS
-  ), instructions = url.searchParams.get(
-    RECIPE_EXTERNAL_QUERY_PARAMS.INSTRUCTIONS
-  );
-  return {
-    title,
-    url: recipeUrl,
-    imageSrc: image ? { src: image, width: imageWidth, height: imageHeight } : void 0,
-    ingredients: ingredients == null ? void 0 : ingredients.split(",").map((ingredient) => ingredient.trim()),
-    instructions: instructions == null ? void 0 : instructions.split(",").map((instruction) => instruction.trim())
+// app/recipes/graphql/fragment/RecipeFragment.ts
+var RECIPE_FRAGMENT = `#graphql
+	fragment recipeFields on Recipe {
+		id
+		title
+		ingredients
+		instructions
+		servings
+		prepTime
+		cookTime
+		userId
+		image {
+			alt
+			height
+			width
+			src
+		}
+		isExternalSrc
+		url
+		allowView
+		allowEdit
+		allowDelete
+		isWishList
+	}
+`;
+
+// app/recipes/graphql/query/ExternalRecipeQuery.ts
+var EXTERNAL_RECIPE_QUERY = `#graphql
+	query ExternalRecipe($id: String!) {
+		externalRecipe(input: { id: $id }) {
+			...recipeFields
+		}
+	}
+
+	${RECIPE_FRAGMENT}
+`, ExternalRecipeQuery_default = EXTERNAL_RECIPE_QUERY;
+
+// app/recipes/graphql/query/RecipeQuery.ts
+var RECIPE_QUERY = `#graphql
+	query RecipeById($id: ID!) {
+		recipe(input: { id: $id }) {
+			...recipeFields
+		}
+	}
+
+	${RECIPE_FRAGMENT}
+`;
+
+// app/recipes/routes/($locale).recipes.$id.route.tsx
+var import_jsx_dev_runtime57 = require("react/jsx-dev-runtime"), loader4 = async ({ request, params }) => {
+  var _a, _b;
+  let isExternalSrc = new URL(request.url).searchParams.get("isExternalSrc") === "true", id = String(params.id), variables = {
+    id
+  }, errors = [], data;
+  if (!id)
+    throw new Response("Not found", { status: 404 });
+  if (isExternalSrc) {
+    let res = await client.query(ExternalRecipeQuery_default, {
+      variables,
+      headers: {
+        ...await createBearerAccessTokenHeader(formAuthenticator, request)
+      },
+      cache: Cache.Long()
+    });
+    errors = res.errors ?? [], data = (_a = res.data) == null ? void 0 : _a.externalRecipe;
+  } else {
+    let res = await client.query(RECIPE_QUERY, {
+      variables,
+      headers: {
+        ...await createBearerAccessTokenHeader(formAuthenticator, request)
+      },
+      cache: Cache.Long()
+    });
+    errors = res.errors ?? [], data = (_b = res.data) == null ? void 0 : _b.recipe;
+  }
+  return errors.length && handleGqlErrors(errors), {
+    recipe: data
   };
-}
-function Index2() {
-  let { title, url, imageSrc, ingredients, instructions } = (0, import_react27.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("main", { className: "flex flex-col py-12 section-container", children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(
+};
+function Index3() {
+  let { recipe } = (0, import_react28.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("main", { className: "flex flex-col py-12 section-container", children: /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(
     Recipe,
     {
-      title: title ?? "",
-      url,
-      image: imageSrc,
-      ingredients,
-      instructions
+      ...recipe
     },
     void 0,
     !1,
     {
-      fileName: "app/recipes/routes/($locale).recipes.external.route.tsx",
-      lineNumber: 44,
+      fileName: "app/recipes/routes/($locale).recipes.$id.route.tsx",
+      lineNumber: 67,
       columnNumber: 7
     },
     this
   ) }, void 0, !1, {
-    fileName: "app/recipes/routes/($locale).recipes.external.route.tsx",
-    lineNumber: 43,
-    columnNumber: 5
-  }, this);
-}
-
-// app/auth/routes/($locale).auth.actions.route.tsx
-var locale_auth_actions_route_exports = {};
-__export(locale_auth_actions_route_exports, {
-  action: () => action
-});
-var import_remix_auth2 = require("remix-auth");
-var import_node3 = require("@remix-run/node");
-async function action({ request }) {
-  try {
-    await formAuthenticator.authenticate(PROVIDER.LOCAL, request, {
-      successRedirect: ROUTES.INDEX
-    });
-  } catch (e) {
-    if (e instanceof Response)
-      return e;
-    if (e instanceof import_remix_auth2.AuthorizationError) {
-      let error = e;
-      return console.error(error), (0, import_node3.json)({ message: error.message });
-    }
-  }
-}
-
-// app/auth/routes/($locale).auth.logout.route.tsx
-var locale_auth_logout_route_exports = {};
-__export(locale_auth_logout_route_exports, {
-  default: () => Logout,
-  loader: () => loader4
-});
-var import_jsx_dev_runtime54 = require("react/jsx-dev-runtime");
-async function loader4({ request }) {
-  await formAuthenticator.logout(request, {
-    redirectTo: USER_ROUTES.LOGIN
-  });
-}
-function Logout() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("div", {}, void 0, !1, {
-    fileName: "app/auth/routes/($locale).auth.logout.route.tsx",
-    lineNumber: 12,
-    columnNumber: 10
-  }, this);
-}
-
-// app/auth/routes/($locale).auth.signup.route.tsx
-var locale_auth_signup_route_exports = {};
-__export(locale_auth_signup_route_exports, {
-  default: () => Index3
-});
-var import_jsx_dev_runtime55 = require("react/jsx-dev-runtime");
-function Index3() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(AccountSignIn, {}, void 0, !1, {
-      fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
-      lineNumber: 8,
-      columnNumber: 11
-    }, this) }, void 0, !1, {
-      fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
-      lineNumber: 7,
-      columnNumber: 9
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(SignupForm, {}, void 0, !1, {
-      fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
-      lineNumber: 10,
-      columnNumber: 9
-    }, this)
-  ] }, void 0, !0, {
-    fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
-    lineNumber: 6,
-    columnNumber: 7
-  }, this) }, void 0, !1, {
-    fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
-    lineNumber: 5,
-    columnNumber: 5
+    fileName: "app/recipes/routes/($locale).recipes.$id.route.tsx",
+    lineNumber: 66,
+    columnNumber: 3
   }, this);
 }
 
@@ -3863,10 +3985,10 @@ var locale_auth_login_route_exports = {};
 __export(locale_auth_login_route_exports, {
   default: () => Index4
 });
-var import_jsx_dev_runtime56 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime58 = require("react/jsx-dev-runtime");
 function Index4() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(NoAccountSignup, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)(NoAccountSignup, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.login.route.tsx",
       lineNumber: 8,
       columnNumber: 11
@@ -3875,7 +3997,7 @@ function Index4() {
       lineNumber: 7,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(LoginForm, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)(LoginForm, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.login.route.tsx",
       lineNumber: 10,
       columnNumber: 9
@@ -3892,7 +4014,7 @@ function Index4() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { entry: { module: "/build/entry.client-KY4SRHS4.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-O63IHIKR.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-OGTFSPUD.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-Z6GTQ4PB.js", imports: ["/build/_shared/chunk-ELSFOB3R.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-43CFXCBH.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-WZI4RSCB.js", imports: ["/build/_shared/chunk-ELSFOB3R.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.external": { id: "($locale).recipes.external", parentId: "root", path: ":locale?/recipes/external", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.external-G76IGYKP.js", imports: ["/build/_shared/chunk-FWY7U4PK.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-2PMFYBKN.js", imports: ["/build/_shared/chunk-WV34VO76.js", "/build/_shared/chunk-VOXRDU2P.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-TH42PCJK.js", imports: ["/build/_shared/chunk-FWY7U4PK.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "18215b3c", hmr: { runtime: "/build/_shared/chunk-OGTFSPUD.js", timestamp: 1703695546795 }, url: "/build/manifest-18215B3C.js" };
+var assets_manifest_default = { entry: { module: "/build/entry.client-KY4SRHS4.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-O63IHIKR.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-OGTFSPUD.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-DJGBNW43.js", imports: ["/build/_shared/chunk-752QHA3I.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-43CFXCBH.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-OT2QFX5Z.js", imports: ["/build/_shared/chunk-752QHA3I.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.$id": { id: "($locale).recipes.$id", parentId: "root", path: ":locale?/recipes/:id", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.$id-SEAYYEK2.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-BCCOJ4YO.js", imports: ["/build/_shared/chunk-T3WBZNON.js", "/build/_shared/chunk-6763BLEM.js", "/build/_shared/chunk-VOXRDU2P.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-3MYAN7MQ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "5473940a", hmr: { runtime: "/build/_shared/chunk-OGTFSPUD.js", timestamp: 1704203888164 }, url: "/build/manifest-5473940A.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public/build", future = { v2_dev: !0, unstable_postcss: !1, unstable_tailwind: !1, v2_errorBoundary: !0, v2_headers: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !0 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
@@ -3920,14 +4042,6 @@ var assetsBuildDirectory = "public/build", future = { v2_dev: !0, unstable_postc
     caseSensitive: void 0,
     module: locale_api_recipes_random_count_route_exports
   },
-  "($locale).recipes.external": {
-    id: "($locale).recipes.external",
-    parentId: "root",
-    path: ":locale?/recipes/external",
-    index: !1,
-    caseSensitive: void 0,
-    module: locale_recipes_external_route_exports
-  },
   "($locale).auth.actions": {
     id: "($locale).auth.actions",
     parentId: "root",
@@ -3951,6 +4065,14 @@ var assetsBuildDirectory = "public/build", future = { v2_dev: !0, unstable_postc
     index: !1,
     caseSensitive: void 0,
     module: locale_auth_signup_route_exports
+  },
+  "($locale).recipes.$id": {
+    id: "($locale).recipes.$id",
+    parentId: "root",
+    path: ":locale?/recipes/:id",
+    index: !1,
+    caseSensitive: void 0,
+    module: locale_recipes_id_route_exports
   },
   "($locale).auth.login": {
     id: "($locale).auth.login",

@@ -22,13 +22,5 @@ export const MEAL_DB_QUERY_PARAMS = {
 } as const;
 
 export const RECIPE_EXTERNAL_QUERY_PARAMS = {
-  TITLE: "title",
-  INSTRUCTIONS: "instructions",
-  INGREDIENTS: "ingredients",
-  IMAGE: "image",
-  IMAGE_WIDTH: "image_width",
-  IMAGE_HEIGHT: "image_height",
-  IMAGE_SIZES: "image_sizes",
-  URL: "url",
-  USER_ID: "user_id",
+  IS_EXTERNAL_SRC: "isExternalSrc",
 } as const;

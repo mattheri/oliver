@@ -51,6 +51,24 @@ let RecipeService = class RecipeService {
         });
         return [...new Set(recipes)];
     }
+    async getWishlistRecipesByUserEmail(email, includeOwner = false) {
+        return this.db.recipe.findMany({
+            where: {
+                AND: [
+                    { isWishList: true },
+                    {
+                        OR: [
+                            { owner: { email } },
+                            { allowView: { contains: email } },
+                            { allowEdit: { contains: email } },
+                            { allowDelete: { contains: email } },
+                        ],
+                    },
+                ],
+            },
+            include: { owner: includeOwner },
+        });
+    }
     async getRecipeById(id, includeOwner = false) {
         return this.db.recipe.findUnique({
             where: { id },
@@ -77,6 +95,7 @@ let RecipeService = class RecipeService {
                 allowDelete: true,
                 allowEdit: true,
                 allowView: true,
+                isWishList: true,
             },
         });
     }
@@ -332,6 +351,9 @@ let RecipeService = class RecipeService {
     }
     async getRandomRecipes({ amount = this.randomRecipesDefaultAmount }, user) {
         return this.externalRecipeService.getMultipeRandomRecipes(user.id, amount);
+    }
+    async getExternalRecipeById(id, user) {
+        return this.externalRecipeService.getRecipeById(id, user.id);
     }
 };
 RecipeService = __decorate([

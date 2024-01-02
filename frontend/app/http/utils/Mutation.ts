@@ -43,7 +43,7 @@ export class Mutation {
       throw new Error(HTTP_ERROR.INVALID_QUERY);
     }
 
-    if (typeof this.options.variables !== "object") {
+    if (this.options.variables && typeof this.options.variables !== "object") {
       throw new Error(
         `${HTTP_ERROR.INVALID_VARIABLES}: ${this.options.variables}`,
       );

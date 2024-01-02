@@ -28,7 +28,7 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: LoaderArgs) {
   const user = await formAuthenticator.isAuthenticated(request);
-  const recipes = await recipesService.getRecipesByUserId(user?.id);
+  const recipes = await recipesService.getRecipesByUserId();
 
   return {
     user,

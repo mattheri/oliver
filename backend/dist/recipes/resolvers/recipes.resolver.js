@@ -28,17 +28,23 @@ const update_allow_view_dto_1 = require("../dto/update-allow-view.dto");
 const update_allow_edit_dto_1 = require("../dto/update-allow-edit.dto");
 const update_allow_delete_dto_1 = require("../dto/update-allow-delete.dto");
 const get_random_recipes_dto_1 = require("../dto/get-random-recipes.dto");
+const get_external_recipe_by_id_dto_1 = require("../dto/get-external-recipe-by-id.dto");
 let RecipesResolver = class RecipesResolver {
     constructor(recipeService) {
         this.recipeService = recipeService;
     }
-    async recipe({ id }) {
-        return this.recipeService.getRecipeById(id);
+    async recipe(input) {
+        return this.recipeService.getRecipeById(input.id);
     }
     async recipesByUser(user) {
         if (!user)
             throw new common_1.UnauthorizedException();
         return this.recipeService.getRecipesByUserEmail(user.email, true);
+    }
+    async wishlistRecipes(user) {
+        if (!user)
+            throw new common_1.UnauthorizedException();
+        return this.recipeService.getRecipesByUserEmail(user.email, false);
     }
     async recipes(user) {
         return this.recipeService.getRecipesByUserId(user.id);
@@ -81,10 +87,14 @@ let RecipesResolver = class RecipesResolver {
     async randomRecipes(input, user) {
         return this.recipeService.getRandomRecipes(input, user);
     }
+    async externalRecipe(input, user) {
+        return this.recipeService.getExternalRecipeById(input.id, user);
+    }
 };
 __decorate([
     (0, graphql_1.Query)(() => recipe_model_1.Recipe),
     (0, common_1.UseGuards)(jwt_gql_auth_guard_1.JwtGqlAuthGuard),
+    __param(0, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_recipe_by_id_dto_1.GetRecipeByIdDto]),
     __metadata("design:returntype", Promise)
@@ -97,6 +107,14 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], RecipesResolver.prototype, "recipesByUser", null);
+__decorate([
+    (0, graphql_1.Query)(() => [recipe_model_1.Recipe]),
+    (0, common_1.UseGuards)(jwt_gql_auth_guard_1.JwtGqlAuthGuard),
+    __param(0, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], RecipesResolver.prototype, "wishlistRecipes", null);
 __decorate([
     (0, graphql_1.Query)(() => [recipe_model_1.Recipe]),
     (0, common_1.UseGuards)(jwt_gql_auth_guard_1.JwtGqlAuthGuard),
@@ -209,6 +227,15 @@ __decorate([
     __metadata("design:paramtypes", [get_random_recipes_dto_1.GetRandomRecipesDto, Object]),
     __metadata("design:returntype", Promise)
 ], RecipesResolver.prototype, "randomRecipes", null);
+__decorate([
+    (0, graphql_1.Query)(() => recipe_model_1.Recipe),
+    (0, common_1.UseGuards)(jwt_gql_auth_guard_1.JwtGqlAuthGuard),
+    __param(0, (0, graphql_1.Args)('input')),
+    __param(1, (0, current_user_decorator_1.CurrentUser)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [get_external_recipe_by_id_dto_1.GetExternalRecipeByIdDto, Object]),
+    __metadata("design:returntype", Promise)
+], RecipesResolver.prototype, "externalRecipe", null);
 RecipesResolver = __decorate([
     (0, graphql_1.Resolver)(() => recipe_model_1.Recipe),
     __metadata("design:paramtypes", [recipes_service_1.RecipeService])

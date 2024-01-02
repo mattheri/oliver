@@ -45,4 +45,7 @@ export class Recipe {
 
   @Field(() => [String], { nullable: true })
   allowDelete?: string[];
+
+  @Field({ defaultValue: false, nullable: true })
+  isWishList?: boolean;
 }

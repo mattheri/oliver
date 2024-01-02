@@ -14,6 +14,7 @@ export class ImageResolver {
     return this.imageService.getImageMetadata(input);
   }
 
+  @Query(() => [ImageSize])
   async imageSizes(@Args('input') { sizes, ...image }: ImageSizeDto) {
     return this.imageService.createImageSizes(image, sizes);
   }

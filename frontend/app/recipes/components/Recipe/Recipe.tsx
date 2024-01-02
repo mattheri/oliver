@@ -4,8 +4,9 @@ import { If } from "~/common";
 import RecipeHeader from "./RecipeHeader";
 import RecipeHeaderSection from "./RecipeHeaderSection";
 import RecipeMetadata from "./RecipeMetadata";
+import RecipeWishlistButton from "../RecipeWishlistButton/RecipeWishlistButton";
 
-type Props = Partial<Recipe>;
+type Props = Recipe;
 
 export default function Recipe({
   title,
@@ -17,9 +18,26 @@ export default function Recipe({
   mainIngredient,
   prepTime,
   servings,
+  id,
+  userId,
+  isExternalSrc,
+  isWishList,
 }: Props) {
   return (
     <section className="flex w-full flex-col">
+      <RecipeWishlistButton recipe={{ title,
+  ingredients,
+  instructions,
+  image,
+  url,
+  cookTime,
+  mainIngredient,
+  prepTime,
+  servings,
+  id,
+  userId,
+  isExternalSrc,
+  isWishList }} createRecipe />
       <RecipeHeader url={url ?? " "} canEdit />
       <RecipeHeaderSection image={image} title={title} />
       <RecipeMetadata

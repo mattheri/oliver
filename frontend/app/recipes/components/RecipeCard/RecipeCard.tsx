@@ -2,25 +2,24 @@ import { If, Link } from "~/common";
 import useRecipeUrl from "~/recipes/hook/useRecipeUrl";
 import type { Recipe } from "~/recipes/types";
 
+type Props = {
+  id: Recipe["id"];
+  title: Recipe["title"];
+  image?: Recipe["image"];
+  isExternalSrc: Recipe["isExternalSrc"];
+  ingredients: Recipe["ingredients"];
+}
+
 export default function RecipeCard({
   id,
   title,
-  url,
   image,
-  isExternalSrc,
+  isExternalSrc = false,
   ingredients,
-  instructions,
-  userId,
-}: Recipe) {
+}: Props) {
   const to = useRecipeUrl({
     id,
-    title,
-    url,
-    image,
     isExternalSrc,
-    ingredients,
-    instructions,
-    userId,
   });
 
   return (

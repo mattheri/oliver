@@ -53,6 +53,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ImageResolver.prototype, "imageMetadata", null);
 __decorate([
+    (0, graphql_1.Query)(() => [image_size_model_1.ImageSize]),
     __param(0, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [image_size_dto_1.ImageSizeDto]),

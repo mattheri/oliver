@@ -13,6 +13,7 @@ export declare class CreateRecipeWithUserIdDto {
     allowView: string;
     allowEdit: string;
     allowDelete: string;
+    isWishList?: boolean;
 }
 declare const CreateRecipeDto_base: import("@nestjs/common").Type<Omit<CreateRecipeWithUserIdDto, "userId">>;
 export declare class CreateRecipeDto extends CreateRecipeDto_base {

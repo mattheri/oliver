@@ -15,7 +15,7 @@ const graphql_1 = require("@nestjs/graphql");
 let GetRecipeByIdDto = class GetRecipeByIdDto {
 };
 __decorate([
-    (0, graphql_1.Field)(),
+    (0, graphql_1.Field)(() => graphql_1.ID),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], GetRecipeByIdDto.prototype, "id", void 0);

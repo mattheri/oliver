@@ -108,6 +108,11 @@ export class CreateRecipeWithUserIdDto {
     return value;
   })
   allowDelete: string;
+
+  @Field({ defaultValue: false, nullable: true })
+  @IsOptional()
+  @IsBoolean()
+  isWishList?: boolean;
 }
 
 @InputType()

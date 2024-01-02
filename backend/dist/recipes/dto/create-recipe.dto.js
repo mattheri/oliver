@@ -122,6 +122,12 @@ __decorate([
     }),
     __metadata("design:type", String)
 ], CreateRecipeWithUserIdDto.prototype, "allowDelete", void 0);
+__decorate([
+    (0, graphql_1.Field)({ defaultValue: false, nullable: true }),
+    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsBoolean)(),
+    __metadata("design:type", Boolean)
+], CreateRecipeWithUserIdDto.prototype, "isWishList", void 0);
 CreateRecipeWithUserIdDto = __decorate([
     (0, graphql_1.InputType)()
 ], CreateRecipeWithUserIdDto);

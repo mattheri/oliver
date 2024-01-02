@@ -1,7 +1,9 @@
 import { client } from "~/http";
+import { handleGqlErrors } from "~/utils/formatGqlErrors";
 
-// import { RECIPES_BY_USER_QUERY } from "../graphql/query/RecipesByUserQuery";
-// import type { Recipe } from "../types";
+import CREATE_RECIPE_MUTATION from "../graphql/mutation/CreateRecipeMutation";
+import RECIPES_QUERY from "../graphql/query/RecipesQuery";
+import type { CreateRecipeDto, Recipe } from "../types";
 
 class RecipesService {
   static __instance: RecipesService;
@@ -16,18 +18,22 @@ class RecipesService {
     this.client = httpClient;
   }
 
-  public async getRecipesByUserId(userId?: string) {
-    return []
-    // if (!userId) return [];
+  public async getRecipesByUserId() {
+    const { data } = await this.client.query<{ recipes: Recipe[] }>(RECIPES_QUERY);
 
-    // const { data } = await this.client.query<{ recipes: Recipe[] }>(
-    //   RECIPES_BY_USER_QUERY,
-    //   {
-    //     variables: { userId },
-    //   },
-    // );
+    return data?.recipes || [];
+  }
 
-    // return data?.recipes ?? [];
+  public async createRecipeAndAddToWishList(input: CreateRecipeDto) {
+    const { data, errors } = await this.client.mutate<{ createRecipe: { id: string } }>(CREATE_RECIPE_MUTATION, {
+      variables: {
+        input,
+      }
+    })
+
+    handleGqlErrors(errors);
+
+    return data?.createRecipe;
   }
 }
 
