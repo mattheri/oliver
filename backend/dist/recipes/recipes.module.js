@@ -16,6 +16,7 @@ const external_recipe_presenter_1 = require("./presenters/external-recipe.presen
 const recipes_resolver_1 = require("./resolvers/recipes.resolver");
 const external_recipe_service_1 = require("./services/external-recipe.service");
 const recipes_service_1 = require("./services/recipes.service");
+const recipe_adapter_1 = require("./adapters/recipe.adapter");
 let RecipesModule = class RecipesModule {
 };
 RecipesModule = __decorate([
@@ -27,6 +28,7 @@ RecipesModule = __decorate([
             recipes_resolver_1.RecipesResolver,
             external_recipe_service_1.ExternalRecipeService,
             external_recipe_presenter_1.ExternalRecipePresenter,
+            recipe_adapter_1.RecipeAdapter,
         ],
         imports: [users_module_1.UsersModule, image_module_1.ImageModule],
     })

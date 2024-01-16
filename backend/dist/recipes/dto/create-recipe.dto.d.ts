@@ -18,4 +18,6 @@ export declare class CreateRecipeWithUserIdDto {
 declare const CreateRecipeDto_base: import("@nestjs/common").Type<Omit<CreateRecipeWithUserIdDto, "userId">>;
 export declare class CreateRecipeDto extends CreateRecipeDto_base {
 }
+export type ICreateRecipeDto = CreateRecipeDto;
+export type ICreateRecipeWithUserIdDto = CreateRecipeWithUserIdDto;
 export {};

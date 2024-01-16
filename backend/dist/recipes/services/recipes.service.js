@@ -72,7 +72,7 @@ let RecipeService = class RecipeService {
     async getRecipeById(id, includeOwner = false) {
         return this.db.recipe.findUnique({
             where: { id },
-            include: { owner: includeOwner },
+            include: { owner: includeOwner, image: true },
         });
     }
     async createRecipe(data) {
@@ -80,7 +80,7 @@ let RecipeService = class RecipeService {
         return this.db.recipe.create({
             data: Object.assign(Object.assign({}, recipe), { owner: { connect: { id: userId } }, image: {
                     connectOrCreate: {
-                        where: { id },
+                        where: { id: id !== null && id !== void 0 ? id : userId },
                         create: Object.assign({ url: src }, image),
                     },
                 } }),
@@ -96,6 +96,7 @@ let RecipeService = class RecipeService {
                 allowEdit: true,
                 allowView: true,
                 isWishList: true,
+                url: true,
             },
         });
     }

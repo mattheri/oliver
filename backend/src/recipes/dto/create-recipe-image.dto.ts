@@ -4,7 +4,7 @@ import { Field, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateRecipeImageDto {
-  @Field()
+  @Field({ nullable: true })
   @IsOptional()
   @IsString()
   id?: string;

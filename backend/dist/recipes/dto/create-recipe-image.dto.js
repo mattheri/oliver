@@ -15,7 +15,7 @@ const graphql_1 = require("@nestjs/graphql");
 let CreateRecipeImageDto = class CreateRecipeImageDto {
 };
 __decorate([
-    (0, graphql_1.Field)(),
+    (0, graphql_1.Field)({ nullable: true }),
     (0, class_validator_1.IsOptional)(),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)

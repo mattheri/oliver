@@ -9,6 +9,7 @@ import { ExternalRecipePresenter } from './presenters/external-recipe.presenter'
 import { RecipesResolver } from './resolvers/recipes.resolver';
 import { ExternalRecipeService } from './services/external-recipe.service';
 import { RecipeService } from './services/recipes.service';
+import { RecipeAdapter } from './adapters/recipe.adapter';
 
 @Module({
   providers: [
@@ -18,6 +19,7 @@ import { RecipeService } from './services/recipes.service';
     RecipesResolver,
     ExternalRecipeService,
     ExternalRecipePresenter,
+    RecipeAdapter,
   ],
   imports: [UsersModule, ImageModule],
 })

@@ -1,6 +1,10 @@
 import { JwtGqlAuthGuard } from 'src/auth/guard/jwt-gql-auth.guard';
 
-import { UnauthorizedException, UseGuards } from '@nestjs/common';
+import {
+  UnauthorizedException,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { GetRecipeByIdDto } from '../dto/get-recipe-by-id.dto';
@@ -17,6 +21,7 @@ import { UpdateAllowEditDto } from '../dto/update-allow-edit.dto';
 import { UpdateAllowDeleteDto } from '../dto/update-allow-delete.dto';
 import { GetRandomRecipesDto } from '../dto/get-random-recipes.dto';
 import { GetExternalRecipeByIdDto } from '../dto/get-external-recipe-by-id.dto';
+import { RecipeInterceptor } from '../interceptors/recipe.interceptor';
 
 @Resolver(() => Recipe)
 export class RecipesResolver {
@@ -24,6 +29,7 @@ export class RecipesResolver {
 
   @Query(() => Recipe)
   @UseGuards(JwtGqlAuthGuard)
+  @UseInterceptors(RecipeInterceptor)
   async recipe(@Args('input') input: GetRecipeByIdDto) {
     return this.recipeService.getRecipeById(input.id);
   }

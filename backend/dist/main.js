@@ -33,7 +33,7 @@ async function bootstrap() {
             },
         },
     }));
-    app.useGlobalPipes(new common_1.ValidationPipe());
+    app.useGlobalPipes(new common_1.ValidationPipe({ transform: true }));
     await app.listen(Number(process.env.PORT));
     app.use(csurf());
 }

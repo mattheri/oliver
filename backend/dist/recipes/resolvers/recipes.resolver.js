@@ -29,6 +29,7 @@ const update_allow_edit_dto_1 = require("../dto/update-allow-edit.dto");
 const update_allow_delete_dto_1 = require("../dto/update-allow-delete.dto");
 const get_random_recipes_dto_1 = require("../dto/get-random-recipes.dto");
 const get_external_recipe_by_id_dto_1 = require("../dto/get-external-recipe-by-id.dto");
+const recipe_interceptor_1 = require("../interceptors/recipe.interceptor");
 let RecipesResolver = class RecipesResolver {
     constructor(recipeService) {
         this.recipeService = recipeService;
@@ -94,6 +95,7 @@ let RecipesResolver = class RecipesResolver {
 __decorate([
     (0, graphql_1.Query)(() => recipe_model_1.Recipe),
     (0, common_1.UseGuards)(jwt_gql_auth_guard_1.JwtGqlAuthGuard),
+    (0, common_1.UseInterceptors)(recipe_interceptor_1.RecipeInterceptor),
     __param(0, (0, graphql_1.Args)('input')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [get_recipe_by_id_dto_1.GetRecipeByIdDto]),

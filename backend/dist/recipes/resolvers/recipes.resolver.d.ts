@@ -25,6 +25,13 @@ export declare class RecipesResolver {
             created: Date;
             updated: Date;
         };
+        image: {
+            id: string;
+            width: number;
+            height: number;
+            url: string;
+            recipeId: string;
+        }[];
     } & {
         id: string;
         title: string;
@@ -35,6 +42,7 @@ export declare class RecipesResolver {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -64,6 +72,7 @@ export declare class RecipesResolver {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -93,6 +102,7 @@ export declare class RecipesResolver {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -111,6 +121,7 @@ export declare class RecipesResolver {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -126,6 +137,7 @@ export declare class RecipesResolver {
         instructions: string;
         ownerId: string;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -166,6 +178,7 @@ export declare class RecipesResolver {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -184,6 +197,7 @@ export declare class RecipesResolver {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -321,6 +335,7 @@ export declare class RecipesResolver {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;

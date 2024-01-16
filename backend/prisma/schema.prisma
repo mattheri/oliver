@@ -95,10 +95,11 @@ model Recipe {
   ingredients   String
   instructions  String
   owner         User          @relation(fields: [ownerId], references: [id])
-  ownerId       String        @unique
+  ownerId       String
   created       DateTime      @default(now())
   updated       DateTime      @updatedAt
   isExternalSrc Boolean       @default(false)
+  url           String?
   allowView     String
   allowEdit     String
   allowDelete   String

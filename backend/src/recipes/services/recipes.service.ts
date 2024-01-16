@@ -5,7 +5,10 @@ import { DatabaseService } from 'src/db/services/db.service';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { User } from '@prisma/client';
 
-import { CreateRecipeWithUserIdDto } from '../dto/create-recipe.dto';
+import {
+  CreateRecipeWithUserIdDto,
+  ICreateRecipeWithUserIdDto,
+} from '../dto/create-recipe.dto';
 import { DeleteManyRecipeDto } from '../dto/delete-many-recipe.dto';
 import { DeleteRecipeDto } from '../dto/delete-recipe.dto';
 import { GetRandomRecipesDto } from '../dto/get-random-recipes.dto';
@@ -71,11 +74,11 @@ export class RecipeService {
   public async getRecipeById(id: string, includeOwner = false) {
     return this.db.recipe.findUnique({
       where: { id },
-      include: { owner: includeOwner },
+      include: { owner: includeOwner, image: true },
     });
   }
 
-  public async createRecipe(data: CreateRecipeWithUserIdDto) {
+  public async createRecipe(data: ICreateRecipeWithUserIdDto) {
     const {
       userId,
       image: { id, src, ...image },
@@ -88,7 +91,7 @@ export class RecipeService {
         owner: { connect: { id: userId } },
         image: {
           connectOrCreate: {
-            where: { id },
+            where: { id: id ?? userId },
             create: { url: src, ...image },
           },
         },
@@ -105,6 +108,7 @@ export class RecipeService {
         allowEdit: true,
         allowView: true,
         isWishList: true,
+        url: true,
       },
     });
   }

@@ -1,7 +1,7 @@
 import { AuthorizationService } from 'src/auth/services/authorization.service';
 import { DatabaseService } from 'src/db/services/db.service';
 import { User } from '@prisma/client';
-import { CreateRecipeWithUserIdDto } from '../dto/create-recipe.dto';
+import { ICreateRecipeWithUserIdDto } from '../dto/create-recipe.dto';
 import { DeleteManyRecipeDto } from '../dto/delete-many-recipe.dto';
 import { DeleteRecipeDto } from '../dto/delete-recipe.dto';
 import { GetRandomRecipesDto } from '../dto/get-random-recipes.dto';
@@ -26,6 +26,7 @@ export declare class RecipeService {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -55,6 +56,7 @@ export declare class RecipeService {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -84,6 +86,7 @@ export declare class RecipeService {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -103,6 +106,13 @@ export declare class RecipeService {
             created: Date;
             updated: Date;
         };
+        image: {
+            id: string;
+            width: number;
+            height: number;
+            url: string;
+            recipeId: string;
+        }[];
     } & {
         id: string;
         title: string;
@@ -113,6 +123,7 @@ export declare class RecipeService {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -121,13 +132,14 @@ export declare class RecipeService {
         cookTime: number;
         isWishList: boolean;
     }>;
-    createRecipe(data: CreateRecipeWithUserIdDto): Promise<{
+    createRecipe(data: ICreateRecipeWithUserIdDto): Promise<{
         id: string;
         title: string;
         ingredients: string;
         instructions: string;
         ownerId: string;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -276,6 +288,7 @@ export declare class RecipeService {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -294,6 +307,7 @@ export declare class RecipeService {
         created: Date;
         updated: Date;
         isExternalSrc: boolean;
+        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;

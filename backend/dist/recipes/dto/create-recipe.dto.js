@@ -18,12 +18,14 @@ let CreateRecipeWithUserIdDto = class CreateRecipeWithUserIdDto {
 };
 __decorate([
     (0, graphql_1.Field)(),
+    (0, class_transformer_1.Type)(() => String),
     (0, class_validator_1.IsString)(),
     __metadata("design:type", String)
 ], CreateRecipeWithUserIdDto.prototype, "title", void 0);
 __decorate([
     (0, graphql_1.Field)(() => [String], { nullable: true, defaultValue: [] }),
     (0, class_validator_1.IsString)({ each: true }),
+    (0, class_transformer_1.Type)(() => String),
     (0, class_transformer_1.Transform)(({ value }) => {
         if (Array.isArray(value)) {
             return value.map((v) => v.trim()).join(',');
@@ -89,7 +91,8 @@ __decorate([
 __decorate([
     (0, graphql_1.Field)(() => [String], { nullable: true, defaultValue: [] }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEmail)({}, { each: true }),
+    (0, class_validator_1.ValidateIf)((o) => o.allowView !== null ||
+        (Array.isArray(o.allowView) && o.allowView.length > 0)),
     (0, class_transformer_1.Transform)(({ value }) => {
         if (Array.isArray(value)) {
             return value.map((v) => v.trim()).join(',');
@@ -101,7 +104,8 @@ __decorate([
 __decorate([
     (0, graphql_1.Field)(() => [String], { nullable: true, defaultValue: [] }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEmail)({}, { each: true }),
+    (0, class_validator_1.ValidateIf)((o) => o.allowEdit !== null ||
+        (Array.isArray(o.allowEdit) && o.allowEdit.length > 0)),
     (0, class_transformer_1.Transform)(({ value }) => {
         if (Array.isArray(value)) {
             return value.map((v) => v.trim()).join(',');
@@ -113,7 +117,8 @@ __decorate([
 __decorate([
     (0, graphql_1.Field)(() => [String], { nullable: true, defaultValue: [] }),
     (0, class_validator_1.IsOptional)(),
-    (0, class_validator_1.IsEmail)({}, { each: true }),
+    (0, class_validator_1.ValidateIf)((o) => o.allowDelete !== null ||
+        (Array.isArray(o.allowDelete) && o.allowDelete.length > 0)),
     (0, class_transformer_1.Transform)(({ value }) => {
         if (Array.isArray(value)) {
             return value.map((v) => v.trim()).join(',');

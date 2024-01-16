@@ -40,7 +40,7 @@ input CreateRecipeDto {
 
 input CreateRecipeImageDto {
   height: Float
-  id: String!
+  id: String
   src: String!
   width: Float
 }

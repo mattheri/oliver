@@ -1,4 +1,4 @@
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
 import {
   IsBoolean,
   IsEmail,
@@ -17,11 +17,13 @@ import { CreateRecipeImageDto } from './create-recipe-image.dto';
 @InputType()
 export class CreateRecipeWithUserIdDto {
   @Field()
+  @Type(() => String)
   @IsString()
   title: string;
 
   @Field(() => [String], { nullable: true, defaultValue: [] })
   @IsString({ each: true })
+  @Type(() => String)
   @Transform(({ value }) => {
     if (Array.isArray(value)) {
       return value.map((v: string) => v.trim()).join(',');
@@ -78,7 +80,11 @@ export class CreateRecipeWithUserIdDto {
 
   @Field(() => [String], { nullable: true, defaultValue: [] })
   @IsOptional()
-  @IsEmail({}, { each: true })
+  @ValidateIf(
+    (o) =>
+      o.allowView !== null ||
+      (Array.isArray(o.allowView) && o.allowView.length > 0),
+  )
   @Transform(({ value }) => {
     if (Array.isArray(value)) {
       return value.map((v: string) => v.trim()).join(',');
@@ -89,7 +95,11 @@ export class CreateRecipeWithUserIdDto {
 
   @Field(() => [String], { nullable: true, defaultValue: [] })
   @IsOptional()
-  @IsEmail({}, { each: true })
+  @ValidateIf(
+    (o) =>
+      o.allowEdit !== null ||
+      (Array.isArray(o.allowEdit) && o.allowEdit.length > 0),
+  )
   @Transform(({ value }) => {
     if (Array.isArray(value)) {
       return value.map((v: string) => v.trim()).join(',');
@@ -100,7 +110,11 @@ export class CreateRecipeWithUserIdDto {
 
   @Field(() => [String], { nullable: true, defaultValue: [] })
   @IsOptional()
-  @IsEmail({}, { each: true })
+  @ValidateIf(
+    (o) =>
+      o.allowDelete !== null ||
+      (Array.isArray(o.allowDelete) && o.allowDelete.length > 0),
+  )
   @Transform(({ value }) => {
     if (Array.isArray(value)) {
       return value.map((v: string) => v.trim()).join(',');
@@ -119,3 +133,6 @@ export class CreateRecipeWithUserIdDto {
 export class CreateRecipeDto extends OmitType(CreateRecipeWithUserIdDto, [
   'userId',
 ] as const) {}
+
+export type ICreateRecipeDto = CreateRecipeDto;
+export type ICreateRecipeWithUserIdDto = CreateRecipeWithUserIdDto;
