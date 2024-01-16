@@ -1,7 +1,0 @@
-{
-  "version": 3,
-  "sources": ["../../../app/common/constants/routes.ts"],
-  "sourcesContent": ["// REMIX HMR BEGIN\nimport * as __hmr__ from \"remix:hmr\";\nif (import.meta) {\nimport.meta.hot = __hmr__.createHotContext(\n//@ts-expect-error\n\"app/common/constants/routes.ts\"\n);\nimport.meta.hot.lastModified = \"1703119630107.2969\";\n}\n// REMIX HMR END\n\nexport const ROUTES = {\n  INDEX: \"/\",\n} as const;\n\nexport const USER_ROUTES = {\n  LOGIN: \"/auth/login\",\n  SIGN_UP: \"/auth/signup\",\n  PROFILE: \"/profile\",\n  LOG_OUT: \"/auth/logout\",\n} as const;\n\nexport const ROUTES_NAMES = {\n  INDEX: \"Home\",\n  LOGIN: \"Login\",\n  SIGN_UP: \"Sign Up\",\n} as const;\n\nexport const USER_ROUTES_NAMES = {\n  LOGIN: \"Login\",\n  SIGN_UP: \"Sign Up\",\n  PROFILE: \"Profile\",\n  LOG_OUT: \"Log Out\",\n} as const;\n\nexport type Routes = typeof ROUTES;\n"],
-  "mappings": ";;;;;AAEA,IAAI,aAAa;AACjB,cAAY,MAAc;AAAA;AAAA,IAE1B;AAAA,EACA;AACA,cAAY,IAAI,eAAe;AAC/B;AAGO,IAAM,SAAS;AAAA,EACpB,OAAO;AACT;AAEO,IAAM,cAAc;AAAA,EACzB,OAAO;AAAA,EACP,SAAS;AAAA,EACT,SAAS;AAAA,EACT,SAAS;AACX;AAEO,IAAM,eAAe;AAAA,EAC1B,OAAO;AAAA,EACP,OAAO;AAAA,EACP,SAAS;AACX;AAEO,IAAM,oBAAoB;AAAA,EAC/B,OAAO;AAAA,EACP,SAAS;AAAA,EACT,SAAS;AAAA,EACT,SAAS;AACX;",
-  "names": []
-}

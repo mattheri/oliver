@@ -24,9 +24,9 @@ var __toESM = (mod, isNodeMode, target) => (target = mod != null ? __create(__ge
   mod
 )), __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: !0 }), mod);
 
-// css-bundle-update-plugin-ns:/Users/mathieutheriault/aec/oliver/frontend/node_modules/@remix-run/css-bundle/dist/index.js
+// css-bundle-update-plugin-ns:C:\Users\mathi\Documents\Projects\oliver\frontend\node_modules\@remix-run\css-bundle\dist\index.js
 var require_dist = __commonJS({
-  "css-bundle-update-plugin-ns:/Users/mathieutheriault/aec/oliver/frontend/node_modules/@remix-run/css-bundle/dist/index.js"(exports) {
+  "css-bundle-update-plugin-ns:C:\\Users\\mathi\\Documents\\Projects\\oliver\\frontend\\node_modules\\@remix-run\\css-bundle\\dist\\index.js"(exports) {
     "use strict";
     Object.defineProperty(exports, "__esModule", { value: !0 });
     var cssBundleHref2;
@@ -165,10 +165,10 @@ __export(root_exports, {
 });
 
 // app/styles/tailwind.css
-var tailwind_default = "/build/_assets/tailwind-CIXTXMLI.css";
+var tailwind_default = "/build/_assets/tailwind-4Q64VS5W.css";
 
 // app/root.tsx
-var import_css_bundle = __toESM(require_dist()), import_react21 = require("@remix-run/react");
+var import_css_bundle = __toESM(require_dist()), import_react23 = require("@remix-run/react");
 
 // app/auth/service/authenticator.service.ts
 var import_remix_auth = require("remix-auth"), import_remix_auth_form = require("remix-auth-form"), import_node2 = require("@remix-run/node");
@@ -314,9 +314,12 @@ var Mutation = class {
     let body = JSON.stringify({
       query: this.query,
       variables: this.options.variables
-    }), response = await fetch(this.base, {
+    }), headers = this.options.headers || {}, response = await fetch(this.base, {
       method: HTTP_METHOD,
-      headers: HTTP_HEADERS,
+      headers: {
+        ...HTTP_HEADERS,
+        ...headers
+      },
       body
     });
     if (!response.ok)
@@ -538,17 +541,17 @@ var Action = {
   OPEN_MODAL: "OPEN_MODAL",
   CLOSE_MODAL: "CLOSE_MODAL"
 };
-function modalsReducer(state, action2) {
-  switch (action2.type) {
+function modalsReducer(state, action3) {
+  switch (action3.type) {
     case Action.OPEN_MODAL:
       return {
         ...state,
-        [action2.payload.modalId]: !0
+        [action3.payload.modalId]: !0
       };
     case Action.CLOSE_MODAL:
       return {
         ...state,
-        [action2.payload.modalId]: !1
+        [action3.payload.modalId]: !1
       };
     default:
       throw new Error("Invalid action type");
@@ -560,17 +563,17 @@ var Action2 = {
   UPDATE_RECIPES: "UPDATE_RECIPES",
   UPDATE_RECIPE: "UPDATE_RECIPE"
 };
-function dataReducer(state, action2) {
-  switch (action2.type) {
+function dataReducer(state, action3) {
+  switch (action3.type) {
     case Action2.UPDATE_RECIPES:
       return {
         ...state,
-        recipes: action2.payload.recipes
+        recipes: action3.payload.recipes
       };
     case Action2.UPDATE_RECIPE:
       return {
         ...state,
-        recipes: state.recipes.map((recipe) => recipe.id === action2.payload.recipe.id ? action2.payload.recipe : recipe)
+        recipes: state.recipes.map((recipe) => recipe.id === action3.payload.recipe.id ? action3.payload.recipe : recipe)
       };
     default:
       throw new Error("Invalid action type");
@@ -770,7 +773,7 @@ function Button({
 var import_jsx_dev_runtime6 = require("react/jsx-dev-runtime");
 function ActionCard({
   to,
-  action: action2,
+  action: action3,
   icon: Icon,
   background = "bg-blue-500",
   description,
@@ -784,7 +787,7 @@ function ActionCard({
     {
       intent: "unstyled",
       onClick: async () => {
-        action2 && await action2(), to && navigate(to);
+        action3 && await action3(), to && navigate(to);
       },
       type: "button",
       className: "p-0",
@@ -2135,6 +2138,19 @@ var VNavigation_default = Object.assign(VNavigation, {
   Secondary: VSecondaryNavigation
 });
 
+// app/common/hooks/useToast.ts
+var import_react17 = require("react"), import_react_toastify2 = require("react-toastify");
+function useToast() {
+  let ref = (0, import_react17.useRef)(null);
+  return {
+    id: ref.current,
+    toast: (...args) => {
+      ref = { current: (0, import_react_toastify2.toast)(...args) };
+    },
+    promise: import_react_toastify2.toast.promise
+  };
+}
+
 // app/http/components/HttpState/HttpState.tsx
 var import_jsx_dev_runtime31 = require("react/jsx-dev-runtime");
 function HttpState({ loading, error, children }) {
@@ -2360,7 +2376,7 @@ function AccountSignIn() {
 var import_react_hook_form = require("react-hook-form");
 
 // app/common/components/ErrorCard/ErrorCard.tsx
-var import_react17 = require("react");
+var import_react18 = require("react");
 var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime");
 function ErrorCard({
   heading: heading2,
@@ -2368,10 +2384,10 @@ function ErrorCard({
   link,
   autoDismiss = 5e3
 }) {
-  let initialRenderState = !!error, [show, setShow] = (0, import_react17.useState)(initialRenderState), ref = (0, import_react17.useRef)(null), dismiss = () => {
+  let initialRenderState = !!error, [show, setShow] = (0, import_react18.useState)(initialRenderState), ref = (0, import_react18.useRef)(null), dismiss = () => {
     ref.current && (clearTimeout(ref.current), ref = { current: null }), setShow(!1);
   };
-  return (0, import_react17.useEffect)(() => {
+  return (0, import_react18.useEffect)(() => {
     if (initialRenderState && autoDismiss)
       return ref = { current: setTimeout(dismiss, autoDismiss) }, () => {
         ref.current && (clearTimeout(ref.current), ref = { current: null }), setShow(initialRenderState);
@@ -2420,10 +2436,10 @@ function ErrorCard({
 }
 
 // app/auth/components/LoginForm/LoginForm.tsx
-var import_react18 = require("@remix-run/react"), import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
+var import_react19 = require("@remix-run/react"), import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
 function LoginForm() {
   var _a;
-  let fetcher = (0, import_react18.useFetcher)(), {
+  let fetcher = (0, import_react19.useFetcher)(), {
     register
   } = (0, import_react_hook_form.useForm)({
     mode: "onBlur",
@@ -2537,9 +2553,9 @@ function NoAccountSignup() {
 
 // app/auth/components/SignupForm/SignupForm.tsx
 var import_react_hook_form2 = require("react-hook-form");
-var import_react19 = require("@remix-run/react"), import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
+var import_react20 = require("@remix-run/react"), import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
 function SignupForm() {
-  let fetcher = (0, import_react19.useFetcher)(), { register } = (0, import_react_hook_form2.useForm)({
+  let fetcher = (0, import_react20.useFetcher)(), { register } = (0, import_react_hook_form2.useForm)({
     mode: "onBlur",
     defaultValues: {
       email: "",
@@ -2627,36 +2643,32 @@ function SignupForm() {
 }
 
 // app/auth/store/UserContext/UserContext.Provider.tsx
-var import_react20 = require("@remix-run/react");
+var import_react21 = require("react");
+var import_react22 = require("@remix-run/react");
 var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime");
 function UserContextProvider({
   user,
   isAuthenticated,
   children
 }) {
-  let navigate = (0, import_react20.useNavigate)();
-  return isAuthenticated || navigate(USER_ROUTES.LOGIN), /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(
-    UserContext_default.Provider,
-    {
-      value: { isAuthenticated, user },
-      children
-    },
-    void 0,
-    !1,
-    {
-      fileName: "app/auth/store/UserContext/UserContext.Provider.tsx",
-      lineNumber: 25,
-      columnNumber: 5
-    },
-    this
-  );
+  let navigate = (0, import_react22.useNavigate)();
+  return (0, import_react21.useEffect)(() => {
+    isAuthenticated || navigate(USER_ROUTES.LOGIN);
+  }, [isAuthenticated]), /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(UserContext_default.Provider, { value: { isAuthenticated, user }, children }, void 0, !1, {
+    fileName: "app/auth/store/UserContext/UserContext.Provider.tsx",
+    lineNumber: 27,
+    columnNumber: 5
+  }, this);
 }
 
 // app/utils/formatGqlErrors.ts
 var handleGqlErrors = (errors) => {
   var _a, _b;
   if (errors) {
-    let formattedErrors = errors.map((error) => (console.error(error), error.message)).join(`
+    let formattedErrors = errors.map((error) => {
+      var _a2, _b2, _c, _d;
+      return console.error(error), (_b2 = (_a2 = error.extensions) == null ? void 0 : _a2.originalError) != null && _b2.message && console.error((_d = (_c = error.extensions) == null ? void 0 : _c.originalError) == null ? void 0 : _d.message), error.message;
+    }).join(`
 `);
     throw new Response(formattedErrors, {
       status: ((_b = (_a = errors[0].extensions) == null ? void 0 : _a.originalError) == null ? void 0 : _b.statusCode) || 500
@@ -2710,16 +2722,34 @@ var RecipesService = class {
     this.client = httpClient;
   }
   async getRecipesByUserId() {
-    let { data } = await this.client.query(RecipesQuery_default);
+    let { data } = await this.client.query(
+      RecipesQuery_default
+    );
     return (data == null ? void 0 : data.recipes) || [];
   }
-  async createRecipeAndAddToWishList(input2) {
+  async createRecipeAndAddToWishList(input2, headers) {
     let { data, errors } = await this.client.mutate(CreateRecipeMutation_default, {
       variables: {
         input: input2
-      }
+      },
+      headers
     });
     return handleGqlErrors(errors), data == null ? void 0 : data.createRecipe;
+  }
+  recipeToCreateRecipeDto(formData, key = "recipe") {
+    let rawRecipe = String(formData.get(key));
+    if (!rawRecipe)
+      return null;
+    let parsedRecipe = JSON.parse(rawRecipe), { id, userId, image, ...recipe } = parsedRecipe, { alt, ...img } = image;
+    return {
+      ...recipe,
+      image: {
+        ...img
+      },
+      allowDelete: recipe.allowDelete || [],
+      allowEdit: recipe.allowEdit || [],
+      allowView: recipe.allowView || []
+    };
   }
 }, recipes_service_default = RecipesService.instance;
 
@@ -2741,7 +2771,7 @@ async function loader({ request }) {
   };
 }
 function App() {
-  let { user, isAuthenticated, recipes } = (0, import_react21.useLoaderData)();
+  let { user, isAuthenticated, recipes } = (0, import_react23.useLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("html", { lang: "en", children: [
     /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("head", { children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("meta", { charSet: "utf-8" }, void 0, !1, {
@@ -2754,12 +2784,12 @@ function App() {
         lineNumber: 47,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react21.Meta, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.Meta, {}, void 0, !1, {
         fileName: "app/root.tsx",
         lineNumber: 48,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react21.Links, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.Links, {}, void 0, !1, {
         fileName: "app/root.tsx",
         lineNumber: 49,
         columnNumber: 9
@@ -2776,7 +2806,7 @@ function App() {
           lineNumber: 54,
           columnNumber: 13
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react21.Outlet, {}, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.Outlet, {}, void 0, !1, {
           fileName: "app/root.tsx",
           lineNumber: 55,
           columnNumber: 13
@@ -2790,17 +2820,17 @@ function App() {
         lineNumber: 52,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react21.ScrollRestoration, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.ScrollRestoration, {}, void 0, !1, {
         fileName: "app/root.tsx",
         lineNumber: 58,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react21.Scripts, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.Scripts, {}, void 0, !1, {
         fileName: "app/root.tsx",
         lineNumber: 59,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react21.LiveReload, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.LiveReload, {}, void 0, !1, {
         fileName: "app/root.tsx",
         lineNumber: 60,
         columnNumber: 9
@@ -2829,10 +2859,10 @@ __export(index_exports, {
 var import_outline4 = require("@heroicons/react/24/outline");
 
 // app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx
-var import_react23 = require("react");
+var import_react25 = require("react");
 
 // app/common/components/Slider/Slider.tsx
-var import_react22 = require("react"), import_react_slick = __toESM(require("react-slick"));
+var import_react24 = require("react"), import_react_slick = __toESM(require("react-slick"));
 
 // app/common/components/Slider/SliderArrowNext.tsx
 var import_tailwind_merge19 = require("tailwind-merge"), import_outline2 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime39 = require("react/jsx-dev-runtime");
@@ -2938,7 +2968,7 @@ function SliderDot({ className, ...rest }) {
 }
 
 // app/common/components/Slider/Slider.tsx
-var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, import_react22.forwardRef)(
+var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, import_react24.forwardRef)(
   ({
     children,
     dots = !0,
@@ -2970,8 +3000,8 @@ var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, im
     deps = [],
     ...settings
   }, ref) => {
-    let sliderRef = (0, import_react22.useRef)(null);
-    return (0, import_react22.useEffect)(() => {
+    let sliderRef = (0, import_react24.useRef)(null);
+    return (0, import_react24.useEffect)(() => {
       ((ref == null ? void 0 : ref.current) || sliderRef.current).slickGoTo(0);
     }, [sliderRef, ref, ...deps]), /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(
       import_react_slick.default,
@@ -2987,7 +3017,7 @@ var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, im
         customPaging,
         appendDots,
         ...settings,
-        children: import_react22.Children.map(children, (child) => /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(SlideAs, { children: child }, void 0, !1, {
+        children: import_react24.Children.map(children, (child) => /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(SlideAs, { children: child }, void 0, !1, {
           fileName: "app/common/components/Slider/Slider.tsx",
           lineNumber: 70,
           columnNumber: 11
@@ -3013,6 +3043,10 @@ var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, im
 // app/recipes/constants.ts
 var RECIPE_EXTERNAL_QUERY_PARAMS = {
   IS_EXTERNAL_SRC: "isExternalSrc"
+};
+var RECIPE_API_ERROR_CODES = {
+  INVALID_RECIPE: "INVALID_RECIPE",
+  RECIPE_NOT_CREATED: "RECIPE_NOT_CREATED"
 };
 
 // app/recipes/hook/useRecipeUrl.ts
@@ -3094,8 +3128,8 @@ var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime"), DEFAULT_NUMBER_
 function RandomRecipesSlider({
   numberOfRecipes = DEFAULT_NUMBER_OF_RECIPES
 }) {
-  let { loader: loader5, loading } = useClientLoader(), [randomRecipes, setRandomRecipes] = (0, import_react23.useState)([]);
-  return (0, import_react23.useEffect)(() => {
+  let { loader: loader5, loading } = useClientLoader(), [randomRecipes, setRandomRecipes] = (0, import_react25.useState)([]);
+  return (0, import_react25.useEffect)(() => {
     loader5({
       route: `/api/recipes/random/${numberOfRecipes}`
     }).then((response) => {
@@ -3206,13 +3240,13 @@ function EmptyRecipesDashboard() {
 }
 
 // app/recipes/hook/useRecipes.ts
-var import_react24 = require("react");
+var import_react26 = require("react");
 function useRecipes() {
   let {
     data: {
       state: { recipes }
     }
-  } = (0, import_react24.useContext)(AppContext_default);
+  } = (0, import_react26.useContext)(AppContext_default);
   return recipes;
 }
 
@@ -3267,11 +3301,12 @@ function Index() {
   }, this);
 }
 
-// app/recipes/routes/($locale).api.recipes.random.$count.route.tsx
-var locale_api_recipes_random_count_route_exports = {};
-__export(locale_api_recipes_random_count_route_exports, {
-  loader: () => loader2
+// app/recipes/routes/($locale).api.recipes.add-external-wishlist.route.tsx
+var locale_api_recipes_add_external_wishlist_route_exports = {};
+__export(locale_api_recipes_add_external_wishlist_route_exports, {
+  action: () => action
 });
+var import_node3 = require("@remix-run/node");
 
 // app/auth/utils/createBearerAccessTokenHeader.ts
 var createBearerAccessTokenHeader = async (authenticator, request) => {
@@ -3282,6 +3317,35 @@ var createBearerAccessTokenHeader = async (authenticator, request) => {
     Authorization: ""
   };
 };
+
+// app/recipes/routes/($locale).api.recipes.add-external-wishlist.route.tsx
+async function action({ request }) {
+  let formData = await request.formData(), recipeDto = recipes_service_default.recipeToCreateRecipeDto(formData);
+  if (!recipeDto)
+    return (0, import_node3.json)(
+      { code: RECIPE_API_ERROR_CODES.INVALID_RECIPE },
+      { status: 400 }
+    );
+  let headers = await createBearerAccessTokenHeader(
+    formAuthenticator,
+    request
+  );
+  console.log(headers);
+  let recipe = await recipes_service_default.createRecipeAndAddToWishList(
+    recipeDto,
+    headers
+  );
+  return recipe ? (0, import_node3.json)(recipe) : (0, import_node3.json)(
+    { code: RECIPE_API_ERROR_CODES.RECIPE_NOT_CREATED },
+    { status: 500 }
+  );
+}
+
+// app/recipes/routes/($locale).api.recipes.random.$count.route.tsx
+var locale_api_recipes_random_count_route_exports = {};
+__export(locale_api_recipes_random_count_route_exports, {
+  loader: () => loader2
+});
 
 // app/recipes/graphql/query/RandomRecipesQuery.ts
 var RANDOM_RECIPES_QUERY = `#graphql
@@ -3316,11 +3380,11 @@ async function loader2({ params, request }) {
 // app/auth/routes/($locale).auth.actions.route.tsx
 var locale_auth_actions_route_exports = {};
 __export(locale_auth_actions_route_exports, {
-  action: () => action
+  action: () => action2
 });
 var import_remix_auth2 = require("remix-auth");
-var import_node3 = require("@remix-run/node");
-async function action({ request }) {
+var import_node4 = require("@remix-run/node");
+async function action2({ request }) {
   try {
     await formAuthenticator.authenticate(PROVIDER.LOCAL, request, {
       successRedirect: ROUTES.INDEX
@@ -3330,7 +3394,7 @@ async function action({ request }) {
       return e;
     if (e instanceof import_remix_auth2.AuthorizationError) {
       let error = e;
-      return console.error(error), (0, import_node3.json)({ message: error.message });
+      return console.error(error), (0, import_node4.json)({ message: error.message });
     }
   }
 }
@@ -3394,11 +3458,11 @@ __export(locale_recipes_id_route_exports, {
   default: () => Index3,
   loader: () => loader4
 });
-var import_react28 = require("@remix-run/react");
+var import_react31 = require("@remix-run/react");
 
 // app/recipes/components/Recipe/RecipeHeader.tsx
-var import_cva14 = require("cva"), import_react25 = require("react");
-var import_react26 = require("@headlessui/react"), import_solid = require("@heroicons/react/20/solid"), import_jsx_dev_runtime51 = require("react/jsx-dev-runtime");
+var import_cva14 = require("cva"), import_react27 = require("react");
+var import_react28 = require("@headlessui/react"), import_solid = require("@heroicons/react/20/solid"), import_jsx_dev_runtime51 = require("react/jsx-dev-runtime");
 function RecipeHeader({
   url,
   canEdit,
@@ -3453,8 +3517,8 @@ function RecipeHeader({
       lineNumber: 37,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu, { as: "div", className: "relative sm:hidden", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu, { as: "div", className: "relative sm:hidden", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
         "More",
         /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
           import_solid.ChevronDownIcon,
@@ -3477,17 +3541,17 @@ function RecipeHeader({
         columnNumber: 11
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
-        import_react26.Transition,
+        import_react28.Transition,
         {
-          as: import_react25.Fragment,
+          as: import_react27.Fragment,
           enter: "transition ease-out duration-200",
           enterFrom: "transform opacity-0 scale-95",
           enterTo: "transform opacity-100 scale-100",
           leave: "transition ease-in duration-75",
           leaveFrom: "transform opacity-100 scale-100",
           leaveTo: "transform opacity-0 scale-95",
-          children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
+          children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
               "a",
               {
                 href: "#",
@@ -3510,7 +3574,7 @@ function RecipeHeader({
               lineNumber: 66,
               columnNumber: 15
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react26.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
               "a",
               {
                 href: "#",
@@ -3700,58 +3764,85 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
 }
 
 // app/common/components/WishlistButton/WishlistButton.tsx
-var import_cva16 = require("cva"), import_outline6 = require("@heroicons/react/24/outline");
+var import_cva16 = require("cva"), import_tailwind_merge22 = require("tailwind-merge"), import_outline6 = require("@heroicons/react/24/outline");
 var import_jsx_dev_runtime54 = require("react/jsx-dev-runtime");
-function WishlistButton({ isWishlist, children, compact = !0, onClick, ...props }) {
+function WishlistButton({
+  isWishlist,
+  children,
+  compact = !0,
+  onClick,
+  ...props
+}) {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(Button, { ...props, type: "button", intent: "secondary", onClick, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(import_outline6.HeartIcon, { className: (0, import_cva16.cx)("h-5 w-5", { "text-red-600": isWishlist }) }, void 0, !1, {
-      fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
-      lineNumber: 17,
-      columnNumber: 3
-    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(
+      import_outline6.HeartIcon,
+      {
+        className: (0, import_tailwind_merge22.twMerge)(
+          (0, import_cva16.cx)("h-5 w-5", { "fill-red-600 text-red-600": isWishlist })
+        )
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
+        lineNumber: 25,
+        columnNumber: 7
+      },
+      this
+    ),
     /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default, { condition: !compact, children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("span", { className: "ml-2", children: isWishlist ? "Remove from Wishlist" : "Add to Wishlist" }, void 0, !1, {
       fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
-      lineNumber: 20,
-      columnNumber: 5
+      lineNumber: 32,
+      columnNumber: 11
     }, this) }, void 0, !1, {
       fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
-      lineNumber: 19,
-      columnNumber: 4
+      lineNumber: 31,
+      columnNumber: 9
     }, this) }, void 0, !1, {
       fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
-      lineNumber: 18,
-      columnNumber: 3
+      lineNumber: 30,
+      columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
-    lineNumber: 16,
-    columnNumber: 9
+    lineNumber: 24,
+    columnNumber: 5
   }, this);
 }
 
 // app/recipes/components/RecipeWishlistButton/RecipeWishlistButton.tsx
-var import_react27 = require("@remix-run/react"), import_jsx_dev_runtime55 = require("react/jsx-dev-runtime");
-function RecipeWishlistButton({ recipe, createRecipe = !1 }) {
-  let navigate = (0, import_react27.useNavigate)(), fetcher = (0, import_react27.useFetcher)(), onClick = async () => {
-    let route = createRecipe ? "/api/recipes/create" : "/api/recipes/update";
-    if (fetcher.submit(route, {
-      preventScrollReset: !0,
-      method: "POST"
-    }), createRecipe) {
-      let { id, ...input2 } = recipe;
-      console.log(input2);
-      let data = await recipes_service_default.createRecipeAndAddToWishList({
-        ...input2,
-        isWishList: !0
-      });
-      if (console.log(data), data)
-        return navigate(`/recipes/${data.id}`);
-    }
+var import_react29 = require("@remix-run/react"), import_react30 = require("react");
+var import_jsx_dev_runtime55 = require("react/jsx-dev-runtime");
+function RecipeWishlistButton({
+  recipe,
+  createRecipe = !1
+}) {
+  let navigate = (0, import_react29.useNavigate)(), fetcher = (0, import_react29.useFetcher)(), { toast: toast4 } = useToast(), onClick = async () => {
+    fetcher.submit(
+      {
+        recipe: JSON.stringify({
+          ...recipe,
+          isWishList: !0
+        })
+      },
+      {
+        method: "POST",
+        action: "/api/recipes/add-external-wishlist"
+      }
+    );
   };
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(WishlistButton, { isWishlist: recipe.isWishList, onClick }, void 0, !1, {
+  return (0, import_react30.useEffect)(() => {
+    if (fetcher.data) {
+      let data = fetcher.data;
+      "id" in data ? navigate(`/recipes/${data.id}`) : toast4(data.code, {
+        autoClose: 5e3,
+        type: "error"
+      });
+    }
+  }, [fetcher]), /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(WishlistButton, { isWishlist: recipe.isWishList, onClick }, void 0, !1, {
     fileName: "app/recipes/components/RecipeWishlistButton/RecipeWishlistButton.tsx",
-    lineNumber: 41,
-    columnNumber: 9
+    lineNumber: 53,
+    columnNumber: 10
   }, this);
 }
 
@@ -3770,36 +3861,52 @@ function Recipe({
   id,
   userId,
   isExternalSrc,
-  isWishList
+  isWishList,
+  allowDelete,
+  allowEdit,
+  allowView
 }) {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("section", { className: "flex w-full flex-col", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(RecipeWishlistButton, { recipe: {
-      title,
-      ingredients,
-      instructions,
-      image,
-      url,
-      cookTime,
-      mainIngredient,
-      prepTime,
-      servings,
-      id,
-      userId,
-      isExternalSrc,
-      isWishList
-    }, createRecipe: !0 }, void 0, !1, {
-      fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 28,
-      columnNumber: 7
-    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(
+      RecipeWishlistButton,
+      {
+        recipe: {
+          title,
+          ingredients,
+          instructions,
+          image,
+          url,
+          cookTime,
+          mainIngredient,
+          prepTime,
+          servings,
+          id,
+          userId,
+          isExternalSrc,
+          isWishList,
+          allowDelete,
+          allowEdit,
+          allowView
+        },
+        createRecipe: !0
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/recipes/components/Recipe/Recipe.tsx",
+        lineNumber: 31,
+        columnNumber: 7
+      },
+      this
+    ),
     /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(RecipeHeader, { url: url ?? " ", canEdit: !0 }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 41,
+      lineNumber: 52,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(RecipeHeaderSection, { image, title }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 42,
+      lineNumber: 53,
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(
@@ -3815,7 +3922,7 @@ function Recipe({
       !1,
       {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 43,
+        lineNumber: 54,
         columnNumber: 7
       },
       this
@@ -3823,58 +3930,58 @@ function Recipe({
     /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default, { condition: !!ingredients, children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("div", { className: "w-full lg:w-1/2", children: [
       /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("h2", { className: "text-xl font-bold", children: "Ingredients" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 53,
-        columnNumber: 15
+        lineNumber: 64,
+        columnNumber: 13
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("ul", { className: "list-inside list-disc", children: ingredients == null ? void 0 : ingredients.map((ingredient) => /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("li", { children: ingredient }, ingredient, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 56,
-        columnNumber: 19
-      }, this)) }, void 0, !1, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 54,
-        columnNumber: 15
-      }, this)
-    ] }, void 0, !0, {
-      fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 52,
-      columnNumber: 13
-    }, this) }, void 0, !1, {
-      fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 51,
-      columnNumber: 11
-    }, this) }, void 0, !1, {
-      fileName: "app/recipes/components/Recipe/Recipe.tsx",
-      lineNumber: 50,
-      columnNumber: 9
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default.Then, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, !1, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
-        lineNumber: 64,
-        columnNumber: 11
-      }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("li", { children: instruction }, instruction, !1, {
-        fileName: "app/recipes/components/Recipe/Recipe.tsx",
         lineNumber: 67,
-        columnNumber: 15
+        columnNumber: 17
       }, this)) }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
         lineNumber: 65,
-        columnNumber: 11
+        columnNumber: 13
       }, this)
     ] }, void 0, !0, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
       lineNumber: 63,
-      columnNumber: 9
+      columnNumber: 11
     }, this) }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
       lineNumber: 62,
+      columnNumber: 9
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/Recipe.tsx",
+      lineNumber: 61,
+      columnNumber: 7
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default.Then, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, !1, {
+        fileName: "app/recipes/components/Recipe/Recipe.tsx",
+        lineNumber: 75,
+        columnNumber: 11
+      }, this),
+      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("li", { children: instruction }, instruction, !1, {
+        fileName: "app/recipes/components/Recipe/Recipe.tsx",
+        lineNumber: 78,
+        columnNumber: 15
+      }, this)) }, void 0, !1, {
+        fileName: "app/recipes/components/Recipe/Recipe.tsx",
+        lineNumber: 76,
+        columnNumber: 11
+      }, this)
+    ] }, void 0, !0, {
+      fileName: "app/recipes/components/Recipe/Recipe.tsx",
+      lineNumber: 74,
+      columnNumber: 9
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/Recipe/Recipe.tsx",
+      lineNumber: 73,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/recipes/components/Recipe/Recipe.tsx",
-    lineNumber: 27,
+    lineNumber: 30,
     columnNumber: 5
   }, this);
 }
@@ -3959,7 +4066,7 @@ var import_jsx_dev_runtime57 = require("react/jsx-dev-runtime"), loader4 = async
   };
 };
 function Index3() {
-  let { recipe } = (0, import_react28.useLoaderData)();
+  let { recipe } = (0, import_react31.useLoaderData)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("main", { className: "flex flex-col py-12 section-container", children: /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(
     Recipe,
     {
@@ -4014,10 +4121,10 @@ function Index4() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { entry: { module: "/build/entry.client-KY4SRHS4.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-O63IHIKR.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-OGTFSPUD.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-DJGBNW43.js", imports: ["/build/_shared/chunk-752QHA3I.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-43CFXCBH.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-OT2QFX5Z.js", imports: ["/build/_shared/chunk-752QHA3I.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.$id": { id: "($locale).recipes.$id", parentId: "root", path: ":locale?/recipes/:id", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.$id-SEAYYEK2.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-BCCOJ4YO.js", imports: ["/build/_shared/chunk-T3WBZNON.js", "/build/_shared/chunk-6763BLEM.js", "/build/_shared/chunk-VOXRDU2P.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-3MYAN7MQ.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "5473940a", hmr: { runtime: "/build/_shared/chunk-OGTFSPUD.js", timestamp: 1704203888164 }, url: "/build/manifest-5473940A.js" };
+var assets_manifest_default = { entry: { module: "/build/entry.client-QYIG72RU.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-OVNFYIRE.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-EF32OAUC.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.add-external-wishlist": { id: "($locale).api.recipes.add-external-wishlist", parentId: "root", path: ":locale?/api/recipes/add-external-wishlist", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.add-external-wishlist-TS5VNA3B.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-IC733C32.js", imports: ["/build/_shared/chunk-JV44DVAR.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-J6QQQL6J.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-6BYU7X2O.js", imports: ["/build/_shared/chunk-JV44DVAR.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.$id": { id: "($locale).recipes.$id", parentId: "root", path: ":locale?/recipes/:id", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.$id-OPLTS2HC.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-GYTNOKGW.js", imports: ["/build/_shared/chunk-M3EURUYW.js", "/build/_shared/chunk-DMOCQSAF.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-PE7KSWAE.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "030fe36a", hmr: { runtime: "/build/_shared\\chunk-EF32OAUC.js", timestamp: 1705370260392 }, url: "/build/manifest-030FE36A.js" };
 
 // server-entry-module:@remix-run/dev/server-build
-var assetsBuildDirectory = "public/build", future = { v2_dev: !0, unstable_postcss: !1, unstable_tailwind: !1, v2_errorBoundary: !0, v2_headers: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !0 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
+var assetsBuildDirectory = "public\\build", future = { v2_dev: !0, unstable_postcss: !1, unstable_tailwind: !1, v2_errorBoundary: !0, v2_headers: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !0 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {
   root: {
     id: "root",
     parentId: void 0,
@@ -4033,6 +4140,14 @@ var assetsBuildDirectory = "public/build", future = { v2_dev: !0, unstable_postc
     index: !0,
     caseSensitive: void 0,
     module: index_exports
+  },
+  "($locale).api.recipes.add-external-wishlist": {
+    id: "($locale).api.recipes.add-external-wishlist",
+    parentId: "root",
+    path: ":locale?/api/recipes/add-external-wishlist",
+    index: !1,
+    caseSensitive: void 0,
+    module: locale_api_recipes_add_external_wishlist_route_exports
   },
   "($locale).api.recipes.random.$count": {
     id: "($locale).api.recipes.random.$count",

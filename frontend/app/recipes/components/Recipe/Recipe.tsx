@@ -22,22 +22,33 @@ export default function Recipe({
   userId,
   isExternalSrc,
   isWishList,
+  allowDelete,
+  allowEdit,
+  allowView,
 }: Props) {
   return (
     <section className="flex w-full flex-col">
-      <RecipeWishlistButton recipe={{ title,
-  ingredients,
-  instructions,
-  image,
-  url,
-  cookTime,
-  mainIngredient,
-  prepTime,
-  servings,
-  id,
-  userId,
-  isExternalSrc,
-  isWishList }} createRecipe />
+      <RecipeWishlistButton
+        recipe={{
+          title,
+          ingredients,
+          instructions,
+          image,
+          url,
+          cookTime,
+          mainIngredient,
+          prepTime,
+          servings,
+          id,
+          userId,
+          isExternalSrc,
+          isWishList,
+          allowDelete,
+          allowEdit,
+          allowView,
+        }}
+        createRecipe
+      />
       <RecipeHeader url={url ?? " "} canEdit />
       <RecipeHeaderSection image={image} title={title} />
       <RecipeMetadata
@@ -47,18 +58,18 @@ export default function Recipe({
         mainIngredient={mainIngredient}
         externalUrl={url}
       />
-        <If condition={!!ingredients}>
-          <If.Then>
-            <div className="w-full lg:w-1/2">
-              <h2 className="text-xl font-bold">Ingredients</h2>
-              <ul className="list-inside list-disc">
-                {ingredients?.map((ingredient) => (
-                  <li key={ingredient}>{ingredient}</li>
-                ))}
-              </ul>
-            </div>
-          </If.Then>
-        </If>
+      <If condition={!!ingredients}>
+        <If.Then>
+          <div className="w-full lg:w-1/2">
+            <h2 className="text-xl font-bold">Ingredients</h2>
+            <ul className="list-inside list-disc">
+              {ingredients?.map((ingredient) => (
+                <li key={ingredient}>{ingredient}</li>
+              ))}
+            </ul>
+          </div>
+        </If.Then>
+      </If>
       <If condition={!!instructions}>
         <If.Then>
           <h2 className="text-xl font-bold">Instructions</h2>

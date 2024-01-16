@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import type { UserContextState } from "~/auth/types";
 import { USER_ROUTES } from "~/common/constants/routes";
 
-import { useNavigate } from '@remix-run/react'
+import { useNavigate } from "@remix-run/react";
 
 import UserContext from "./UserContext";
 
@@ -15,16 +15,16 @@ export default function UserContextProvider({
   isAuthenticated,
   children,
 }: Props) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  if (!isAuthenticated) {
-    navigate(USER_ROUTES.LOGIN)  
-  }
+  useEffect(() => {
+    if (!isAuthenticated) {
+      navigate(USER_ROUTES.LOGIN);
+    }
+  }, [isAuthenticated]);
 
   return (
-    <UserContext.Provider
-      value={{ isAuthenticated, user }}
-    >
+    <UserContext.Provider value={{ isAuthenticated, user }}>
       {children}
     </UserContext.Provider>
   );

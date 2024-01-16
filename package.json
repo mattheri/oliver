@@ -7,7 +7,7 @@
     "target:frontend": "cd frontend",
     "target:backend": "cd backend",
     "dev:frontend": "npm run dev",
-    "dev:backend": "npm run dev",
+    "dev:backend": "npm run start:dev",
     "start:frontend:dev": "run-s target:frontend dev:frontend",
     "start:backend:dev": "run-s target:backend dev:backend",
     "start:dev": "run-p start:frontend:dev start:backend:dev",

@@ -1,42 +1,54 @@
-import WishlistButton from "~/common/components/WishlistButton/WishlistButton"
-import { useClientLoader } from "~/http"
-import recipesService from "~/recipes/service/recipes.service"
-import type { Recipe } from "~/recipes/types"
+import WishlistButton from "~/common/components/WishlistButton/WishlistButton";
+import type {
+  CreateRecipeFromExternalSrcResponse,
+  Recipe,
+} from "~/recipes/types";
 
-import { useFetcher, useNavigate } from "@remix-run/react"
+import { useActionData, useFetcher, useNavigate } from "@remix-run/react";
+import { useEffect } from "react";
+import { useToast } from "~/common";
 
 type Props = {
-	recipe: Recipe;
-	createRecipe?: boolean;
-}
+  recipe: Recipe;
+  createRecipe?: boolean;
+};
 
-export default function RecipeWishlistButton({ recipe, createRecipe = false }: Props) {
-	const navigate = useNavigate();
-	const fetcher = useFetcher<{ id: string }>();
+export default function RecipeWishlistButton({
+  recipe,
+  createRecipe = false,
+}: Props) {
+  const navigate = useNavigate();
+  const fetcher = useFetcher<CreateRecipeFromExternalSrcResponse>();
+  const { toast } = useToast();
 
-	const onClick = async () => {
-		const route = createRecipe ? "/api/recipes/create" : '/api/recipes/update';
-		fetcher.submit(route, {
-			preventScrollReset: true,
-			method: "POST",
-		})
-		if (createRecipe) {
-			const { id, ...input } = recipe;
+  const onClick = async () => {
+    fetcher.submit(
+      {
+        recipe: JSON.stringify({
+          ...recipe,
+          isWishList: true,
+        }),
+      },
+      {
+        method: "POST",
+        action: "/api/recipes/add-external-wishlist",
+      },
+    );
+  };
 
-			console.log(input)
-	
-			const data = await recipesService.createRecipeAndAddToWishList({
-				...input,
-				isWishList: true,
-			});
+  useEffect(() => {
+    if (fetcher.data) {
+      const data = fetcher.data;
+      if ("id" in data) {
+        navigate(`/recipes/${data.id}`);
+      } else {
+        toast(data.code, {
+          autoClose: 5000,
+          type: "error",
+        });
+      }
+    }
+  }, [fetcher]);
 
-			console.log(data)
-	
-			if (data) {
-				return navigate(`/recipes/${data.id}`);
-			}
-		}
-	}
-
-	return <WishlistButton isWishlist={recipe.isWishList} onClick={onClick} />
+  return <WishlistButton isWishlist={recipe.isWishList} onClick={onClick} />;
 }

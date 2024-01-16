@@ -1,4 +1,5 @@
 import type { Nullable } from "~/types";
+import { RECIPE_API_ERROR_CODES } from "./constants";
 
 export type Recipe = {
   id: string;
@@ -23,6 +24,9 @@ export type Recipe = {
   cookTime?: Nullable<string>;
   mainIngredient?: Nullable<string>;
   isWishList?: boolean;
+  allowView: string[];
+  allowEdit: string[];
+  allowDelete: string[];
 };
 
 export type CreateRecipeDto = Omit<Recipe, "id" | "userId">;
@@ -104,3 +108,11 @@ export type MealDbCategory = {
 export type MealDbCategoryResponse = {
   categories: MealDbCategory[];
 };
+
+export type CreateRecipeFromExternalSrcResponse =
+  | {
+      id: string;
+    }
+  | {
+      code: (typeof RECIPE_API_ERROR_CODES)[keyof typeof RECIPE_API_ERROR_CODES];
+    };

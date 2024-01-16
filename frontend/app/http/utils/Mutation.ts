@@ -36,9 +36,7 @@ export class Mutation {
     return queryName.split("_")[1];
   }
 
-  public async execute<T>(): Promise<
-    HttpResponse<T>
-  > {
+  public async execute<T>(): Promise<HttpResponse<T>> {
     if (typeof this.query !== "string") {
       throw new Error(HTTP_ERROR.INVALID_QUERY);
     }
@@ -54,9 +52,14 @@ export class Mutation {
       variables: this.options.variables,
     });
 
+    const headers = this.options.headers || {};
+
     const response = await fetch(this.base, {
       method: HTTP_METHOD,
-      headers: HTTP_HEADERS,
+      headers: {
+        ...HTTP_HEADERS,
+        ...headers,
+      },
       body,
     });
 
