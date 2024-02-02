@@ -1,8 +1,8 @@
 import { MINIMAL_RECIPE_FRAGMENT } from "../fragment/MinimalRecipeFragment";
 
 const RECIPES_QUERY = `#graphql
-	query Recipes {
-		recipes {
+	query RecipesByUser {
+		recipesByUser {
 			...recipeFields
 		}
 	}

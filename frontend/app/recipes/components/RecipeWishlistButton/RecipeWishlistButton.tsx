@@ -27,6 +27,7 @@ export default function RecipeWishlistButton({
         recipe: JSON.stringify({
           ...recipe,
           isWishList: true,
+          isExternalSrc: false,
         }),
       },
       {

@@ -22,4 +22,13 @@ export const USER_ROUTES_NAMES = {
   LOG_OUT: "Log Out",
 } as const;
 
+export const PROTECTED_ROUTES = {
+  ...ROUTES,
+  LOG_OUT: USER_ROUTES.LOG_OUT,
+};
+
+export const PROTECTED_ROUTES_ARRAY = Object.values(
+  PROTECTED_ROUTES,
+) as string[];
+
 export type Routes = typeof ROUTES;

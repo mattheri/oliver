@@ -40,7 +40,7 @@ let RecipesResolver = class RecipesResolver {
     async recipesByUser(user) {
         if (!user)
             throw new common_1.UnauthorizedException();
-        return this.recipeService.getRecipesByUserEmail(user.email, true);
+        return this.recipeService.getRecipesByUserEmail(user.email);
     }
     async wishlistRecipes(user) {
         if (!user)
@@ -102,8 +102,9 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], RecipesResolver.prototype, "recipe", null);
 __decorate([
-    (0, graphql_1.Query)(() => [recipe_model_1.Recipe]),
+    (0, graphql_1.Query)(() => [recipe_model_1.Recipe], { nullable: true }),
     (0, common_1.UseGuards)(jwt_gql_auth_guard_1.JwtGqlAuthGuard),
+    (0, common_1.UseInterceptors)(recipe_interceptor_1.RecipeInterceptor),
     __param(0, (0, current_user_decorator_1.CurrentUser)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

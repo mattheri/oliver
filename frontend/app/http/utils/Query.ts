@@ -17,20 +17,6 @@ export class Query {
     this.cache = this.options.cache || Cache.Default();
   }
 
-  private getDomain() {
-    const normalizedQuery = stripIgnoredCharacters(this.query);
-    const queryWithoutName = normalizedQuery.slice(
-      normalizedQuery.indexOf("{") + 1,
-      normalizedQuery.length
-    );
-    const endNameIndex =
-      queryWithoutName.indexOf("(") > -1
-        ? queryWithoutName.indexOf("(")
-        : queryWithoutName.indexOf("{");
-    const queryName = queryWithoutName.slice(0, endNameIndex);
-    return queryName.split("_")[0];
-  }
-
   public async execute<T>(): Promise<HttpResponse<T>> {
     if (typeof this.query !== "string") {
       throw new Error(HTTP_ERROR.INVALID_QUERY);
@@ -38,7 +24,7 @@ export class Query {
 
     if (this.options.variables && typeof this.options.variables !== "object") {
       throw new Error(
-        `${HTTP_ERROR.INVALID_VARIABLES}: ${this.options.variables}`
+        `${HTTP_ERROR.INVALID_VARIABLES}: ${this.options.variables}`,
       );
     }
 
@@ -70,14 +56,8 @@ export class Query {
     if (!response.ok) {
       throw new Error(`${response.status} ${response.statusText}`);
     }
+    const results = (await response.json()) as NonNullable<HttpResponse<T>>;
 
-    return this.cache.set<HttpResponse<T>>(
-      {
-        query: this.query,
-        variables: this.options.variables,
-        domain: this.getDomain(),
-      },
-      await response.json()
-    );
+    return results;
   }
 }

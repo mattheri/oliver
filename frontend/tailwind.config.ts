@@ -8,6 +8,13 @@ import scrollbarHide from "tailwind-scrollbar-hide";
 export default {
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
   theme: {
+    appearance: {
+      none: [
+        "-webkit-appearance: none",
+        "-moz-appearance: none",
+        "appearance: none",
+      ],
+    },
     container: {
       center: true,
       padding: "1rem",
@@ -66,6 +73,26 @@ export default {
           marginLeft: "auto",
           marginRight: "auto",
           width: "100%",
+        },
+      });
+    }),
+    plugin(({ addUtilities, theme }) => {
+      addUtilities({
+        ".appearance-none": {
+          "-webkit-appearance": "none",
+          "-moz-appearance": "none",
+          appearance: "none",
+        },
+      });
+    }),
+    plugin(({ addUtilities, theme }) => {
+      addUtilities({
+        ".select-reset": {
+          "-webkit-appearance": "none",
+          "-moz-appearance": "none",
+          appearance: "none",
+          "text-indent": "1px",
+          "text-overflow": "",
         },
       });
     }),

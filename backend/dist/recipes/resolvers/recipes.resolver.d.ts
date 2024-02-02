@@ -62,6 +62,13 @@ export declare class RecipesResolver {
             created: Date;
             updated: Date;
         };
+        image: {
+            id: string;
+            width: number;
+            height: number;
+            url: string;
+            recipeId: string;
+        }[];
     } & {
         id: string;
         title: string;
@@ -92,6 +99,13 @@ export declare class RecipesResolver {
             created: Date;
             updated: Date;
         };
+        image: {
+            id: string;
+            width: number;
+            height: number;
+            url: string;
+            recipeId: string;
+        }[];
     } & {
         id: string;
         title: string;
@@ -325,6 +339,13 @@ export declare class RecipesResolver {
             created: Date;
             updated: Date;
         };
+        image: {
+            id: string;
+            width: number;
+            height: number;
+            url: string;
+            recipeId: string;
+        }[];
     } & {
         id: string;
         title: string;

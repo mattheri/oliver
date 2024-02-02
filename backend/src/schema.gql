@@ -191,7 +191,7 @@ type Query {
   randomRecipes(input: GetRandomRecipesDto!): [Recipe!]!
   recipe(input: GetRecipeByIdDto!): Recipe!
   recipes: [Recipe!]!
-  recipesByUser: [Recipe!]!
+  recipesByUser: [Recipe!]
   recipesByUserEmail: [Recipe!]!
   user(input: FindUserByEmailDto!): User
   wishlistRecipes: [Recipe!]!

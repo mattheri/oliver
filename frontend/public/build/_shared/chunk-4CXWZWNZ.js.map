@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../../../app/http/store/HttpContext.ts"],
+  "sourcesContent": ["// REMIX HMR BEGIN\nimport * as __hmr__ from \"remix:hmr\";\nif (import.meta) {\nimport.meta.hot = __hmr__.createHotContext(\n//@ts-expect-error\n\"app\\\\http\\\\store\\\\HttpContext.ts\"\n);\nimport.meta.hot.lastModified = \"1706584620816.1074\";\n}\n// REMIX HMR END\n\nimport { createContext } from \"react\";\r\nimport { HttpContextState } from \"../types\";\r\n\r\nconst HttpContext = createContext<HttpContextState>({\r\n  url: new URL(\"http://localhost:3000\"),\r\n});\r\n\r\nexport default HttpContext;\r\n"],
+  "mappings": ";;;;;;;;;;;AAWA,mBAA8B;AAT9B,IAAI,aAAa;AACjB,cAAY,MAAc;AAAA;AAAA,IAE1B;AAAA,EACA;AACA,cAAY,IAAI,eAAe;AAC/B;AAMA,IAAM,kBAAc,4BAAgC;AAAA,EAClD,KAAK,IAAI,IAAI,uBAAuB;AACtC,CAAC;AAED,IAAO,sBAAQ;",
+  "names": []
+}

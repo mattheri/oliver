@@ -27,13 +27,24 @@ export default function RandomRecipesSlider({
     });
   }, [loader, numberOfRecipes]);
 
-  console.log("randomRecipes", randomRecipes)
-
   return (
     <HttpState loading={loading}>
-      <Slider slidesToShow={2} responsive={[{ breakpoint: THEME.BREAKPOINTS.LG, settings: { slidesToShow: 1} }]} className="py-2 isolate">
+      <Slider
+        slidesToShow={2}
+        responsive={[
+          { breakpoint: THEME.BREAKPOINTS.LG, settings: { slidesToShow: 1 } },
+        ]}
+        className="isolate py-2"
+      >
         {randomRecipes.map((recipe) => (
-          <RecipeCard key={recipe.id} id={recipe.id} ingredients={recipe.ingredients} isExternalSrc={recipe.isExternalSrc} title={recipe.title} image={recipe.image} />
+          <RecipeCard
+            key={recipe.id}
+            id={recipe.id}
+            ingredients={recipe.ingredients}
+            isExternalSrc={recipe.isExternalSrc}
+            title={recipe.title}
+            image={recipe.image}
+          />
         ))}
       </Slider>
     </HttpState>

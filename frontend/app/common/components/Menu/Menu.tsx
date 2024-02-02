@@ -2,7 +2,7 @@ import { MODALS } from "~/common/constants/modals";
 import Drawer from "../Drawer/Drawer";
 import Button from "../Button/Button";
 import { MdMenu, MdClose } from "react-icons/md";
-import { VNavigation, If } from "~/common";
+import { VNavigation, If, useModal } from "~/common";
 import { useLocation } from "@remix-run/react";
 import { ROUTES, ROUTES_NAMES, USER_ROUTES } from "~/common/constants/routes";
 import AuthNavMenu from "~/auth/components/AuthNavMenu/AuthNavMenu";
@@ -14,6 +14,7 @@ export default function Menu() {
     USER_ROUTES.SIGN_UP,
     USER_ROUTES.LOG_OUT,
   ].some((route) => location.pathname === route);
+  const { close } = useModal(MODALS.MENU);
 
   return (
     <If condition={canRender}>
@@ -38,6 +39,7 @@ export default function Menu() {
                   key={key}
                   to={value}
                   name={ROUTES_NAMES[key as keyof typeof ROUTES]}
+                  onClick={close}
                 />
               ))}
             </VNavigation>

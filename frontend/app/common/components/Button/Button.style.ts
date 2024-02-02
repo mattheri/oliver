@@ -31,3 +31,7 @@ export const button = cva(
 );
 
 export type ButtonVariantProps = VariantProps<typeof button>;
+
+export type ButtonIntents = ButtonVariantProps["intent"];
+
+export type ButtonSizes = ButtonVariantProps["size"];

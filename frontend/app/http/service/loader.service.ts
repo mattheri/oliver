@@ -5,6 +5,7 @@ type Handlers = {
   signal?: AbortSignal;
   onRequestEnd?: () => void;
   onError?: (error: Error) => void;
+  canRequest?: boolean;
 };
 
 export default class LoaderService {
@@ -20,8 +21,11 @@ export default class LoaderService {
     onRequestStart,
     onRequestEnd,
     onError,
+    canRequest = true,
   }: Omit<LoaderInit & Handlers, "request">): Promise<T | undefined> {
     try {
+      if (!canRequest) return;
+
       if (onRequestStart) {
         onRequestStart();
       }

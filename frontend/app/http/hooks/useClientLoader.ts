@@ -7,9 +7,11 @@ export default function useClientLoader() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>(undefined);
   const controller = useRef(new AbortController());
+  const canDo = useRef(true);
 
   const onRequestStart = useCallback(() => {
     setLoading(true);
+    canDo.current = false;
   }, []);
 
   const onRequestEnd = useCallback(() => {
@@ -30,6 +32,7 @@ export default function useClientLoader() {
         onRequestStart,
         onRequestEnd,
         onError,
+        canRequest: canDo.current,
       });
     },
     [loaderService],

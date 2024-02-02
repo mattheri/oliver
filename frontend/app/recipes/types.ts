@@ -116,3 +116,7 @@ export type CreateRecipeFromExternalSrcResponse =
   | {
       code: (typeof RECIPE_API_ERROR_CODES)[keyof typeof RECIPE_API_ERROR_CODES];
     };
+
+export type RecipeByUserQueryResponse = {
+  recipesByUser: Recipe[];
+};

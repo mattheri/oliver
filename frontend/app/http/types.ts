@@ -7,22 +7,22 @@ export type HttpOptions<Variables extends Record<string, unknown> = {}> = {
 };
 
 export type HttpMutationOptions<
-  Variables extends Record<string, unknown> = {}
+  Variables extends Record<string, unknown> = {},
 > = {
-    variables?: Variables;
-    invalidateCache?: boolean;
-    headers?: Headers | Record<string, string>;
-  };
+  variables?: Variables;
+  invalidateCache?: boolean;
+  headers?: Headers | Record<string, string>;
+};
 
 export type HttpError = {
   message?: string;
   extensions?: {
     code?: string;
-    originalError?: { statusCode?: number, message?: string };
-  }
-}
+    originalError?: { statusCode?: number; message?: string };
+  };
+};
 
-export type HttpResponse<T> = { data: T | null, errors?: HttpError[] };
+export type HttpResponse<T> = { data: T | null; errors?: HttpError[] };
 
 export type CacheKey = {
   query: string;
@@ -40,4 +40,8 @@ export type LoaderInit = {
   request: Request;
   method?: Request["method"];
   headers?: Request["headers"];
+};
+
+export type HttpContextState = {
+  url: URL;
 };

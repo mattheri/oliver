@@ -34,12 +34,13 @@ export class RecipesResolver {
     return this.recipeService.getRecipeById(input.id);
   }
 
-  @Query(() => [Recipe])
+  @Query(() => [Recipe], { nullable: true })
   @UseGuards(JwtGqlAuthGuard)
+  @UseInterceptors(RecipeInterceptor)
   async recipesByUser(@CurrentUser() user?: User) {
     if (!user) throw new UnauthorizedException();
 
-    return this.recipeService.getRecipesByUserEmail(user.email, true);
+    return this.recipeService.getRecipesByUserEmail(user.email);
   }
 
   @Query(() => [Recipe])

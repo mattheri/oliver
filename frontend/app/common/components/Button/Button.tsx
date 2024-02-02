@@ -1,8 +1,9 @@
-import type { ButtonHTMLAttributes, ComponentProps } from "react";
+import type { ButtonHTMLAttributes, ComponentProps, ForwardedRef } from "react";
 import type { LinkProps } from "~/common/components/Link/Link";
 import type { ButtonVariantProps } from "./Button.style";
 
 import { twMerge } from "tailwind-merge";
+import { forwardRef } from "react";
 
 import Link from "~/common/components/Link/Link";
 
@@ -21,17 +22,28 @@ type UnstyledProps =
 
 type Props = UnstyledProps & ButtonVariantProps;
 
-export default function Button({
-  to,
-  className,
-  intent,
-  size,
-  ...props
-}: Props) {
-  if (to) {
+const Button = forwardRef<HTMLButtonElement | HTMLAnchorElement, Props>(
+  function Button({ to, className, intent, size, ...props }, ref) {
+    if (to) {
+      return (
+        <Link
+          to={to}
+          className={twMerge(
+            button({
+              intent: intent ?? "primary",
+              size: size ?? "md",
+              className,
+            }),
+          )}
+          {...(props as LinkPropsWithoutTo)}
+          ref={ref as ForwardedRef<HTMLAnchorElement>}
+        />
+      );
+    }
+
     return (
-      <Link
-        to={to}
+      <button
+        ref={ref as ForwardedRef<HTMLButtonElement>}
         className={twMerge(
           button({
             intent: intent ?? "primary",
@@ -39,19 +51,12 @@ export default function Button({
             className,
           }),
         )}
-        {...(props as LinkPropsWithoutTo)}
+        {...(props as HtmlButtonProps)}
       />
     );
-  }
+  },
+);
 
-  return (
-    <button
-      className={twMerge(
-        button({ intent: intent ?? "primary", size: size ?? "md", className }),
-      )}
-      {...(props as HtmlButtonProps)}
-    />
-  );
-}
+export default Button;
 
 export type ButtonProps = ComponentProps<typeof Button>;

@@ -1,7 +1,7 @@
 import tailwind from "~/styles/tailwind.css";
 
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LinksFunction, LoaderArgs } from "@remix-run/node";
+import { redirect, type LinksFunction, type LoaderArgs } from "@remix-run/node";
 import {
   Links,
   LiveReload,
@@ -14,8 +14,17 @@ import {
 
 import { formAuthenticator } from "./auth";
 import UserContextProvider from "./auth/store/UserContext/UserContext.Provider";
-import { AppContextProvider, Menu } from "./common";
+import {
+  AppContextProvider,
+  Menu,
+  PROTECTED_ROUTES_ARRAY,
+  ROUTES,
+  USER_ROUTES,
+} from "./common";
 import recipesService from "./recipes/service/recipes.service";
+import { RootData } from "./types";
+import { createBearerAccessTokenHeader } from "./auth/utils/createBearerAccessTokenHeader";
+import HttpContextProvider from "./http/store/HttpContext.Provider";
 
 export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
@@ -28,17 +37,28 @@ export const links: LinksFunction = () => [
 
 export async function loader({ request }: LoaderArgs) {
   const user = await formAuthenticator.isAuthenticated(request);
-  const recipes = await recipesService.getRecipesByUserId();
+  const recipes = await recipesService.getRecipesByUser({
+    headers: await createBearerAccessTokenHeader(formAuthenticator, request),
+  });
+  const isAuthenticated = !!user;
+
+  if (
+    PROTECTED_ROUTES_ARRAY.includes(new URL(request.url).pathname) &&
+    !isAuthenticated
+  ) {
+    return redirect(USER_ROUTES.LOGIN);
+  }
 
   return {
     user,
-    isAuthenticated: !!user,
+    isAuthenticated,
     recipes,
+    url: request.url,
   };
 }
 
 export default function App() {
-  const { user, isAuthenticated, recipes } = useLoaderData<typeof loader>();
+  const { user, isAuthenticated, recipes } = useLoaderData<RootData>();
 
   return (
     <html lang="en">
@@ -49,12 +69,14 @@ export default function App() {
         <Links />
       </head>
       <body className="text-body text-black-900 flex flex-col">
-        <AppContextProvider recipes={recipes}>
-          <UserContextProvider isAuthenticated={isAuthenticated} user={user}>
-            <Menu />
-            <Outlet />
-          </UserContextProvider>
-        </AppContextProvider>
+        <HttpContextProvider>
+          <AppContextProvider recipes={recipes}>
+            <UserContextProvider isAuthenticated={isAuthenticated} user={user}>
+              <Menu />
+              <Outlet />
+            </UserContextProvider>
+          </AppContextProvider>
+        </HttpContextProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
@@ -63,4 +85,4 @@ export default function App() {
   );
 }
 
-export const shouldRevalidate = () => false;
+// export const shouldRevalidate = () => false;

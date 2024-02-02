@@ -16,6 +16,16 @@ export class RecipeAdapter {
     const allowEdit = dbRecipe.allowEdit?.split(',') ?? [];
     const allowDelete = dbRecipe.allowDelete?.split(',') ?? [];
 
+    const height = Array.isArray(dbRecipe?.image)
+      ? dbRecipe?.image[0]?.height ?? 0
+      : 0;
+    const width = Array.isArray(dbRecipe?.image)
+      ? dbRecipe?.image[0]?.width ?? 0
+      : 0;
+    const src = Array.isArray(dbRecipe?.image)
+      ? dbRecipe?.image[0]?.url ?? null
+      : null;
+
     return {
       ...dbRecipe,
       userId,
@@ -25,9 +35,9 @@ export class RecipeAdapter {
       allowEdit,
       allowDelete,
       image: {
-        height: dbRecipe.image[0].height,
-        width: dbRecipe.image[0].width,
-        src: dbRecipe.image[0].url,
+        height,
+        width,
+        src,
       },
     };
   }

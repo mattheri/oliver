@@ -30,10 +30,10 @@ export default function VNavigationItem({
         to={to}
         className={twMerge(
           cx(
-            "text-sm group flex gap-x-3 rounded-md p-2 font-semibold leading-6",
+            "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
             { "bg-gray-50 text-indigo-600": current },
             {
-              "text-gray-700 hover:text-indigo-600 hover:bg-gray-50": !current,
+              "text-gray-700 hover:bg-gray-50 hover:text-indigo-600": !current,
             },
           ),
           className,
@@ -58,9 +58,9 @@ export default function VNavigationItem({
               className={twMerge(
                 cx(
                   "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium",
-                  { "text-indigo-600 border-indigo-600": current },
+                  { "border-indigo-600 text-indigo-600": current },
                   {
-                    "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600":
+                    "border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600":
                       !current,
                   },
                 ),
@@ -74,7 +74,7 @@ export default function VNavigationItem({
         <If condition={!!count}>
           <If.Then>
             <span
-              className="text-xs text-gray-600 ring-gray-200 ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center font-medium leading-5 ring-1 ring-inset"
+              className="ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center text-xs font-medium leading-5 text-gray-600 ring-1 ring-inset ring-gray-200"
               aria-hidden="true"
             >
               {count}

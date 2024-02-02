@@ -13,17 +13,20 @@ const DEFAULT_RANDOM_RECIPES_COUNT = 10;
 export async function loader({ params, request }: LoaderArgs) {
   const count = Number(params.count) ?? DEFAULT_RANDOM_RECIPES_COUNT;
 
-  const { data, errors } = await client.query<{ randomRecipes: Recipe[] }>(RANDOM_RECIPES_QUERY, {
-    variables: {
-      input: {
-        amount: count,
-      }
+  const { data, errors } = await client.query<{ randomRecipes: Recipe[] }>(
+    RANDOM_RECIPES_QUERY,
+    {
+      variables: {
+        input: {
+          amount: count,
+        },
+      },
+      headers: {
+        ...(await createBearerAccessTokenHeader(formAuthenticator, request)),
+      },
+      cache: Cache.Long(),
     },
-    headers: {
-      ...(await createBearerAccessTokenHeader(formAuthenticator, request)),
-    },
-    cache: Cache.Long(),
-  })
+  );
 
   handleGqlErrors(errors);
 

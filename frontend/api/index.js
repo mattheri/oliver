@@ -160,15 +160,14 @@ var root_exports = {};
 __export(root_exports, {
   default: () => App,
   links: () => links,
-  loader: () => loader,
-  shouldRevalidate: () => shouldRevalidate
+  loader: () => loader
 });
 
 // app/styles/tailwind.css
-var tailwind_default = "/build/_assets/tailwind-4Q64VS5W.css";
+var tailwind_default = "/build/_assets/tailwind-6XI2ZFFV.css";
 
 // app/root.tsx
-var import_css_bundle = __toESM(require_dist()), import_react23 = require("@remix-run/react");
+var import_css_bundle = __toESM(require_dist()), import_node3 = require("@remix-run/node"), import_react26 = require("@remix-run/react");
 
 // app/auth/service/authenticator.service.ts
 var import_remix_auth = require("remix-auth"), import_remix_auth_form = require("remix-auth-form"), import_node2 = require("@remix-run/node");
@@ -291,18 +290,10 @@ var _Cache = class {
 Cache.customCaches = /* @__PURE__ */ new Map();
 
 // app/http/utils/Mutation.ts
-var import_graphql = require("graphql");
 var Mutation = class {
   constructor(base, query, options, cache = Cache) {
     this.options = {};
     this.base = base, this.query = query, this.options = options || {}, this.cache = cache;
-  }
-  getDomain() {
-    let normalizedQuery = (0, import_graphql.stripIgnoredCharacters)(this.query), queryWithoutName = normalizedQuery.slice(
-      normalizedQuery.indexOf("{") + 1,
-      normalizedQuery.length
-    ), endNameIndex = queryWithoutName.indexOf("(") > -1 ? queryWithoutName.indexOf("(") : queryWithoutName.indexOf("{");
-    return queryWithoutName.slice(0, endNameIndex).split("_")[1];
   }
   async execute() {
     if (typeof this.query != "string")
@@ -324,23 +315,15 @@ var Mutation = class {
     });
     if (!response.ok)
       throw new Error(`${response.status} ${response.statusText}`);
-    return this.options.invalidateCache && this.cache.invalidateByDomain(this.getDomain()), await response.json();
+    return await response.json();
   }
 };
 
 // app/http/utils/Query.ts
-var import_graphql2 = require("graphql");
 var Query = class {
   constructor(base, query, options) {
     this.options = {};
     this.base = base, this.query = query, this.options = options || {}, this.cache = this.options.cache || Cache.Default();
-  }
-  getDomain() {
-    let normalizedQuery = (0, import_graphql2.stripIgnoredCharacters)(this.query), queryWithoutName = normalizedQuery.slice(
-      normalizedQuery.indexOf("{") + 1,
-      normalizedQuery.length
-    ), endNameIndex = queryWithoutName.indexOf("(") > -1 ? queryWithoutName.indexOf("(") : queryWithoutName.indexOf("{");
-    return queryWithoutName.slice(0, endNameIndex).split("_")[0];
   }
   async execute() {
     if (typeof this.query != "string")
@@ -368,14 +351,7 @@ var Query = class {
     });
     if (!response.ok)
       throw new Error(`${response.status} ${response.statusText}`);
-    return this.cache.set(
-      {
-        query: this.query,
-        variables: this.options.variables,
-        domain: this.getDomain()
-      },
-      await response.json()
-    );
+    return await response.json();
   }
 };
 
@@ -408,9 +384,12 @@ var LoaderService = class {
     signal,
     onRequestStart,
     onRequestEnd,
-    onError
+    onError,
+    canRequest = !0
   }) {
     try {
+      if (!canRequest)
+        return;
       onRequestStart && onRequestStart();
       let origin = window.location.origin, url = new URL(route, origin), headerObj = Object.fromEntries(headers ?? []), response = await fetch(url.toString(), {
         method: method ?? "GET",
@@ -456,8 +435,8 @@ var LoaderService = class {
 // app/http/hooks/useClientLoader.ts
 var import_react2 = require("react");
 function useClientLoader() {
-  let [loading, setLoading] = (0, import_react2.useState)(!1), [error, setError] = (0, import_react2.useState)(void 0), controller = (0, import_react2.useRef)(new AbortController()), onRequestStart = (0, import_react2.useCallback)(() => {
-    setLoading(!0);
+  let [loading, setLoading] = (0, import_react2.useState)(!1), [error, setError] = (0, import_react2.useState)(void 0), controller = (0, import_react2.useRef)(new AbortController()), canDo = (0, import_react2.useRef)(!0), onRequestStart = (0, import_react2.useCallback)(() => {
+    setLoading(!0), canDo.current = !1;
   }, []), onRequestEnd = (0, import_react2.useCallback)(() => {
     setLoading(!1);
   }, []), onError = (0, import_react2.useCallback)((error2) => {
@@ -471,7 +450,8 @@ function useClientLoader() {
         signal,
         onRequestStart,
         onRequestEnd,
-        onError
+        onError,
+        canRequest: canDo.current
       });
     },
     [loaderService]
@@ -515,7 +495,12 @@ var ROUTES = {
   SIGN_UP: "Sign Up",
   PROFILE: "Profile",
   LOG_OUT: "Log Out"
-};
+}, PROTECTED_ROUTES = {
+  ...ROUTES,
+  LOG_OUT: USER_ROUTES.LOG_OUT
+}, PROTECTED_ROUTES_ARRAY = Object.values(
+  PROTECTED_ROUTES
+);
 
 // app/common/store/AppContext/AppContext.ts
 var initialModalState = Object.keys(MODALS).reduce((acc, key) => (acc[MODALS[key]] = !1, acc), {}), initialDataState = {
@@ -611,7 +596,7 @@ function AppContextProvider({ children, recipes = [] }) {
 }
 
 // app/common/components/ActionCard/ActionCard.tsx
-var import_react7 = require("@remix-run/react"), import_tailwind_merge3 = require("tailwind-merge"), import_cva3 = require("cva");
+var import_react9 = require("@remix-run/react"), import_tailwind_merge3 = require("tailwind-merge"), import_cva3 = require("cva");
 
 // app/common/components/Heading/Heading.tsx
 var import_tailwind_merge = require("tailwind-merge");
@@ -681,17 +666,16 @@ var If_default = Object.assign(If, {
 });
 
 // app/common/components/Button/Button.tsx
-var import_tailwind_merge2 = require("tailwind-merge");
+var import_tailwind_merge2 = require("tailwind-merge"), import_react8 = require("react");
 
 // app/common/components/Link/Link.tsx
-var import_react6 = require("@remix-run/react"), import_jsx_dev_runtime4 = require("react/jsx-dev-runtime");
-function Link(props) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(import_react6.Link, { ...props }, void 0, !1, {
+var import_react6 = require("react"), import_react7 = require("@remix-run/react"), import_jsx_dev_runtime4 = require("react/jsx-dev-runtime"), Link = (0, import_react6.forwardRef)(function({ to, ...props }, ref) {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime4.jsxDEV)(import_react7.Link, { ref, to, ...props }, void 0, !1, {
     fileName: "app/common/components/Link/Link.tsx",
-    lineNumber: 9,
+    lineNumber: 12,
     columnNumber: 10
   }, this);
-}
+}), Link_default = Link;
 
 // app/common/components/Button/Button.style.ts
 var import_cva2 = require("cva"), button = (0, import_cva2.cva)(
@@ -721,53 +705,54 @@ var import_cva2 = require("cva"), button = (0, import_cva2.cva)(
 );
 
 // app/common/components/Button/Button.tsx
-var import_jsx_dev_runtime5 = require("react/jsx-dev-runtime");
-function Button({
-  to,
-  className,
-  intent,
-  size,
-  ...props
-}) {
-  return to ? /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
-    Link,
-    {
-      to,
-      className: (0, import_tailwind_merge2.twMerge)(
-        button({
-          intent: intent ?? "primary",
-          size: size ?? "md",
-          className
-        })
-      ),
-      ...props
-    },
-    void 0,
-    !1,
-    {
-      fileName: "app/common/components/Button/Button.tsx",
-      lineNumber: 33,
-      columnNumber: 7
-    },
-    this
-  ) : /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
-    "button",
-    {
-      className: (0, import_tailwind_merge2.twMerge)(
-        button({ intent: intent ?? "primary", size: size ?? "md", className })
-      ),
-      ...props
-    },
-    void 0,
-    !1,
-    {
-      fileName: "app/common/components/Button/Button.tsx",
-      lineNumber: 48,
-      columnNumber: 5
-    },
-    this
-  );
-}
+var import_jsx_dev_runtime5 = require("react/jsx-dev-runtime"), Button = (0, import_react8.forwardRef)(
+  function({ to, className, intent, size, ...props }, ref) {
+    return to ? /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+      Link_default,
+      {
+        to,
+        className: (0, import_tailwind_merge2.twMerge)(
+          button({
+            intent: intent ?? "primary",
+            size: size ?? "md",
+            className
+          })
+        ),
+        ...props,
+        ref
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/common/components/Button/Button.tsx",
+        lineNumber: 29,
+        columnNumber: 9
+      },
+      this
+    ) : /* @__PURE__ */ (0, import_jsx_dev_runtime5.jsxDEV)(
+      "button",
+      {
+        ref,
+        className: (0, import_tailwind_merge2.twMerge)(
+          button({
+            intent: intent ?? "primary",
+            size: size ?? "md",
+            className
+          })
+        ),
+        ...props
+      },
+      void 0,
+      !1,
+      {
+        fileName: "app/common/components/Button/Button.tsx",
+        lineNumber: 45,
+        columnNumber: 7
+      },
+      this
+    );
+  }
+), Button_default = Button;
 
 // app/common/components/ActionCard/ActionCard.tsx
 var import_jsx_dev_runtime6 = require("react/jsx-dev-runtime");
@@ -781,9 +766,9 @@ function ActionCard({
   className,
   ...props
 }) {
-  let navigate = (0, import_react7.useNavigate)();
+  let navigate = (0, import_react9.useNavigate)();
   return /* @__PURE__ */ (0, import_jsx_dev_runtime6.jsxDEV)(
-    Button,
+    Button_default,
     {
       intent: "unstyled",
       onClick: async () => {
@@ -903,17 +888,17 @@ function ActionCard({
 }
 
 // app/common/components/Drawer/Drawer.tsx
-var import_react12 = require("@headlessui/react"), import_tailwind_merge7 = require("tailwind-merge");
+var import_react14 = require("@headlessui/react"), import_tailwind_merge7 = require("tailwind-merge");
 
 // app/common/components/Drawer/Control.tsx
-var import_react9 = require("react");
+var import_react11 = require("react");
 
 // app/common/hooks/useModal.ts
-var import_react8 = require("react");
+var import_react10 = require("react");
 var useModal = (modalId) => {
-  let { modals } = (0, import_react8.useContext)(AppContext_default), isOpen = modals.state[modalId], open = (0, import_react8.useCallback)(() => {
+  let { modals } = (0, import_react10.useContext)(AppContext_default), isOpen = modals.state[modalId], open = (0, import_react10.useCallback)(() => {
     modals.dispatch({ type: "OPEN_MODAL", payload: { modalId } });
-  }, []), close = (0, import_react8.useCallback)(() => {
+  }, []), close = (0, import_react10.useCallback)(() => {
     modals.dispatch({ type: "CLOSE_MODAL", payload: { modalId } });
   }, []);
   return {
@@ -926,12 +911,12 @@ var useModal = (modalId) => {
 // app/common/components/Drawer/Control.tsx
 var import_jsx_dev_runtime7 = require("react/jsx-dev-runtime");
 function Control({ modalId, children, ...props }) {
-  let { isOpen, close, open } = useModal(modalId), Component = (0, import_react9.isValidElement)(children) ? import_react9.Children.only(children) : /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("div", { ...props, children: import_react9.Children.only(children) }, void 0, !1, {
+  let { isOpen, close, open } = useModal(modalId), Component = (0, import_react11.isValidElement)(children) ? import_react11.Children.only(children) : /* @__PURE__ */ (0, import_jsx_dev_runtime7.jsxDEV)("div", { ...props, children: import_react11.Children.only(children) }, void 0, !1, {
     fileName: "app/common/components/Drawer/Control.tsx",
     lineNumber: 18,
     columnNumber: 5
   }, this);
-  return children ? (0, import_react9.cloneElement)(Component, {
+  return children ? (0, import_react11.cloneElement)(Component, {
     ...props,
     onClick: isOpen ? close : open
   }) : null;
@@ -968,7 +953,7 @@ function Footer({ className, ...props }) {
 }
 
 // app/common/components/Drawer/Backdrop.tsx
-var import_react10 = require("@headlessui/react"), import_jsx_dev_runtime11 = require("react/jsx-dev-runtime");
+var import_react12 = require("@headlessui/react"), import_jsx_dev_runtime11 = require("react/jsx-dev-runtime");
 function Backdrop({
   className,
   isOpen,
@@ -976,7 +961,7 @@ function Backdrop({
   ...props
 }) {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime11.jsxDEV)(
-    import_react10.Transition,
+    import_react12.Transition,
     {
       show: isOpen,
       enterFrom: "opacity-0",
@@ -1049,7 +1034,7 @@ var import_cva4 = require("cva"), drawer = (0, import_cva4.cva)("bg-white flex f
 });
 
 // app/common/hooks/useKeyboard.ts
-var import_react11 = require("react");
+var import_react13 = require("react");
 
 // app/common/utils/PubSub.ts
 var PubSub = class {
@@ -1100,11 +1085,11 @@ var events = {}, KeyboardRegistry = class {
 
 // app/common/hooks/useKeyboard.ts
 var useKeyboard = ({ fn, key }) => {
-  let onKeyDown = (0, import_react11.useCallback)(
+  let onKeyDown = (0, import_react13.useCallback)(
     (event) => key && event.key === key ? keyboardRegistry.emit(key, event) : fn(event),
     [fn, key]
   );
-  (0, import_react11.useEffect)(() => (key && keyboardRegistry.register(key, fn), window.addEventListener("keydown", onKeyDown), () => {
+  (0, import_react13.useEffect)(() => (key && keyboardRegistry.register(key, fn), window.addEventListener("keydown", onKeyDown), () => {
     key && keyboardRegistry.unregister(key, fn), window.removeEventListener("keydown", onKeyDown);
   }), [fn, key]);
 };
@@ -1128,7 +1113,7 @@ var import_jsx_dev_runtime12 = require("react/jsx-dev-runtime"), Drawer = ({
       columnNumber: 7
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime12.jsxDEV)(
-      import_react12.Transition,
+      import_react14.Transition,
       {
         ...getTransition(position ?? "right"),
         show: isOpen,
@@ -1200,7 +1185,7 @@ function Image({ src, alt, width, height, loading = "lazy", sizes, forceAspectRa
 }
 
 // app/common/components/Input/Input.tsx
-var import_react13 = require("react"), import_cva6 = require("cva"), import_tailwind_merge10 = require("tailwind-merge");
+var import_react15 = require("react"), import_cva6 = require("cva"), import_tailwind_merge10 = require("tailwind-merge");
 
 // app/common/components/Input/InputLabel.tsx
 var import_jsx_dev_runtime14 = require("react/jsx-dev-runtime");
@@ -1348,7 +1333,7 @@ var import_cva5 = require("cva"), input = (0, import_cva5.cva)(
 );
 
 // app/common/components/Input/Input.tsx
-var import_jsx_dev_runtime19 = require("react/jsx-dev-runtime"), Input_default = (0, import_react13.forwardRef)(function({
+var import_jsx_dev_runtime19 = require("react/jsx-dev-runtime"), Input_default = (0, import_react15.forwardRef)(function({
   label,
   helpText,
   id,
@@ -1572,20 +1557,20 @@ function Loader({
 
 // app/common/components/Menu/Menu.tsx
 var import_md = require("react-icons/md");
-var import_react16 = require("@remix-run/react");
+var import_react18 = require("@remix-run/react");
 
 // app/auth/hooks/useIsAuthenticated.ts
-var import_react15 = require("react");
+var import_react17 = require("react");
 
 // app/auth/store/UserContext/UserContext.ts
-var import_react14 = require("react"), UserContext = (0, import_react14.createContext)({
+var import_react16 = require("react"), UserContext = (0, import_react16.createContext)({
   isAuthenticated: !1,
   user: null
 }), UserContext_default = UserContext;
 
 // app/auth/hooks/useIsAuthenticated.ts
 function useIsAuthenticated() {
-  let { isAuthenticated } = (0, import_react15.useContext)(UserContext_default);
+  let { isAuthenticated } = (0, import_react17.useContext)(UserContext_default);
   return isAuthenticated;
 }
 
@@ -1617,41 +1602,41 @@ function AuthNavMenu() {
 // app/common/components/Menu/Menu.tsx
 var import_jsx_dev_runtime22 = require("react/jsx-dev-runtime");
 function Menu() {
-  let location = (0, import_react16.useLocation)(), canRender = ![
+  let location = (0, import_react18.useLocation)(), canRender = ![
     USER_ROUTES.LOGIN,
     USER_ROUTES.SIGN_UP,
     USER_ROUTES.LOG_OUT
-  ].some((route) => location.pathname === route);
+  ].some((route) => location.pathname === route), { close } = useModal(MODALS.MENU);
   return /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(If_default, { condition: canRender, children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(If_default.Then, { children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Drawer_default.Control, { modalId: MODALS.MENU, children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Button, { intent: "unstyled", className: "fixed left-4 top-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(import_md.MdMenu, { size: "2rem" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Drawer_default.Control, { modalId: MODALS.MENU, children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Button_default, { intent: "unstyled", className: "fixed left-4 top-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(import_md.MdMenu, { size: "2rem" }, void 0, !1, {
       fileName: "app/common/components/Menu/Menu.tsx",
-      lineNumber: 23,
+      lineNumber: 24,
       columnNumber: 13
     }, this) }, void 0, !1, {
       fileName: "app/common/components/Menu/Menu.tsx",
-      lineNumber: 22,
+      lineNumber: 23,
       columnNumber: 11
     }, this) }, void 0, !1, {
       fileName: "app/common/components/Menu/Menu.tsx",
-      lineNumber: 21,
+      lineNumber: 22,
       columnNumber: 9
     }, this),
     /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Drawer_default, { modalId: MODALS.MENU, position: "left", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Drawer_default.Header, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Drawer_default.Control, { modalId: MODALS.MENU, children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Button, { intent: "unstyled", children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(import_md.MdClose, { size: "1rem" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Drawer_default.Header, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Drawer_default.Control, { modalId: MODALS.MENU, children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Button_default, { intent: "unstyled", children: /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(import_md.MdClose, { size: "1rem" }, void 0, !1, {
         fileName: "app/common/components/Menu/Menu.tsx",
-        lineNumber: 30,
+        lineNumber: 31,
         columnNumber: 17
       }, this) }, void 0, !1, {
         fileName: "app/common/components/Menu/Menu.tsx",
-        lineNumber: 29,
+        lineNumber: 30,
         columnNumber: 15
       }, this) }, void 0, !1, {
         fileName: "app/common/components/Menu/Menu.tsx",
-        lineNumber: 28,
+        lineNumber: 29,
         columnNumber: 13
       }, this) }, void 0, !1, {
         fileName: "app/common/components/Menu/Menu.tsx",
-        lineNumber: 27,
+        lineNumber: 28,
         columnNumber: 11
       }, this),
       /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(Drawer_default.Body, { children: [
@@ -1659,43 +1644,44 @@ function Menu() {
           VNavigation_default.Item,
           {
             to: value,
-            name: ROUTES_NAMES[key]
+            name: ROUTES_NAMES[key],
+            onClick: close
           },
           key,
           !1,
           {
             fileName: "app/common/components/Menu/Menu.tsx",
-            lineNumber: 37,
+            lineNumber: 38,
             columnNumber: 17
           },
           this
         )) }, void 0, !1, {
           fileName: "app/common/components/Menu/Menu.tsx",
-          lineNumber: 35,
+          lineNumber: 36,
           columnNumber: 13
         }, this),
         /* @__PURE__ */ (0, import_jsx_dev_runtime22.jsxDEV)(AuthNavMenu, {}, void 0, !1, {
           fileName: "app/common/components/Menu/Menu.tsx",
-          lineNumber: 44,
+          lineNumber: 46,
           columnNumber: 13
         }, this)
       ] }, void 0, !0, {
         fileName: "app/common/components/Menu/Menu.tsx",
-        lineNumber: 34,
+        lineNumber: 35,
         columnNumber: 11
       }, this)
     ] }, void 0, !0, {
       fileName: "app/common/components/Menu/Menu.tsx",
-      lineNumber: 26,
+      lineNumber: 27,
       columnNumber: 9
     }, this)
   ] }, void 0, !0, {
     fileName: "app/common/components/Menu/Menu.tsx",
-    lineNumber: 20,
+    lineNumber: 21,
     columnNumber: 7
   }, this) }, void 0, !1, {
     fileName: "app/common/components/Menu/Menu.tsx",
-    lineNumber: 19,
+    lineNumber: 20,
     columnNumber: 5
   }, this);
 }
@@ -1813,7 +1799,7 @@ var import_cva11 = require("cva"), toastLink = (0, import_cva11.cva)("whitespace
 var import_jsx_dev_runtime25 = require("react/jsx-dev-runtime");
 function ToastLink({ intent, className, ...props }) {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime25.jsxDEV)(
-    Link,
+    Link_default,
     {
       ...props,
       className: (0, import_tailwind_merge14.twMerge)(ToastLink_style_default({ intent: intent ?? "success", className }))
@@ -1976,16 +1962,16 @@ function VNavigationItem({
   ...props
 }) {
   return /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)("li", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
-    Link,
+    Link_default,
     {
       ...props,
       to,
       className: (0, import_tailwind_merge16.twMerge)(
         (0, import_cva13.cx)(
-          "text-sm group flex gap-x-3 rounded-md p-2 font-semibold leading-6",
+          "group flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6",
           { "bg-gray-50 text-indigo-600": current },
           {
-            "text-gray-700 hover:text-indigo-600 hover:bg-gray-50": !current
+            "text-gray-700 hover:bg-gray-50 hover:text-indigo-600": !current
           }
         ),
         className
@@ -2022,9 +2008,9 @@ function VNavigationItem({
               className: (0, import_tailwind_merge16.twMerge)(
                 (0, import_cva13.cx)(
                   "flex h-6 w-6 shrink-0 items-center justify-center rounded-lg border bg-white text-[0.625rem] font-medium",
-                  { "text-indigo-600 border-indigo-600": current },
+                  { "border-indigo-600 text-indigo-600": current },
                   {
-                    "text-gray-400 border-gray-200 group-hover:border-indigo-600 group-hover:text-indigo-600": !current
+                    "border-gray-200 text-gray-400 group-hover:border-indigo-600 group-hover:text-indigo-600": !current
                   }
                 )
               ),
@@ -2056,7 +2042,7 @@ function VNavigationItem({
         /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(If_default, { condition: !!count, children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime28.jsxDEV)(
           "span",
           {
-            className: "text-xs text-gray-600 ring-gray-200 ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center font-medium leading-5 ring-1 ring-inset",
+            className: "ml-auto w-9 min-w-max whitespace-nowrap rounded-full bg-white px-2.5 py-0.5 text-center text-xs font-medium leading-5 text-gray-600 ring-1 ring-inset ring-gray-200",
             "aria-hidden": "true",
             children: count
           },
@@ -2139,9 +2125,9 @@ var VNavigation_default = Object.assign(VNavigation, {
 });
 
 // app/common/hooks/useToast.ts
-var import_react17 = require("react"), import_react_toastify2 = require("react-toastify");
+var import_react19 = require("react"), import_react_toastify2 = require("react-toastify");
 function useToast() {
-  let ref = (0, import_react17.useRef)(null);
+  let ref = (0, import_react19.useRef)(null);
   return {
     id: ref.current,
     toast: (...args) => {
@@ -2355,7 +2341,7 @@ function AccountSignIn() {
     /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)("p", { children: [
       "Already have an account?",
       " ",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button, { to: "/auth/login", intent: "link", children: "Sign in" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime32.jsxDEV)(Button_default, { to: "/auth/login", intent: "link", children: "Sign in" }, void 0, !1, {
         fileName: "app/auth/components/AccountSignIn/AccountSignIn.tsx",
         lineNumber: 11,
         columnNumber: 9
@@ -2376,7 +2362,7 @@ function AccountSignIn() {
 var import_react_hook_form = require("react-hook-form");
 
 // app/common/components/ErrorCard/ErrorCard.tsx
-var import_react18 = require("react");
+var import_react20 = require("react");
 var import_jsx_dev_runtime33 = require("react/jsx-dev-runtime");
 function ErrorCard({
   heading: heading2,
@@ -2384,10 +2370,10 @@ function ErrorCard({
   link,
   autoDismiss = 5e3
 }) {
-  let initialRenderState = !!error, [show, setShow] = (0, import_react18.useState)(initialRenderState), ref = (0, import_react18.useRef)(null), dismiss = () => {
+  let initialRenderState = !!error, [show, setShow] = (0, import_react20.useState)(initialRenderState), ref = (0, import_react20.useRef)(null), dismiss = () => {
     ref.current && (clearTimeout(ref.current), ref = { current: null }), setShow(!1);
   };
-  return (0, import_react18.useEffect)(() => {
+  return (0, import_react20.useEffect)(() => {
     if (initialRenderState && autoDismiss)
       return ref = { current: setTimeout(dismiss, autoDismiss) }, () => {
         ref.current && (clearTimeout(ref.current), ref = { current: null }), setShow(initialRenderState);
@@ -2436,10 +2422,10 @@ function ErrorCard({
 }
 
 // app/auth/components/LoginForm/LoginForm.tsx
-var import_react19 = require("@remix-run/react"), import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
+var import_react21 = require("@remix-run/react"), import_jsx_dev_runtime34 = require("react/jsx-dev-runtime");
 function LoginForm() {
   var _a;
-  let fetcher = (0, import_react19.useFetcher)(), {
+  let fetcher = (0, import_react21.useFetcher)(), {
     register
   } = (0, import_react_hook_form.useForm)({
     mode: "onBlur",
@@ -2504,7 +2490,7 @@ function LoginForm() {
           lineNumber: 40,
           columnNumber: 7
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(Button, { type: "submit", size: "lg", children: "Login" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime34.jsxDEV)(Button_default, { type: "submit", size: "lg", children: "Login" }, void 0, !1, {
           fileName: "app/auth/components/LoginForm/LoginForm.tsx",
           lineNumber: 45,
           columnNumber: 7
@@ -2534,7 +2520,7 @@ function NoAccountSignup() {
     /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)("p", { children: [
       "Don't have an account?",
       " ",
-      /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(Button, { to: "/auth/signup", intent: "link", children: "Sign up" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime35.jsxDEV)(Button_default, { to: "/auth/signup", intent: "link", children: "Sign up" }, void 0, !1, {
         fileName: "app/auth/components/NoAccountSignup/NoAccountSignup.tsx",
         lineNumber: 11,
         columnNumber: 9
@@ -2553,9 +2539,9 @@ function NoAccountSignup() {
 
 // app/auth/components/SignupForm/SignupForm.tsx
 var import_react_hook_form2 = require("react-hook-form");
-var import_react20 = require("@remix-run/react"), import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
+var import_react22 = require("@remix-run/react"), import_jsx_dev_runtime36 = require("react/jsx-dev-runtime");
 function SignupForm() {
-  let fetcher = (0, import_react20.useFetcher)(), { register } = (0, import_react_hook_form2.useForm)({
+  let fetcher = (0, import_react22.useFetcher)(), { register } = (0, import_react_hook_form2.useForm)({
     mode: "onBlur",
     defaultValues: {
       email: "",
@@ -2624,7 +2610,7 @@ function SignupForm() {
           },
           this
         ),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(Button, { type: "submit", size: "lg", children: "Sign up" }, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime36.jsxDEV)(Button_default, { type: "submit", size: "lg", children: "Sign up" }, void 0, !1, {
           fileName: "app/auth/components/SignupForm/SignupForm.tsx",
           lineNumber: 45,
           columnNumber: 7
@@ -2643,20 +2629,15 @@ function SignupForm() {
 }
 
 // app/auth/store/UserContext/UserContext.Provider.tsx
-var import_react21 = require("react");
-var import_react22 = require("@remix-run/react");
 var import_jsx_dev_runtime37 = require("react/jsx-dev-runtime");
 function UserContextProvider({
   user,
   isAuthenticated,
   children
 }) {
-  let navigate = (0, import_react22.useNavigate)();
-  return (0, import_react21.useEffect)(() => {
-    isAuthenticated || navigate(USER_ROUTES.LOGIN);
-  }, [isAuthenticated]), /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(UserContext_default.Provider, { value: { isAuthenticated, user }, children }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime37.jsxDEV)(UserContext_default.Provider, { value: { isAuthenticated, user }, children }, void 0, !1, {
     fileName: "app/auth/store/UserContext/UserContext.Provider.tsx",
-    lineNumber: 27,
+    lineNumber: 16,
     columnNumber: 5
   }, this);
 }
@@ -2704,8 +2685,8 @@ var MINIMAL_RECIPE_FRAGMENT = `#graphql
 
 // app/recipes/graphql/query/RecipesQuery.ts
 var RECIPES_QUERY = `#graphql
-	query Recipes {
-		recipes {
+	query RecipesByUser {
+		recipesByUser {
 			...recipeFields
 		}
 	}
@@ -2721,11 +2702,12 @@ var RecipesService = class {
   constructor(httpClient = client) {
     this.client = httpClient;
   }
-  async getRecipesByUserId() {
+  async getRecipesByUser(options) {
     let { data } = await this.client.query(
-      RecipesQuery_default
+      RecipesQuery_default,
+      options
     );
-    return (data == null ? void 0 : data.recipes) || [];
+    return (data == null ? void 0 : data.recipesByUser) || [];
   }
   async createRecipeAndAddToWishList(input2, headers) {
     let { data, errors } = await this.client.mutate(CreateRecipeMutation_default, {
@@ -2753,8 +2735,42 @@ var RecipesService = class {
   }
 }, recipes_service_default = RecipesService.instance;
 
+// app/auth/utils/createBearerAccessTokenHeader.ts
+var createBearerAccessTokenHeader = async (authenticator, request) => {
+  let user = await authenticator.isAuthenticated(request);
+  return user ? {
+    Authorization: `Bearer ${user.accessToken}`
+  } : {
+    Authorization: ""
+  };
+};
+
+// app/http/store/HttpContext.Provider.tsx
+var import_react24 = require("@remix-run/react");
+
+// app/http/store/HttpContext.ts
+var import_react23 = require("react"), HttpContext = (0, import_react23.createContext)({
+  url: new URL("http://localhost:3000")
+}), HttpContext_default = HttpContext;
+
+// app/http/store/HttpContext.Provider.tsx
+var import_react25 = require("react"), import_jsx_dev_runtime38 = require("react/jsx-dev-runtime");
+function HttpContextProvider({ children }) {
+  let data = (0, import_react24.useRouteLoaderData)("root"), serverUrl = (0, import_react25.useMemo)(() => new URL(data.url), [data]), location = (0, import_react24.useLocation)(), [url, setUrl] = (0, import_react25.useState)(serverUrl);
+  return (0, import_react25.useEffect)(() => {
+    let clientUrl = new URL(location.pathname, serverUrl.origin);
+    Object.entries(location).forEach(([key, value]) => {
+      clientUrl[key] = value;
+    }), setUrl(clientUrl);
+  }, [location, serverUrl]), /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(HttpContext_default.Provider, { value: { url }, children }, void 0, !1, {
+    fileName: "app/http/store/HttpContext.Provider.tsx",
+    lineNumber: 26,
+    columnNumber: 5
+  }, this);
+}
+
 // app/root.tsx
-var import_jsx_dev_runtime38 = require("react/jsx-dev-runtime"), links = () => [
+var import_jsx_dev_runtime39 = require("react/jsx-dev-runtime"), links = () => [
   ...import_css_bundle.cssBundleHref ? [{ rel: "stylesheet", href: import_css_bundle.cssBundleHref }] : [],
   { rel: "stylesheet", href: tailwind_default },
   {
@@ -2763,90 +2779,96 @@ var import_jsx_dev_runtime38 = require("react/jsx-dev-runtime"), links = () => [
   }
 ];
 async function loader({ request }) {
-  let user = await formAuthenticator.isAuthenticated(request), recipes = await recipes_service_default.getRecipesByUserId();
-  return {
+  let user = await formAuthenticator.isAuthenticated(request), recipes = await recipes_service_default.getRecipesByUser({
+    headers: await createBearerAccessTokenHeader(formAuthenticator, request)
+  }), isAuthenticated = !!user;
+  return PROTECTED_ROUTES_ARRAY.includes(new URL(request.url).pathname) && !isAuthenticated ? (0, import_node3.redirect)(USER_ROUTES.LOGIN) : {
     user,
-    isAuthenticated: !!user,
-    recipes
+    isAuthenticated,
+    recipes,
+    url: request.url
   };
 }
 function App() {
-  let { user, isAuthenticated, recipes } = (0, import_react23.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("html", { lang: "en", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("head", { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("meta", { charSet: "utf-8" }, void 0, !1, {
+  let { user, isAuthenticated, recipes } = (0, import_react26.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("html", { lang: "en", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("head", { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("meta", { charSet: "utf-8" }, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 46,
+        lineNumber: 66,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("meta", { name: "viewport", content: "width=device-width,initial-scale=1" }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("meta", { name: "viewport", content: "width=device-width,initial-scale=1" }, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 47,
+        lineNumber: 67,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.Meta, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(import_react26.Meta, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 48,
+        lineNumber: 68,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.Links, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(import_react26.Links, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 49,
+        lineNumber: 69,
         columnNumber: 9
       }, this)
     ] }, void 0, !0, {
       fileName: "app/root.tsx",
-      lineNumber: 45,
+      lineNumber: 65,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)("body", { className: "text-body text-black-900 flex flex-col", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(AppContextProvider, { recipes, children: /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(UserContextProvider, { isAuthenticated, user, children: [
-        /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(Menu, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)("body", { className: "text-body text-black-900 flex flex-col", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(HttpContextProvider, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(AppContextProvider, { recipes, children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(UserContextProvider, { isAuthenticated, user, children: [
+        /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(Menu, {}, void 0, !1, {
           fileName: "app/root.tsx",
-          lineNumber: 54,
-          columnNumber: 13
+          lineNumber: 75,
+          columnNumber: 15
         }, this),
-        /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.Outlet, {}, void 0, !1, {
+        /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(import_react26.Outlet, {}, void 0, !1, {
           fileName: "app/root.tsx",
-          lineNumber: 55,
-          columnNumber: 13
+          lineNumber: 76,
+          columnNumber: 15
         }, this)
       ] }, void 0, !0, {
         fileName: "app/root.tsx",
-        lineNumber: 53,
+        lineNumber: 74,
+        columnNumber: 13
+      }, this) }, void 0, !1, {
+        fileName: "app/root.tsx",
+        lineNumber: 73,
         columnNumber: 11
       }, this) }, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 52,
+        lineNumber: 72,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.ScrollRestoration, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(import_react26.ScrollRestoration, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 58,
+        lineNumber: 80,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.Scripts, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(import_react26.Scripts, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 59,
+        lineNumber: 81,
         columnNumber: 9
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime38.jsxDEV)(import_react23.LiveReload, {}, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(import_react26.LiveReload, {}, void 0, !1, {
         fileName: "app/root.tsx",
-        lineNumber: 60,
+        lineNumber: 82,
         columnNumber: 9
       }, this)
     ] }, void 0, !0, {
       fileName: "app/root.tsx",
-      lineNumber: 51,
+      lineNumber: 71,
       columnNumber: 7
     }, this)
   ] }, void 0, !0, {
     fileName: "app/root.tsx",
-    lineNumber: 44,
+    lineNumber: 64,
     columnNumber: 5
   }, this);
 }
-var shouldRevalidate = () => !1;
 
 // app/routes/_index.tsx
 var index_exports = {};
@@ -2859,13 +2881,13 @@ __export(index_exports, {
 var import_outline4 = require("@heroicons/react/24/outline");
 
 // app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx
-var import_react25 = require("react");
+var import_react29 = require("react");
 
 // app/common/components/Slider/Slider.tsx
-var import_react24 = require("react"), import_react_slick = __toESM(require("react-slick"));
+var import_react27 = require("react"), import_react_slick = __toESM(require("react-slick"));
 
 // app/common/components/Slider/SliderArrowNext.tsx
-var import_tailwind_merge19 = require("tailwind-merge"), import_outline2 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime39 = require("react/jsx-dev-runtime");
+var import_tailwind_merge19 = require("tailwind-merge"), import_outline2 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime40 = require("react/jsx-dev-runtime");
 function SliderArrowNext({
   className,
   currentSlide,
@@ -2873,7 +2895,7 @@ function SliderArrowNext({
   additionalClassName,
   ...rest
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
     "button",
     {
       ...rest,
@@ -2882,7 +2904,7 @@ function SliderArrowNext({
         className,
         additionalClassName
       ),
-      children: /* @__PURE__ */ (0, import_jsx_dev_runtime39.jsxDEV)(import_outline2.ArrowRightIcon, { className: "h-8 w-8 text-gray-500", "aria-hidden": "true" }, void 0, !1, {
+      children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(import_outline2.ArrowRightIcon, { className: "h-8 w-8 text-gray-500", "aria-hidden": "true" }, void 0, !1, {
         fileName: "app/common/components/Slider/SliderArrowNext.tsx",
         lineNumber: 28,
         columnNumber: 7
@@ -2900,7 +2922,7 @@ function SliderArrowNext({
 }
 
 // app/common/components/Slider/SliderArrowPrevious.tsx
-var import_tailwind_merge20 = require("tailwind-merge"), import_outline3 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime40 = require("react/jsx-dev-runtime");
+var import_tailwind_merge20 = require("tailwind-merge"), import_outline3 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime41 = require("react/jsx-dev-runtime");
 function SliderArrowNext2({
   className,
   currentSlide,
@@ -2908,7 +2930,7 @@ function SliderArrowNext2({
   additionalClassName,
   ...rest
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(
     "button",
     {
       ...rest,
@@ -2917,7 +2939,7 @@ function SliderArrowNext2({
         className,
         additionalClassName
       ),
-      children: /* @__PURE__ */ (0, import_jsx_dev_runtime40.jsxDEV)(import_outline3.ArrowLeftIcon, { className: "h-8 w-8 text-gray-500", "aria-hidden": "true" }, void 0, !1, {
+      children: /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)(import_outline3.ArrowLeftIcon, { className: "h-8 w-8 text-gray-500", "aria-hidden": "true" }, void 0, !1, {
         fileName: "app/common/components/Slider/SliderArrowPrevious.tsx",
         lineNumber: 28,
         columnNumber: 7
@@ -2935,9 +2957,9 @@ function SliderArrowNext2({
 }
 
 // app/common/components/Slider/SliderDotsContainer.tsx
-var import_jsx_dev_runtime41 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime42 = require("react/jsx-dev-runtime");
 function SliderDotsContainer({ children }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime41.jsxDEV)("ul", { className: "scrollbar-hide flex w-full justify-center gap-4 overflow-y-hidden overflow-x-scroll py-[3px] [&_li]:h-4 [&_li]:w-4", children }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)("ul", { className: "scrollbar-hide flex w-full justify-center gap-4 overflow-y-hidden overflow-x-scroll py-[3px] [&_li]:h-4 [&_li]:w-4", children }, void 0, !1, {
     fileName: "app/common/components/Slider/SliderDotsContainer.tsx",
     lineNumber: 9,
     columnNumber: 5
@@ -2945,9 +2967,9 @@ function SliderDotsContainer({ children }) {
 }
 
 // app/common/components/Slider/SliderDot.tsx
-var import_tailwind_merge21 = require("tailwind-merge"), import_jsx_dev_runtime42 = require("react/jsx-dev-runtime");
+var import_tailwind_merge21 = require("tailwind-merge"), import_jsx_dev_runtime43 = require("react/jsx-dev-runtime");
 function SliderDot({ className, ...rest }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime42.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(
     "button",
     {
       ...rest,
@@ -2968,7 +2990,7 @@ function SliderDot({ className, ...rest }) {
 }
 
 // app/common/components/Slider/Slider.tsx
-var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, import_react24.forwardRef)(
+var import_jsx_dev_runtime44 = require("react/jsx-dev-runtime"), Slider = (0, import_react27.forwardRef)(
   ({
     children,
     dots = !0,
@@ -2976,22 +2998,22 @@ var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, im
     speed = 500,
     slidesToShow = 1,
     slidesToScroll = 1,
-    nextArrow = /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(SliderArrowNext, {}, void 0, !1, {
+    nextArrow = /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(SliderArrowNext, {}, void 0, !1, {
       fileName: "app/common/components/Slider/Slider.tsx",
       lineNumber: 36,
       columnNumber: 19
     }, this),
-    prevArrow = /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(SliderArrowNext2, {}, void 0, !1, {
+    prevArrow = /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(SliderArrowNext2, {}, void 0, !1, {
       fileName: "app/common/components/Slider/Slider.tsx",
       lineNumber: 37,
       columnNumber: 19
     }, this),
-    appendDots = (dots2) => /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(SliderDotsContainer, { children: dots2 }, void 0, !1, {
+    appendDots = (dots2) => /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(SliderDotsContainer, { children: dots2 }, void 0, !1, {
       fileName: "app/common/components/Slider/Slider.tsx",
       lineNumber: 38,
       columnNumber: 30
     }, this),
-    customPaging = () => /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(SliderDot, {}, void 0, !1, {
+    customPaging = () => /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(SliderDot, {}, void 0, !1, {
       fileName: "app/common/components/Slider/Slider.tsx",
       lineNumber: 39,
       columnNumber: 28
@@ -3000,10 +3022,10 @@ var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, im
     deps = [],
     ...settings
   }, ref) => {
-    let sliderRef = (0, import_react24.useRef)(null);
-    return (0, import_react24.useEffect)(() => {
+    let sliderRef = (0, import_react27.useRef)(null);
+    return (0, import_react27.useEffect)(() => {
       ((ref == null ? void 0 : ref.current) || sliderRef.current).slickGoTo(0);
-    }, [sliderRef, ref, ...deps]), /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(
+    }, [sliderRef, ref, ...deps]), /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(
       import_react_slick.default,
       {
         ref: ref || sliderRef,
@@ -3017,7 +3039,7 @@ var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, im
         customPaging,
         appendDots,
         ...settings,
-        children: import_react24.Children.map(children, (child) => /* @__PURE__ */ (0, import_jsx_dev_runtime43.jsxDEV)(SlideAs, { children: child }, void 0, !1, {
+        children: import_react27.Children.map(children, (child) => /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(SlideAs, { children: child }, void 0, !1, {
           fileName: "app/common/components/Slider/Slider.tsx",
           lineNumber: 70,
           columnNumber: 11
@@ -3040,6 +3062,13 @@ var import_jsx_dev_runtime43 = require("react/jsx-dev-runtime"), Slider = (0, im
   DotsContainer: SliderDotsContainer
 });
 
+// app/http/hooks/useUrl.ts
+var import_react28 = require("react");
+function useUrl() {
+  let { url } = (0, import_react28.useContext)(HttpContext_default);
+  return new URL(url);
+}
+
 // app/recipes/constants.ts
 var RECIPE_EXTERNAL_QUERY_PARAMS = {
   IS_EXTERNAL_SRC: "isExternalSrc"
@@ -3050,16 +3079,16 @@ var RECIPE_API_ERROR_CODES = {
 };
 
 // app/recipes/hook/useRecipeUrl.ts
-function useRecipeUrl({
-  id,
-  isExternalSrc
-}) {
-  let recipeUrl = new URL(`${window.location.origin}/recipes/${id}`);
-  return isExternalSrc && recipeUrl.searchParams.set(RECIPE_EXTERNAL_QUERY_PARAMS.IS_EXTERNAL_SRC, "true"), recipeUrl.toString().replace(window.location.origin, "");
+function useRecipeUrl({ id, isExternalSrc }) {
+  let url = useUrl(), recipeUrl = new URL(`${url.origin}/recipes/${id}`);
+  return isExternalSrc && recipeUrl.searchParams.set(
+    RECIPE_EXTERNAL_QUERY_PARAMS.IS_EXTERNAL_SRC,
+    "true"
+  ), recipeUrl.toString().replace(url.origin, "");
 }
 
 // app/recipes/components/RecipeCard/RecipeCard.tsx
-var import_jsx_dev_runtime44 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime");
 function RecipeCard({
   id,
   title,
@@ -3071,8 +3100,8 @@ function RecipeCard({
     id,
     isExternalSrc
   });
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(Link, { to, className: "block max-h-24 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("div", { className: "flex", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(If_default, { condition: !!image, children: /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(Link_default, { to, className: "block max-h-24 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "flex", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(If_default, { condition: !!image, children: /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(
       "img",
       {
         className: "h-24 w-24 rounded-md",
@@ -3096,13 +3125,13 @@ function RecipeCard({
       lineNumber: 28,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("div", { className: "max-h-full flex-grow p-2", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("div", { className: "pb-2 text-left text-sm", children: title }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "max-h-full flex-grow p-2", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("div", { className: "pb-2 text-left text-sm", children: title }, void 0, !1, {
         fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
         lineNumber: 38,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime44.jsxDEV)("p", { className: "line-clamp-2 text-sm", children: ingredients == null ? void 0 : ingredients.join(", ") }, void 0, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)("p", { className: "line-clamp-2 text-sm", children: ingredients == null ? void 0 : ingredients.join(", ") }, void 0, !1, {
         fileName: "app/recipes/components/RecipeCard/RecipeCard.tsx",
         lineNumber: 39,
         columnNumber: 11
@@ -3124,52 +3153,79 @@ function RecipeCard({
 }
 
 // app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx
-var import_jsx_dev_runtime45 = require("react/jsx-dev-runtime"), DEFAULT_NUMBER_OF_RECIPES = 10;
+var import_jsx_dev_runtime46 = require("react/jsx-dev-runtime"), DEFAULT_NUMBER_OF_RECIPES = 10;
 function RandomRecipesSlider({
   numberOfRecipes = DEFAULT_NUMBER_OF_RECIPES
 }) {
-  let { loader: loader5, loading } = useClientLoader(), [randomRecipes, setRandomRecipes] = (0, import_react25.useState)([]);
-  return (0, import_react25.useEffect)(() => {
+  let { loader: loader5, loading } = useClientLoader(), [randomRecipes, setRandomRecipes] = (0, import_react29.useState)([]);
+  return (0, import_react29.useEffect)(() => {
     loader5({
       route: `/api/recipes/random/${numberOfRecipes}`
     }).then((response) => {
       response && setRandomRecipes(response.randomRecipes);
     });
-  }, [loader5, numberOfRecipes]), console.log("randomRecipes", randomRecipes), /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(HttpState, { loading, children: /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(Slider_default, { slidesToShow: 2, responsive: [{ breakpoint: THEME.BREAKPOINTS.LG, settings: { slidesToShow: 1 } }], className: "py-2 isolate", children: randomRecipes.map((recipe) => /* @__PURE__ */ (0, import_jsx_dev_runtime45.jsxDEV)(RecipeCard, { id: recipe.id, ingredients: recipe.ingredients, isExternalSrc: recipe.isExternalSrc, title: recipe.title, image: recipe.image }, recipe.id, !1, {
+  }, [loader5, numberOfRecipes]), /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(HttpState, { loading, children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
+    Slider_default,
+    {
+      slidesToShow: 2,
+      responsive: [
+        { breakpoint: THEME.BREAKPOINTS.LG, settings: { slidesToShow: 1 } }
+      ],
+      className: "isolate py-2",
+      children: randomRecipes.map((recipe) => /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
+        RecipeCard,
+        {
+          id: recipe.id,
+          ingredients: recipe.ingredients,
+          isExternalSrc: recipe.isExternalSrc,
+          title: recipe.title,
+          image: recipe.image
+        },
+        recipe.id,
+        !1,
+        {
+          fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
+          lineNumber: 40,
+          columnNumber: 11
+        },
+        this
+      ))
+    },
+    void 0,
+    !1,
+    {
+      fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
+      lineNumber: 32,
+      columnNumber: 7
+    },
+    this
+  ) }, void 0, !1, {
     fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
-    lineNumber: 36,
-    columnNumber: 11
-  }, this)) }, void 0, !1, {
-    fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
-    lineNumber: 34,
-    columnNumber: 7
-  }, this) }, void 0, !1, {
-    fileName: "app/recipes/components/RandomRecipesSlider/RandomRecipesSlider.tsx",
-    lineNumber: 33,
+    lineNumber: 31,
     columnNumber: 5
   }, this);
 }
 
 // app/recipes/components/EmptyRecipesDashboard/EmptyRecipesDashboard.tsx
-var import_jsx_dev_runtime46 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime47 = require("react/jsx-dev-runtime");
 function EmptyRecipesDashboard() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { className: "relative", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("h2", { className: "text-base font-semibold leading-6 text-gray-900", children: "Recipes" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { className: "relative", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("h2", { className: "text-base font-semibold leading-6 text-gray-900", children: "Recipes" }, void 0, !1, {
       fileName: "app/recipes/components/EmptyRecipesDashboard/EmptyRecipesDashboard.tsx",
       lineNumber: 10,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("p", { className: "mt-1 text-sm text-gray-500", children: "You didn\u2019t add any recipes yet. Start by adding your first recipe." }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("p", { className: "mt-1 text-sm text-gray-500", children: "You didn\u2019t add any recipes yet. Start by adding your first recipe." }, void 0, !1, {
       fileName: "app/recipes/components/EmptyRecipesDashboard/EmptyRecipesDashboard.tsx",
       lineNumber: 13,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(
       "ul",
       {
         className: "mt-6 grid grid-cols-1 gap-6 border-b border-t border-gray-200 py-6 sm:grid-cols-2",
         children: [
-          /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("li", { className: "flow-root", children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
+          /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("li", { className: "flow-root", children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(
             ActionCard,
             {
               heading: "Add a custom recipe",
@@ -3190,7 +3246,7 @@ function EmptyRecipesDashboard() {
             lineNumber: 19,
             columnNumber: 9
           }, this),
-          /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("li", { className: "flow-root", children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(
+          /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("li", { className: "flow-root", children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(
             ActionCard,
             {
               heading: "Add a recipe from a URL",
@@ -3223,7 +3279,7 @@ function EmptyRecipesDashboard() {
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)("div", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime46.jsxDEV)(RandomRecipesSlider, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(RandomRecipesSlider, {}, void 0, !1, {
       fileName: "app/recipes/components/EmptyRecipesDashboard/EmptyRecipesDashboard.tsx",
       lineNumber: 38,
       columnNumber: 9
@@ -3240,57 +3296,78 @@ function EmptyRecipesDashboard() {
 }
 
 // app/recipes/hook/useRecipes.ts
-var import_react26 = require("react");
+var import_react30 = require("react");
 function useRecipes() {
   let {
     data: {
       state: { recipes }
     }
-  } = (0, import_react26.useContext)(AppContext_default);
+  } = (0, import_react30.useContext)(AppContext_default);
   return recipes;
 }
 
 // app/recipes/components/RecipesDashboard/RecipesDashboard.tsx
-var import_jsx_dev_runtime47 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime48 = require("react/jsx-dev-runtime");
 function RecipesDashboard() {
   let recipes = useRecipes();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("section", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(If_default, { condition: recipes.length === 0, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(EmptyRecipesDashboard, {}, void 0, !1, {
-      fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
-      lineNumber: 14,
-      columnNumber: 11
-    }, this) }, void 0, !1, {
-      fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
-      lineNumber: 13,
-      columnNumber: 9
-    }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)(If_default.Else, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime47.jsxDEV)("div", {}, void 0, !1, {
-      fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
-      lineNumber: 17,
-      columnNumber: 11
-    }, this) }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("section", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(If_default, { condition: recipes.length === 0, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(EmptyRecipesDashboard, {}, void 0, !1, {
       fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
       lineNumber: 16,
+      columnNumber: 11
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
+      lineNumber: 15,
+      columnNumber: 9
+    }, this),
+    /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(If_default.Else, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("div", { children: /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(Slider_default, { children: recipes.map((recipe) => /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(
+      RecipeCard,
+      {
+        id: recipe.id,
+        ingredients: recipe.ingredients,
+        isExternalSrc: recipe.isExternalSrc,
+        title: recipe.title,
+        image: recipe.image
+      },
+      recipe.id,
+      !1,
+      {
+        fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
+        lineNumber: 22,
+        columnNumber: 17
+      },
+      this
+    )) }, void 0, !1, {
+      fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
+      lineNumber: 20,
+      columnNumber: 13
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
+      lineNumber: 19,
+      columnNumber: 11
+    }, this) }, void 0, !1, {
+      fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
+      lineNumber: 18,
       columnNumber: 9
     }, this)
   ] }, void 0, !0, {
     fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
-    lineNumber: 12,
+    lineNumber: 14,
     columnNumber: 7
   }, this) }, void 0, !1, {
     fileName: "app/recipes/components/RecipesDashboard/RecipesDashboard.tsx",
-    lineNumber: 11,
+    lineNumber: 13,
     columnNumber: 5
   }, this);
 }
 
 // app/routes/_index.tsx
-var import_jsx_dev_runtime48 = require("react/jsx-dev-runtime"), meta = () => [
+var import_jsx_dev_runtime49 = require("react/jsx-dev-runtime"), meta = () => [
   { title: "New Remix App" },
   { name: "description", content: "Welcome to Remix!" }
 ];
 function Index() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)("main", { className: "section-container pt-16", children: /* @__PURE__ */ (0, import_jsx_dev_runtime48.jsxDEV)(RecipesDashboard, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("main", { className: "section-container pt-16", children: /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)(RecipesDashboard, {}, void 0, !1, {
     fileName: "app/routes/_index.tsx",
     lineNumber: 15,
     columnNumber: 7
@@ -3306,23 +3383,11 @@ var locale_api_recipes_add_external_wishlist_route_exports = {};
 __export(locale_api_recipes_add_external_wishlist_route_exports, {
   action: () => action
 });
-var import_node3 = require("@remix-run/node");
-
-// app/auth/utils/createBearerAccessTokenHeader.ts
-var createBearerAccessTokenHeader = async (authenticator, request) => {
-  let user = await authenticator.isAuthenticated(request);
-  return user ? {
-    Authorization: `Bearer ${user.accessToken}`
-  } : {
-    Authorization: ""
-  };
-};
-
-// app/recipes/routes/($locale).api.recipes.add-external-wishlist.route.tsx
+var import_node4 = require("@remix-run/node");
 async function action({ request }) {
   let formData = await request.formData(), recipeDto = recipes_service_default.recipeToCreateRecipeDto(formData);
   if (!recipeDto)
-    return (0, import_node3.json)(
+    return (0, import_node4.json)(
       { code: RECIPE_API_ERROR_CODES.INVALID_RECIPE },
       { status: 400 }
     );
@@ -3335,7 +3400,7 @@ async function action({ request }) {
     recipeDto,
     headers
   );
-  return recipe ? (0, import_node3.json)(recipe) : (0, import_node3.json)(
+  return recipe ? (0, import_node4.json)(recipe) : (0, import_node4.json)(
     { code: RECIPE_API_ERROR_CODES.RECIPE_NOT_CREATED },
     { status: 500 }
   );
@@ -3361,17 +3426,20 @@ var RANDOM_RECIPES_QUERY = `#graphql
 // app/recipes/routes/($locale).api.recipes.random.$count.route.tsx
 var DEFAULT_RANDOM_RECIPES_COUNT = 10;
 async function loader2({ params, request }) {
-  let count = Number(params.count) ?? DEFAULT_RANDOM_RECIPES_COUNT, { data, errors } = await client.query(RandomRecipesQuery_default, {
-    variables: {
-      input: {
-        amount: count
-      }
-    },
-    headers: {
-      ...await createBearerAccessTokenHeader(formAuthenticator, request)
-    },
-    cache: Cache.Long()
-  });
+  let count = Number(params.count) ?? DEFAULT_RANDOM_RECIPES_COUNT, { data, errors } = await client.query(
+    RandomRecipesQuery_default,
+    {
+      variables: {
+        input: {
+          amount: count
+        }
+      },
+      headers: {
+        ...await createBearerAccessTokenHeader(formAuthenticator, request)
+      },
+      cache: Cache.Long()
+    }
+  );
   return handleGqlErrors(errors), {
     randomRecipes: (data == null ? void 0 : data.randomRecipes) ?? []
   };
@@ -3383,7 +3451,7 @@ __export(locale_auth_actions_route_exports, {
   action: () => action2
 });
 var import_remix_auth2 = require("remix-auth");
-var import_node4 = require("@remix-run/node");
+var import_node5 = require("@remix-run/node");
 async function action2({ request }) {
   try {
     await formAuthenticator.authenticate(PROVIDER.LOCAL, request, {
@@ -3394,7 +3462,7 @@ async function action2({ request }) {
       return e;
     if (e instanceof import_remix_auth2.AuthorizationError) {
       let error = e;
-      return console.error(error), (0, import_node4.json)({ message: error.message });
+      return console.error(error), (0, import_node5.json)({ message: error.message });
     }
   }
 }
@@ -3405,14 +3473,14 @@ __export(locale_auth_logout_route_exports, {
   default: () => Logout,
   loader: () => loader3
 });
-var import_jsx_dev_runtime49 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime");
 async function loader3({ request }) {
   await formAuthenticator.logout(request, {
     redirectTo: USER_ROUTES.LOGIN
   });
 }
 function Logout() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime49.jsxDEV)("div", {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", {}, void 0, !1, {
     fileName: "app/auth/routes/($locale).auth.logout.route.tsx",
     lineNumber: 12,
     columnNumber: 10
@@ -3424,10 +3492,10 @@ var locale_auth_signup_route_exports = {};
 __export(locale_auth_signup_route_exports, {
   default: () => Index2
 });
-var import_jsx_dev_runtime50 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime51 = require("react/jsx-dev-runtime");
 function Index2() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(AccountSignIn, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(AccountSignIn, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
       lineNumber: 8,
       columnNumber: 11
@@ -3436,7 +3504,7 @@ function Index2() {
       lineNumber: 7,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime50.jsxDEV)(SignupForm, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(SignupForm, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.signup.route.tsx",
       lineNumber: 10,
       columnNumber: 9
@@ -3458,19 +3526,19 @@ __export(locale_recipes_id_route_exports, {
   default: () => Index3,
   loader: () => loader4
 });
-var import_react31 = require("@remix-run/react");
+var import_react35 = require("@remix-run/react");
 
 // app/recipes/components/Recipe/RecipeHeader.tsx
-var import_cva14 = require("cva"), import_react27 = require("react");
-var import_react28 = require("@headlessui/react"), import_solid = require("@heroicons/react/20/solid"), import_jsx_dev_runtime51 = require("react/jsx-dev-runtime");
+var import_cva14 = require("cva"), import_react31 = require("react");
+var import_react32 = require("@headlessui/react"), import_solid = require("@heroicons/react/20/solid"), import_jsx_dev_runtime52 = require("react/jsx-dev-runtime");
 function RecipeHeader({
   url,
   canEdit,
   isFavorite
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("section", { className: "flex items-center justify-between py-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("section", { className: "flex gap-4", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default, { condition: !!canEdit, children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(Button, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_solid.PencilIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("section", { className: "flex items-center justify-between py-4", children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("section", { className: "flex gap-4", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default, { condition: !!canEdit, children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(Button_default, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(import_solid.PencilIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
         lineNumber: 30,
         columnNumber: 17
@@ -3493,8 +3561,8 @@ function RecipeHeader({
       lineNumber: 26,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default, { condition: !!url, children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(Button, { intent: "secondary", to: url, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_solid.LinkIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default, { condition: !!url, children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("span", { className: "hidden sm:block", children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(Button_default, { intent: "secondary", to: url, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(import_solid.LinkIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/RecipeHeader.tsx",
         lineNumber: 41,
         columnNumber: 17
@@ -3517,10 +3585,10 @@ function RecipeHeader({
       lineNumber: 37,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu, { as: "div", className: "relative sm:hidden", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(import_react32.Menu, { as: "div", className: "relative sm:hidden", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(import_react32.Menu.Button, { className: "inline-flex items-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:ring-gray-400", children: [
         "More",
-        /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
+        /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(
           import_solid.ChevronDownIcon,
           {
             className: "-mr-1 ml-1.5 h-5 w-5 text-gray-400",
@@ -3540,18 +3608,18 @@ function RecipeHeader({
         lineNumber: 48,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
-        import_react28.Transition,
+      /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(
+        import_react32.Transition,
         {
-          as: import_react27.Fragment,
+          as: import_react31.Fragment,
           enter: "transition ease-out duration-200",
           enterFrom: "transform opacity-0 scale-95",
           enterTo: "transform opacity-100 scale-100",
           leave: "transition ease-in duration-75",
           leaveFrom: "transform opacity-100 scale-100",
           leaveTo: "transform opacity-0 scale-95",
-          children: /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
-            /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
+          children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(import_react32.Menu.Items, { className: "absolute right-0 z-10 -mr-1 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none", children: [
+            /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(import_react32.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(
               "a",
               {
                 href: "#",
@@ -3574,7 +3642,7 @@ function RecipeHeader({
               lineNumber: 66,
               columnNumber: 15
             }, this),
-            /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(import_react28.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime51.jsxDEV)(
+            /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(import_react32.Menu.Item, { children: ({ active }) => /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(
               "a",
               {
                 href: "#",
@@ -3630,10 +3698,10 @@ function RecipeHeader({
 
 // app/recipes/components/Recipe/RecipeHeaderSection.tsx
 var import_cva15 = require("cva");
-var import_jsx_dev_runtime52 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime53 = require("react/jsx-dev-runtime");
 function RecipeHeaderSection({ image, title }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("section", { className: "grid grid-cols-1 grid-rows-1 max-h-96", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default, { condition: !!(image != null && image.src), children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)(Image, { ...image, alt: title, className: "w-full bg-cover bg-top block max-w-full h-auto" }, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("section", { className: "grid grid-cols-1 grid-rows-1 max-h-96", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!(image != null && image.src), children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 overflow-hidden", children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(Image, { ...image, alt: title, className: "w-full bg-cover bg-top block max-w-full h-auto" }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
       lineNumber: 16,
       columnNumber: 7
@@ -3650,7 +3718,7 @@ function RecipeHeaderSection({ image, title }) {
       lineNumber: 13,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 grid place-items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime52.jsxDEV)("h1", { className: (0, import_cva15.cx)("text-3xl font-bold text-center", {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("div", { className: "col-start-1 col-end-2 row-start-1 row-end-2 grid place-items-center", children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("h1", { className: (0, import_cva15.cx)("text-3xl font-bold text-center", {
       "bg-black text-white p-2": !!(image != null && image.src)
     }), children: title }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/RecipeHeaderSection.tsx",
@@ -3669,10 +3737,10 @@ function RecipeHeaderSection({ image, title }) {
 }
 
 // app/recipes/components/Recipe/RecipeMetadata.tsx
-var import_outline5 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime53 = require("react/jsx-dev-runtime");
+var import_outline5 = require("@heroicons/react/24/outline"), import_jsx_dev_runtime54 = require("react/jsx-dev-runtime");
 function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredient }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("section", { className: "flex flex-wrap items-center gap-y-2 gap-x-4 py-2 text-gray-900", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!prepTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("span", { className: "text-sm", children: [
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("section", { className: "flex flex-wrap items-center gap-y-2 gap-x-4 py-2 text-gray-900", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default, { condition: !!prepTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("span", { className: "text-sm", children: [
       "Preparation: ",
       prepTime
     ] }, void 0, !0, {
@@ -3688,7 +3756,7 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
       lineNumber: 17,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!cookTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("span", { className: "text-sm", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default, { condition: !!cookTime, children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("span", { className: "text-sm", children: [
       "Cooking: ",
       cookTime
     ] }, void 0, !0, {
@@ -3704,7 +3772,7 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
       lineNumber: 24,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!servings, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("span", { className: "text-sm", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default, { condition: !!servings, children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("span", { className: "text-sm", children: [
       "Serves: ",
       servings
     ] }, void 0, !0, {
@@ -3720,7 +3788,7 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
       lineNumber: 31,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!mainIngredient, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)("span", { className: "text-sm", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default, { condition: !!mainIngredient, children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("span", { className: "text-sm", children: [
       "Main Ingredient: ",
       mainIngredient
     ] }, void 0, !0, {
@@ -3736,8 +3804,8 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
       lineNumber: 38,
       columnNumber: 4
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default, { condition: !!externalUrl, children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(Button, { intent: "secondary", to: externalUrl, children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime53.jsxDEV)(import_outline5.LinkIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default, { condition: !!externalUrl, children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(Button_default, { intent: "secondary", to: externalUrl, children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(import_outline5.LinkIcon, { className: "h-5 w-5", "aria-hidden": "true" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/RecipeMetadata.tsx",
         lineNumber: 48,
         columnNumber: 5
@@ -3765,7 +3833,7 @@ function RecipeMetadata({ prepTime, cookTime, servings, externalUrl, mainIngredi
 
 // app/common/components/WishlistButton/WishlistButton.tsx
 var import_cva16 = require("cva"), import_tailwind_merge22 = require("tailwind-merge"), import_outline6 = require("@heroicons/react/24/outline");
-var import_jsx_dev_runtime54 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime55 = require("react/jsx-dev-runtime");
 function WishlistButton({
   isWishlist,
   children,
@@ -3773,8 +3841,8 @@ function WishlistButton({
   onClick,
   ...props
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(Button, { ...props, type: "button", intent: "secondary", onClick, children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(Button_default, { ...props, type: "button", intent: "secondary", onClick, children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(
       import_outline6.HeartIcon,
       {
         className: (0, import_tailwind_merge22.twMerge)(
@@ -3790,7 +3858,7 @@ function WishlistButton({
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default, { condition: !compact, children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime54.jsxDEV)("span", { className: "ml-2", children: isWishlist ? "Remove from Wishlist" : "Add to Wishlist" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(If_default, { condition: !compact, children: /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)("span", { className: "ml-2", children: isWishlist ? "Remove from Wishlist" : "Add to Wishlist" }, void 0, !1, {
       fileName: "app/common/components/WishlistButton/WishlistButton.tsx",
       lineNumber: 32,
       columnNumber: 11
@@ -3811,18 +3879,19 @@ function WishlistButton({
 }
 
 // app/recipes/components/RecipeWishlistButton/RecipeWishlistButton.tsx
-var import_react29 = require("@remix-run/react"), import_react30 = require("react");
-var import_jsx_dev_runtime55 = require("react/jsx-dev-runtime");
+var import_react33 = require("@remix-run/react"), import_react34 = require("react");
+var import_jsx_dev_runtime56 = require("react/jsx-dev-runtime");
 function RecipeWishlistButton({
   recipe,
   createRecipe = !1
 }) {
-  let navigate = (0, import_react29.useNavigate)(), fetcher = (0, import_react29.useFetcher)(), { toast: toast4 } = useToast(), onClick = async () => {
+  let navigate = (0, import_react33.useNavigate)(), fetcher = (0, import_react33.useFetcher)(), { toast: toast4 } = useToast(), onClick = async () => {
     fetcher.submit(
       {
         recipe: JSON.stringify({
           ...recipe,
-          isWishList: !0
+          isWishList: !0,
+          isExternalSrc: !1
         })
       },
       {
@@ -3831,7 +3900,7 @@ function RecipeWishlistButton({
       }
     );
   };
-  return (0, import_react30.useEffect)(() => {
+  return (0, import_react34.useEffect)(() => {
     if (fetcher.data) {
       let data = fetcher.data;
       "id" in data ? navigate(`/recipes/${data.id}`) : toast4(data.code, {
@@ -3839,15 +3908,15 @@ function RecipeWishlistButton({
         type: "error"
       });
     }
-  }, [fetcher]), /* @__PURE__ */ (0, import_jsx_dev_runtime55.jsxDEV)(WishlistButton, { isWishlist: recipe.isWishList, onClick }, void 0, !1, {
+  }, [fetcher]), /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(WishlistButton, { isWishlist: recipe.isWishList, onClick }, void 0, !1, {
     fileName: "app/recipes/components/RecipeWishlistButton/RecipeWishlistButton.tsx",
-    lineNumber: 53,
+    lineNumber: 54,
     columnNumber: 10
   }, this);
 }
 
 // app/recipes/components/Recipe/Recipe.tsx
-var import_jsx_dev_runtime56 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime57 = require("react/jsx-dev-runtime");
 function Recipe({
   title,
   ingredients,
@@ -3866,8 +3935,8 @@ function Recipe({
   allowEdit,
   allowView
 }) {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("section", { className: "flex w-full flex-col", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("section", { className: "flex w-full flex-col", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(
       RecipeWishlistButton,
       {
         recipe: {
@@ -3899,17 +3968,17 @@ function Recipe({
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(RecipeHeader, { url: url ?? " ", canEdit: !0 }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(RecipeHeader, { url: url ?? " ", canEdit: !0 }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
       lineNumber: 52,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(RecipeHeaderSection, { image, title }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(RecipeHeaderSection, { image, title }, void 0, !1, {
       fileName: "app/recipes/components/Recipe/Recipe.tsx",
       lineNumber: 53,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(
+    /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(
       RecipeMetadata,
       {
         cookTime,
@@ -3927,13 +3996,13 @@ function Recipe({
       },
       this
     ),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default, { condition: !!ingredients, children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("div", { className: "w-full lg:w-1/2", children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("h2", { className: "text-xl font-bold", children: "Ingredients" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(If_default, { condition: !!ingredients, children: /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(If_default.Then, { children: /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("div", { className: "w-full lg:w-1/2", children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("h2", { className: "text-xl font-bold", children: "Ingredients" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
         lineNumber: 64,
         columnNumber: 13
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("ul", { className: "list-inside list-disc", children: ingredients == null ? void 0 : ingredients.map((ingredient) => /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("li", { children: ingredient }, ingredient, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("ul", { className: "list-inside list-disc", children: ingredients == null ? void 0 : ingredients.map((ingredient) => /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("li", { children: ingredient }, ingredient, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
         lineNumber: 67,
         columnNumber: 17
@@ -3955,13 +4024,13 @@ function Recipe({
       lineNumber: 61,
       columnNumber: 7
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)(If_default.Then, { children: [
-      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(If_default, { condition: !!instructions, children: /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(If_default.Then, { children: [
+      /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("h2", { className: "text-xl font-bold", children: "Instructions" }, void 0, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
         lineNumber: 75,
         columnNumber: 11
       }, this),
-      /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime56.jsxDEV)("li", { children: instruction }, instruction, !1, {
+      /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("ol", { className: "list-inside list-decimal", children: instructions == null ? void 0 : instructions.map((instruction) => /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("li", { children: instruction }, instruction, !1, {
         fileName: "app/recipes/components/Recipe/Recipe.tsx",
         lineNumber: 78,
         columnNumber: 15
@@ -4035,7 +4104,7 @@ var RECIPE_QUERY = `#graphql
 `;
 
 // app/recipes/routes/($locale).recipes.$id.route.tsx
-var import_jsx_dev_runtime57 = require("react/jsx-dev-runtime"), loader4 = async ({ request, params }) => {
+var import_jsx_dev_runtime58 = require("react/jsx-dev-runtime"), loader4 = async ({ request, params }) => {
   var _a, _b;
   let isExternalSrc = new URL(request.url).searchParams.get("isExternalSrc") === "true", id = String(params.id), variables = {
     id
@@ -4066,8 +4135,8 @@ var import_jsx_dev_runtime57 = require("react/jsx-dev-runtime"), loader4 = async
   };
 };
 function Index3() {
-  let { recipe } = (0, import_react31.useLoaderData)();
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)("main", { className: "flex flex-col py-12 section-container", children: /* @__PURE__ */ (0, import_jsx_dev_runtime57.jsxDEV)(
+  let { recipe } = (0, import_react35.useLoaderData)();
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)("main", { className: "flex flex-col py-12 section-container", children: /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)(
     Recipe,
     {
       ...recipe
@@ -4092,10 +4161,10 @@ var locale_auth_login_route_exports = {};
 __export(locale_auth_login_route_exports, {
   default: () => Index4
 });
-var import_jsx_dev_runtime58 = require("react/jsx-dev-runtime");
+var import_jsx_dev_runtime59 = require("react/jsx-dev-runtime");
 function Index4() {
-  return /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
-    /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)(NoAccountSignup, {}, void 0, !1, {
+  return /* @__PURE__ */ (0, import_jsx_dev_runtime59.jsxDEV)("main", { className: "from-indigo-600 grid min-h-screen w-full grid-cols-1 place-items-center bg-gradient-to-bl lg:place-items-start", children: /* @__PURE__ */ (0, import_jsx_dev_runtime59.jsxDEV)("section", { className: "flex h-full w-full max-w-xl flex-col justify-center bg-white p-8", children: [
+    /* @__PURE__ */ (0, import_jsx_dev_runtime59.jsxDEV)("div", { className: "py-8", children: /* @__PURE__ */ (0, import_jsx_dev_runtime59.jsxDEV)(NoAccountSignup, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.login.route.tsx",
       lineNumber: 8,
       columnNumber: 11
@@ -4104,7 +4173,7 @@ function Index4() {
       lineNumber: 7,
       columnNumber: 9
     }, this),
-    /* @__PURE__ */ (0, import_jsx_dev_runtime58.jsxDEV)(LoginForm, {}, void 0, !1, {
+    /* @__PURE__ */ (0, import_jsx_dev_runtime59.jsxDEV)(LoginForm, {}, void 0, !1, {
       fileName: "app/auth/routes/($locale).auth.login.route.tsx",
       lineNumber: 10,
       columnNumber: 9
@@ -4121,7 +4190,7 @@ function Index4() {
 }
 
 // server-assets-manifest:@remix-run/dev/assets-manifest
-var assets_manifest_default = { entry: { module: "/build/entry.client-QYIG72RU.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-OVNFYIRE.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-EF32OAUC.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.add-external-wishlist": { id: "($locale).api.recipes.add-external-wishlist", parentId: "root", path: ":locale?/api/recipes/add-external-wishlist", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.add-external-wishlist-TS5VNA3B.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-IC733C32.js", imports: ["/build/_shared/chunk-JV44DVAR.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-J6QQQL6J.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-6BYU7X2O.js", imports: ["/build/_shared/chunk-JV44DVAR.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.$id": { id: "($locale).recipes.$id", parentId: "root", path: ":locale?/recipes/:id", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.$id-OPLTS2HC.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-GYTNOKGW.js", imports: ["/build/_shared/chunk-M3EURUYW.js", "/build/_shared/chunk-DMOCQSAF.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-PE7KSWAE.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "030fe36a", hmr: { runtime: "/build/_shared\\chunk-EF32OAUC.js", timestamp: 1705370260392 }, url: "/build/manifest-030FE36A.js" };
+var assets_manifest_default = { entry: { module: "/build/entry.client-QYIG72RU.js", imports: ["/build/_shared/chunk-ZWGWGGVF.js", "/build/_shared/chunk-GIAAE3CH.js", "/build/_shared/chunk-OVNFYIRE.js", "/build/_shared/chunk-XU7DNSPJ.js", "/build/_shared/chunk-EF32OAUC.js", "/build/_shared/chunk-UWV35TSL.js", "/build/_shared/chunk-BOXFZXVX.js", "/build/_shared/chunk-PNG5AS42.js"] }, routes: { "($locale).api.recipes.add-external-wishlist": { id: "($locale).api.recipes.add-external-wishlist", parentId: "root", path: ":locale?/api/recipes/add-external-wishlist", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.add-external-wishlist-TS5VNA3B.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).api.recipes.random.$count": { id: "($locale).api.recipes.random.$count", parentId: "root", path: ":locale?/api/recipes/random/:count", index: !1, caseSensitive: void 0, module: "/build/($locale).api.recipes.random.$count-4X3G3VQ4.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.actions": { id: "($locale).auth.actions", parentId: "root", path: ":locale?/auth/actions", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.actions-OTGDRZFQ.js", imports: void 0, hasAction: !0, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.login": { id: "($locale).auth.login", parentId: "root", path: ":locale?/auth/login", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.login-KMHECNYZ.js", imports: ["/build/_shared/chunk-TCFIUGTE.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.logout": { id: "($locale).auth.logout", parentId: "root", path: ":locale?/auth/logout", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.logout-JNHMIU6U.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).auth.signup": { id: "($locale).auth.signup", parentId: "root", path: ":locale?/auth/signup", index: !1, caseSensitive: void 0, module: "/build/($locale).auth.signup-RDKUFD2G.js", imports: ["/build/_shared/chunk-TCFIUGTE.js"], hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "($locale).recipes.$id": { id: "($locale).recipes.$id", parentId: "root", path: ":locale?/recipes/:id", index: !1, caseSensitive: void 0, module: "/build/($locale).recipes.$id-AVEFNEKT.js", imports: void 0, hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, root: { id: "root", parentId: void 0, path: "", index: void 0, caseSensitive: void 0, module: "/build/root-WKDTVBYP.js", imports: ["/build/_shared/chunk-4CXWZWNZ.js", "/build/_shared/chunk-LJDFXF47.js", "/build/_shared/chunk-QLFRGZQC.js"], hasAction: !1, hasLoader: !0, hasCatchBoundary: !1, hasErrorBoundary: !1 }, "routes/_index": { id: "routes/_index", parentId: "root", path: void 0, index: !0, caseSensitive: void 0, module: "/build/routes/_index-JSM7AXRM.js", imports: void 0, hasAction: !1, hasLoader: !1, hasCatchBoundary: !1, hasErrorBoundary: !1 } }, version: "ec875435", hmr: { runtime: "/build/_shared\\chunk-EF32OAUC.js", timestamp: 1706832808404 }, url: "/build/manifest-EC875435.js" };
 
 // server-entry-module:@remix-run/dev/server-build
 var assetsBuildDirectory = "public\\build", future = { v2_dev: !0, unstable_postcss: !1, unstable_tailwind: !1, v2_errorBoundary: !0, v2_headers: !0, v2_meta: !0, v2_normalizeFormMethod: !0, v2_routeConvention: !0 }, publicPath = "/build/", entry = { module: entry_server_exports }, routes = {

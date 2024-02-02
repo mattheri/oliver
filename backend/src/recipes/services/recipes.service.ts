@@ -43,7 +43,7 @@ export class RecipeService {
           { allowDelete: { contains: email } },
         ],
       },
-      include: { owner: includeOwner },
+      include: { owner: includeOwner, image: true },
     });
 
     return [...new Set(recipes)];

@@ -46,6 +46,13 @@ export declare class RecipeService {
             created: Date;
             updated: Date;
         };
+        image: {
+            id: string;
+            width: number;
+            height: number;
+            url: string;
+            recipeId: string;
+        }[];
     } & {
         id: string;
         title: string;
@@ -134,16 +141,10 @@ export declare class RecipeService {
     }>;
     createRecipe(data: ICreateRecipeWithUserIdDto): Promise<{
         id: string;
-        title: string;
-        ingredients: string;
-        instructions: string;
         ownerId: string;
-        isExternalSrc: boolean;
-        url: string;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
-        isWishList: boolean;
         image: {
             id: string;
             width: number;
@@ -151,14 +152,16 @@ export declare class RecipeService {
             url: string;
             recipeId: string;
         }[];
+        url: string;
+        title: string;
+        ingredients: string;
+        instructions: string;
+        isExternalSrc: boolean;
+        isWishList: boolean;
     }>;
     updateRecipe(data: UpdateRecipeDto): Promise<{
         id: string;
-        title: string;
-        ingredients: string;
-        instructions: string;
         ownerId: string;
-        isExternalSrc: boolean;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -169,14 +172,14 @@ export declare class RecipeService {
             url: string;
             recipeId: string;
         }[];
+        title: string;
+        ingredients: string;
+        instructions: string;
+        isExternalSrc: boolean;
     }>;
     addAllowView({ id, email }: UpdateAllowViewDto, user: User): Promise<{
         id: string;
-        title: string;
-        ingredients: string;
-        instructions: string;
         ownerId: string;
-        isExternalSrc: boolean;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -187,14 +190,14 @@ export declare class RecipeService {
             url: string;
             recipeId: string;
         }[];
+        title: string;
+        ingredients: string;
+        instructions: string;
+        isExternalSrc: boolean;
     }>;
     addAllowEdit({ id, email }: UpdateAllowEditDto, user: User): Promise<{
         id: string;
-        title: string;
-        ingredients: string;
-        instructions: string;
         ownerId: string;
-        isExternalSrc: boolean;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -205,14 +208,14 @@ export declare class RecipeService {
             url: string;
             recipeId: string;
         }[];
+        title: string;
+        ingredients: string;
+        instructions: string;
+        isExternalSrc: boolean;
     }>;
     addAllowDelete({ id, email }: UpdateAllowDeleteDto, user: User): Promise<{
         id: string;
-        title: string;
-        ingredients: string;
-        instructions: string;
         ownerId: string;
-        isExternalSrc: boolean;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -223,14 +226,14 @@ export declare class RecipeService {
             url: string;
             recipeId: string;
         }[];
+        title: string;
+        ingredients: string;
+        instructions: string;
+        isExternalSrc: boolean;
     }>;
     removeAllowView({ id, email }: UpdateAllowDeleteDto, user: User): Promise<{
         id: string;
-        title: string;
-        ingredients: string;
-        instructions: string;
         ownerId: string;
-        isExternalSrc: boolean;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -241,14 +244,14 @@ export declare class RecipeService {
             url: string;
             recipeId: string;
         }[];
+        title: string;
+        ingredients: string;
+        instructions: string;
+        isExternalSrc: boolean;
     }>;
     removeAllowEdit({ id, email }: UpdateAllowDeleteDto, user: User): Promise<{
         id: string;
-        title: string;
-        ingredients: string;
-        instructions: string;
         ownerId: string;
-        isExternalSrc: boolean;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -259,14 +262,14 @@ export declare class RecipeService {
             url: string;
             recipeId: string;
         }[];
+        title: string;
+        ingredients: string;
+        instructions: string;
+        isExternalSrc: boolean;
     }>;
     removeAllowDelete({ id, email }: UpdateAllowDeleteDto, user: User): Promise<{
         id: string;
-        title: string;
-        ingredients: string;
-        instructions: string;
         ownerId: string;
-        isExternalSrc: boolean;
         allowView: string;
         allowEdit: string;
         allowDelete: string;
@@ -277,6 +280,10 @@ export declare class RecipeService {
             url: string;
             recipeId: string;
         }[];
+        title: string;
+        ingredients: string;
+        instructions: string;
+        isExternalSrc: boolean;
     }>;
     deleteRecipe({ id }: DeleteRecipeDto): Promise<{
         id: string;
